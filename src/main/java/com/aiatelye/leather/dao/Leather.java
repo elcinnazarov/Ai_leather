@@ -1,4 +1,4 @@
-package com.aiatelye.leather.dao.enitity;
+package com.aiatelye.leather.dao;
 
 import com.aiatelye.leather.enums.Enums;
 import jakarta.persistence.*;
@@ -19,7 +19,7 @@ public class Leather {
     private  String leathername;
 
     @Column(name = "texture_image_url", nullable = false)
-    private String textureUrl; // AI-nın "geyindirəcəyi" tekstura
+    private String imageUrl; // AI-nın "geyindirəcəyi" tekstura
 
     private String color; // "Black", "Brown", "Red"
 
@@ -39,9 +39,5 @@ public class Leather {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "grade_id",nullable = false)
     private LeatherGrade grade;
-
-   /* @OneToMany(mappedBy = "leather", cascade = CascadeType.ALL)
-    private List<CustomDesign> customDesigns;*/
-
 
 }

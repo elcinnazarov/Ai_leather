@@ -1,4 +1,4 @@
-package com.aiatelye.leather.dao.enitity;
+package com.aiatelye.leather.dao;
 
 
 import jakarta.persistence.*;
@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "custom_desings")
 @Data
-public class CustomDesings {
+public class CustomDesigns {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

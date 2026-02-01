@@ -23,3 +23,20 @@ spring:
 
 server:
   port: 1111
+
+logging:
+  level:
+    root: info
+servlet:
+  multipart:
+    enabled: true
+    max-file-size: 10MB        # Maksimum fayl ölçüsü
+    max-request-size: 10MB
+minio:
+  url: ${MINIO_URL}
+  access-key: ${MINIO_ADMIN}
+  secret-key: ${SECRET_ADMIN}
+  bucket: ai-atelye-storage
+  image:
+    allowed-extensions: jpg,jpeg,png,webp
+    max-size-mb: 5

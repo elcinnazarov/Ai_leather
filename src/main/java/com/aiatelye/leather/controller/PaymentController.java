@@ -1,4 +1,4 @@
 package com.aiatelye.leather.controller;
 
-public class DesingnController {
+public class PaymentController {
 }

@@ -1,4 +1,4 @@
-package com.aiatelye.leather.dao.enitity;
+package com.aiatelye.leather.dao;
 import com.aiatelye.leather.enums.Enums;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -45,8 +45,7 @@ public class ProductModel {
     @OneToMany(mappedBy = "productModel")
     private List<ProductGradePrice> gradePrices;
 
-    @OneToMany(mappedBy = "productModelId")
+    @OneToMany(mappedBy = "productModel", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Favorite> favorites;
-
 
 }

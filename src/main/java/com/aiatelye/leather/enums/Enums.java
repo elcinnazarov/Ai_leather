@@ -12,8 +12,6 @@ public class Enums {
     public enum DesignProcessStatus { GENERATING, SUCCESS, FAILED }
     public  enum  ModelType{ WALLET, BAG, BELT }
     public enum OrderType {READY_PRODUCT, AI_CUSTOM_DESIGN }
-    public enum FavoriteTargetType {
-        PRODUCT_MODEL,
-        AI_DESIGN
+    public enum FavoriteTargetType {PRODUCT_MODEL, AI_DESIGN
     }
 }

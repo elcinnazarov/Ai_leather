@@ -1,4 +1,4 @@
-package com.aiatelye.leather.dao.enitity;
+package com.aiatelye.leather.dao;
 import jakarta.persistence.*;
 import lombok.Data;
 

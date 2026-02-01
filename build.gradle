@@ -48,6 +48,12 @@ dependencies {
     runtimeOnly 'org.postgresql:postgresql'
 
 
+    implementation 'io.minio:minio:8.6.0'
+
+    //mapstruct
+    implementation "org.mapstruct:mapstruct:${mapstructVersion}"//3 annotasiya-->Mapstruct ile islemek ucun
+    annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
 }
 
 tasks.named('test') {

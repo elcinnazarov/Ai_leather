@@ -1,4 +1,4 @@
-package com.aiatelye.leather.dao.enitity;
+package com.aiatelye.leather.dao;
 import com.aiatelye.leather.enums.Enums;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -16,13 +16,13 @@ public class Favorite {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "target_type", nullable = false)
+    @Column(name = "favorite_model_type", nullable = false)
     private Enums.FavoriteTargetType targetType;
 
-    @Column(name = "target_id", nullable = false)
+    @Column(name = "favorite_model_id", nullable = false)
     private Long productModelId;
 
-    @Column(name = "target_name")
+    @Column(name = "favorite_model_name")
     private String targetName; // snapshot (opsional)
 
     @Column(name = "created_at", nullable = false)
@@ -31,5 +31,9 @@ public class Favorite {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_model_id")
+    private ProductModel productModel;
 
 }

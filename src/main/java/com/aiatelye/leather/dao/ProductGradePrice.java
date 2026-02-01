@@ -1,4 +1,4 @@
-package com.aiatelye.leather.dao.enitity;
+package com.aiatelye.leather.dao;
 
 
 import com.aiatelye.leather.enums.Enums;
