@@ -1,5 +1,8 @@
-package com.aiatelye.leather.error;
+package com.aiatelye.leather.error.model;
 
+import lombok.Getter;
+
+@Getter
 public class ApiException extends RuntimeException {
     private final int statusCode;
 
@@ -9,7 +12,4 @@ public class ApiException extends RuntimeException {
         this.statusCode = statusCode;
     }
 
-    public int getStatusCode() {
-        return statusCode;
-    }
 }

@@ -27,11 +27,14 @@ server:
 logging:
   level:
     root: info
+
 servlet:
   multipart:
     enabled: true
-    max-file-size: 10MB        # Maksimum fayl ölçüsü
-    max-request-size: 10MB
+    max-file-size: 6MB        # Maksimum fayl ölçüsü
+    max-request-size: 30MB
+
+
 minio:
   url: ${MINIO_URL}
   access-key: ${MINIO_ADMIN}
@@ -40,3 +43,7 @@ minio:
   image:
     allowed-extensions: jpg,jpeg,png,webp
     max-size-mb: 5
+  folders:
+    product: products
+    leather: leather-textures
+    ai: ai-renders

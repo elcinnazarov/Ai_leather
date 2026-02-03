@@ -14,4 +14,9 @@ public class Enums {
     public enum OrderType {READY_PRODUCT, AI_CUSTOM_DESIGN }
     public enum FavoriteTargetType {PRODUCT_MODEL, AI_DESIGN
     }
+    public enum MinioFolderType {
+        PRODUCT,
+        LEATHER,
+        AI
+    }
 }

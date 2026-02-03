@@ -1,4 +1,4 @@
-package com.aiatelye.leather.error;
+package com.aiatelye.leather.error.model;
 
 
 import lombok.AllArgsConstructor;
