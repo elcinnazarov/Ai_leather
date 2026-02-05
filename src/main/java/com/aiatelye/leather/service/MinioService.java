@@ -2,10 +2,7 @@ package com.aiatelye.leather.service;
 
 
 import com.aiatelye.leather.enums.Enums;
-import com.aiatelye.leather.error.Exception.FileEmptyException;
-import com.aiatelye.leather.error.Exception.FileInvalidTypeException;
-import com.aiatelye.leather.error.Exception.FileTooLargeException;
-import com.aiatelye.leather.error.Exception.MinioCreatFaildException;
+import com.aiatelye.leather.error.Exception.*;
 import io.minio.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -120,7 +117,7 @@ public class MinioService {
                             .build()
             );
         } catch (Exception e) {
-            throw new RuntimeException("Failed to delete image", e);
+            throw new MinioDeleteException("Failed to delete image");
         }
     }
 

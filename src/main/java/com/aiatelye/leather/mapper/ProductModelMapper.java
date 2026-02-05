@@ -3,9 +3,9 @@ package com.aiatelye.leather.mapper;
 
 import com.aiatelye.leather.dao.ProductImage;
 import com.aiatelye.leather.dao.ProductModel;
-import com.aiatelye.leather.dto.CreateProductModelRequest;
-import com.aiatelye.leather.dto.ProductImageResponse;
-import com.aiatelye.leather.dto.ProductModelResponse;
+import com.aiatelye.leather.dto.RequestCreateProductModel;
+import com.aiatelye.leather.dto.ResponseProductImage;
+import com.aiatelye.leather.dto.ResponseProductModel;
 import com.aiatelye.leather.dto.UpdateProductModelRequest;
 import org.mapstruct.*;
 
@@ -17,14 +17,14 @@ public interface ProductModelMapper {
     @Mapping(target = "images", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
-    ProductModel toProductModelEntity(CreateProductModelRequest request);
+    ProductModel toProductModelEntity(RequestCreateProductModel request);
 
     @Mapping(target = "primaryImageUrl",
             expression = "java(getPrimaryImageUrl(entity))")
-    ProductModelResponse toProductModelResponse(ProductModel entity);
+    ResponseProductModel toProductModelResponse(ProductModel entity);
 
 
-    ProductImageResponse toProductImageResponse(ProductImage image);
+    ResponseProductImage toProductImageResponse(ProductImage image);
 
     default String getPrimaryImageUrl(ProductModel entity) {
         return entity.getImages().stream()

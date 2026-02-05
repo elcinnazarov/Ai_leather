@@ -1,12 +1,11 @@
 package com.aiatelye.leather.service.admin;
 import com.aiatelye.leather.dao.ProductImage;
 import com.aiatelye.leather.dao.ProductModel;
-import com.aiatelye.leather.dto.CreateProductModelRequest;
-import com.aiatelye.leather.dto.ProductModelResponse;
-import com.aiatelye.leather.dto.UpdateProductModelRequest;
+import com.aiatelye.leather.dto.*;
 import com.aiatelye.leather.enums.Enums;
 import com.aiatelye.leather.error.Exception.*;
 import com.aiatelye.leather.mapper.ProductModelMapper;
+import com.aiatelye.leather.repository.LeatherRepository;
 import com.aiatelye.leather.repository.ProductImageRepository;
 import com.aiatelye.leather.repository.ProductModelRepository;
 import com.aiatelye.leather.service.MinioService;
@@ -26,11 +25,12 @@ public class AdminServiceImpl {
     private final ProductImageRepository productImageRepository;
     private final MinioService minioService;
     private final ProductModelMapper productMapper;
+    private final LeatherRepository leatherRepository;
 
 
     @Transactional
-    public ProductModelResponse createProductModel(
-            CreateProductModelRequest request,
+    public ResponseProductModel createProductModel(
+            RequestCreateProductModel request,
             List<MultipartFile> images
     ) {
         log.info("Creating product: {}", request.getModelName());
@@ -43,7 +43,7 @@ public class AdminServiceImpl {
         }
 
         if (images == null || images.isEmpty()) {
-            throw new BadRequestException ("At least one image required");
+            throw new BadRequestException("At least one image required");
         }
 
         // MinIO bucket check
@@ -71,7 +71,7 @@ public class AdminServiceImpl {
     }
 
     @Transactional
-    public ProductModelResponse addProductImages(Long productId, List<MultipartFile> images) {
+    public ResponseProductModel addProductImages(Long productId, List<MultipartFile> images) {
         ProductModel product = productModelRepository.findById(productId)
                 .orElseThrow(() -> new BadRequestException("Product not found"));
 
@@ -80,7 +80,7 @@ public class AdminServiceImpl {
         try {
             for (MultipartFile image : images) {
 
-                if (currentOrder>=6) throw  new MultiFileLimitException("Only 6 images allowed");
+                if (currentOrder >= 6) throw new MultiFileLimitException("Only 6 images allowed");
 
                 String imageUrl = minioService.uploadImage(image, Enums.MinioFolderType.PRODUCT);
 
@@ -96,8 +96,7 @@ public class AdminServiceImpl {
 
             ProductModel updated = productModelRepository.save(product);
             return productMapper.toProductModelResponse(updated);
-        }
-         catch (Exception e) {
+        } catch (Exception e) {
             throw new AddProductImagesException(" add Product iMages  error");
         }
     }
@@ -137,7 +136,7 @@ public class AdminServiceImpl {
     }
 
     @Transactional
-    public ProductModelResponse updateProductModel(Long productId, UpdateProductModelRequest request) {
+    public ResponseProductModel updateProductModel(Long productId, UpdateProductModelRequest request) {
         log.info("Updating product ID: {}", productId);
 
         ProductModel product = productModelRepository.findById(productId)
@@ -161,6 +160,45 @@ public class AdminServiceImpl {
     }
 
     @Transactional
+    public ResponseProductModel updateProductModelStatus(Long productId, Enums.AvailabilityStatus newStatus) {
+        log.info("Updating product ID: {} status to: {}", productId, newStatus);
+
+        ProductModel product = productModelRepository.findById(productId)
+                .orElseThrow(() -> new NotFoundException("Product not found with id: " + productId));
+
+        Enums.AvailabilityStatus currentStatus = product.getAvailabilityStatus();
+
+        // 1. Zəncirvari Validasiya: Aktivlik yoxlaması
+        if (Boolean.FALSE.equals(product.getIsActive()) && newStatus != Enums.AvailabilityStatus.ACTIVE) {
+            throw new ResourcePassiveException("Resource is in passive state (isActive=false). " +
+                    "Access denied for any update except activation.");
+        }
+
+        // 2. Enum daxilindəki keçid yoxlaması
+        if (product.getAvailabilityStatus().canTransitionTo(newStatus)) {
+            throw new InvalidStateTransitionException("Illegal move from [currentStatus] to [newStatus]." +
+                    " Business rules violated");
+
+        }
+
+        // 3. Status və isActive sinxronlaşdırılması
+        product.setAvailabilityStatus(newStatus);
+        Boolean nextIsActive = newStatus.getAssociatedIsActive();
+        if (nextIsActive != null) {
+            product.setIsActive(nextIsActive);
+        }
+        ProductModel updated = productModelRepository.save(product);
+
+        // Cache invalidate--this will be using  future
+        //cacheService.evictProductCache(productId);
+
+        log.info("Product ID: {} status changed from {} to {}", productId, currentStatus, newStatus);
+
+        return productMapper.toProductModelResponse(updated);
+
+    }
+
+    @Transactional
     public void deleteProductModel(Long productId) {
         log.info("Soft deleting product ID: {}", productId);
 
@@ -175,72 +213,11 @@ public class AdminServiceImpl {
         product.setAvailabilityStatus(Enums.AvailabilityStatus.ARCHIVED);
 
         productModelRepository.save(product);
-
-        log.info("Product ID: {} soft deleted successfully", productId);
-    }
-
-
-    public  ProductModelResponse updateProductModelStatus(Long productId,
-                                                           Enums.AvailabilityStatus newStatus) {
-
-        log.info("Updating product ID: {} status to: {}", productId, newStatus);
-
-        ProductModel product = productModelRepository.findById(productId)
-                .orElseThrow(() -> new NotFoundException("Product not found with id: " + productId));
-
-        Enums.AvailabilityStatus currentStatus = product.getAvailabilityStatus();
-
-        // Status transition validate
-        validateStatusTransition(currentStatus, newStatus);
-
-        // Status update
-        product.setAvailabilityStatus(newStatus);
-
-        // Əgər ARCHIVED edilirsə, isActive də false et
-        if (newStatus == Enums.AvailabilityStatus.ARCHIVED) {
-            product.setIsActive(false);
-        }
-
-        // Əgər ACTIVE edilirsə, isActive true et (əgər əvvəl false idisə)
-        if (newStatus == Enums.AvailabilityStatus.ACTIVE) {
-            product.setIsActive(true);
-        }
-
-        ProductModel updated = productModelRepository.save(product);
-
-        // Cache invalidate
-        // cacheService.evictProductCache(productId);
-
-        log.info("Product ID: {} status changed from {} to {}", productId, currentStatus, newStatus);
-
-        return productMapper.toProductModelResponse(updated);
-    }
-
-    private void validateStatusTransition(Enums.AvailabilityStatus current, Enums.AvailabilityStatus next) {
-
-
-        if (current == next) {
-            throw new InvalidStateTransitionException("New status must be different from current status");
-        }
-
-        boolean validTransition = switch (current) {
-            case DRAFT -> next == Enums.AvailabilityStatus.ACTIVE || next == Enums.AvailabilityStatus.ARCHIVED;
-            case ACTIVE -> next == Enums.AvailabilityStatus.ARCHIVED;
-            case ARCHIVED -> next == Enums.AvailabilityStatus.ACTIVE || next == Enums.AvailabilityStatus.DRAFT;
-            default -> false;
-        };
-
-        if (!validTransition) {
-            throw new InvalidStateTransitionException(
-                    String.format("Invalid status transition from %s to %s", current, next)
-            );
-        }
+        log.info("Leather status updated. ID: {}, New Status: {}", productId, product.getAvailabilityStatus());
 
     }
 
-
-
-}
+    }
 
 
 

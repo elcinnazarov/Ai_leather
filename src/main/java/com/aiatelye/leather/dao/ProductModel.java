@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ public class ProductModel {
 
     @Column(name = "is_active", nullable = false)
     @Builder.Default
-    private Boolean isActive = true;
+    private Boolean isActive = false;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "availability_status", nullable = false)
@@ -44,6 +45,7 @@ public class ProductModel {
     private Enums.AvailabilityStatus availabilityStatus = Enums.AvailabilityStatus.DRAFT;
 
     @Column(name = "created_at",nullable = false, updatable = false)
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")

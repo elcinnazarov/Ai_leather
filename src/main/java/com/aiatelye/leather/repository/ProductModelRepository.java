@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
     @Repository
     public interface ProductModelRepository extends JpaRepository<ProductModel,Long> {
 
-
         boolean existsByModelnameIgnoreCaseAndIsActiveTrue(String modelname);
         boolean existsByModelnameIgnoreCaseAndIsActiveTrueAndIdNot(String modelName, Long id);
 

@@ -23,6 +23,4 @@ public class UpdateProductModelRequest {
 
     private String dimensions;
 
-    @NotNull(message = "Availability status is required")
-    private Enums.AvailabilityStatus availabilityStatus;
 }

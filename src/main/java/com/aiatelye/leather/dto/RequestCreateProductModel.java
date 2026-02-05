@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class CreateProductModelRequest {
+public class RequestCreateProductModel {
     @NotBlank(message = "Model name is required")
     @Size(min = 3, max = 100)
     private String modelName;
@@ -18,6 +18,7 @@ public class CreateProductModelRequest {
     @NotNull(message = "Model type is required")
     private Enums.ModelType modelType;
 
+    @NotNull(message = "description is  not be  null")
     @Size(max = 2000)
     private String description;
 

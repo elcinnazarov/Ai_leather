@@ -39,6 +39,4 @@ public class LeatherGrade {
     @OneToMany(mappedBy = "grade", cascade = CascadeType.ALL)
     private List<ProductGradePrice> productPrices;
 
-
-
 }

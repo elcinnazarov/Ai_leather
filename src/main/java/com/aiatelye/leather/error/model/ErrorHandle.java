@@ -135,7 +135,7 @@ public class ErrorHandle extends ResponseEntityExceptionHandler {
 
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<ErrorResponse> PrimaryImageException(NotFoundException exception,
+    public ResponseEntity<ErrorResponse> NotFoundException(NotFoundException exception,
                                                                Locale locale) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(),
@@ -143,13 +143,52 @@ public class ErrorHandle extends ResponseEntityExceptionHandler {
 
     }
     @ExceptionHandler(InvalidStateTransitionException.class)
-    public ResponseEntity<ErrorResponse> PrimaryImageException(InvalidStateTransitionException exception,
+    public ResponseEntity<ErrorResponse> InvalidStateTransitionException(InvalidStateTransitionException exception,
+                                                               Locale locale) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                        messageSource.getMessage("It is not possible to change the product status from" +
+                                " the current status to the status you selected directly. " +
+                                "Please follow the sequence.", null, locale)));
+
+
+
+    }
+
+    @ExceptionHandler(MinioDeleteException.class)
+    public ResponseEntity<ErrorResponse> MinioDeleteException(MinioDeleteException exception,
                                                                Locale locale) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(),
                         messageSource.getMessage(exception.getMessage(), null, locale)));
 
     }
+
+    @ExceptionHandler(ImageFileRequired.class)
+    public ResponseEntity<ErrorResponse> ImageFileRequired(ImageFileRequired exception,
+                                                               Locale locale) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse(HttpStatus.BAD_REQUEST.value(),
+                        messageSource.getMessage("Image file is required", null,locale)));
+
+    }
+
+
+    @ExceptionHandler(ResourcePassiveException.class)
+    public ResponseEntity<ErrorResponse> ResourcePassiveException(ResourcePassiveException exception,
+                                                               Locale locale) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse(HttpStatus.BAD_REQUEST.value(),
+                        messageSource.getMessage("""
+  Dear user, the product (or service) you selected is currently not active or has been deleted.
+   This cannot be undone. For support: [number]""", null,locale)));
+
+    }
+
+
+
+
+
 
 
 
