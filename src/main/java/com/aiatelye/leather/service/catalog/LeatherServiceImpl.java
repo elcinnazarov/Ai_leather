@@ -1,9 +1,8 @@
 package com.aiatelye.leather.service.catalog;
 import com.aiatelye.leather.dao.Leather;
 import com.aiatelye.leather.dao.LeatherGrade;
-import com.aiatelye.leather.dao.ProductModel;
-import com.aiatelye.leather.dto.RequestCreatLeather;
-import com.aiatelye.leather.dto.ResponseLeather;
+import com.aiatelye.leather.dto.CreatLeatherRequest;
+import com.aiatelye.leather.dto.LeatherResponse;
 import com.aiatelye.leather.dto.UpdateLeatherRequest;
 import com.aiatelye.leather.enums.Enums;
 import com.aiatelye.leather.error.Exception.*;
@@ -25,17 +24,14 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 @Slf4j
 public class LeatherServiceImpl implements LeatherService {
-    private final ProductModelRepository productModelRepository;
-    private final ProductImageRepository productImageRepository;
     private final LeatherMapper leatherMapper;
     private final MinioService minioService;
-    private final ProductModelMapper productMapper;
     private final LeatherRepository leatherRepository;
 
 
     @Override
     @Transactional
-    public ResponseLeather createLeather(RequestCreatLeather request, MultipartFile image) {
+    public LeatherResponse createLeather(CreatLeatherRequest request, MultipartFile image) {
         log.info("Creating leather: {}", request.getLeatherName());
 
         if (leatherRepository.existsByLeathernameIgnoreCaseAndIsActiveTrue(request.getLeatherName())) {
@@ -92,7 +88,7 @@ public class LeatherServiceImpl implements LeatherService {
     }
 
     @Transactional
-    public ResponseLeather updateLeatherImage(Long leatherId, MultipartFile newImage) {
+    public LeatherResponse updateLeatherImage(Long leatherId, MultipartFile newImage) {
 
         if (newImage == null || newImage.isEmpty()) {
             throw new ImageFileRequired("Image file is required");
@@ -130,7 +126,7 @@ public class LeatherServiceImpl implements LeatherService {
     }
 
     @Transactional
-    public ResponseLeather updateLeather(Long leatherId, UpdateLeatherRequest request) {
+    public LeatherResponse updateLeather(Long leatherId, UpdateLeatherRequest request) {
         log.info("Updating leather ID: {} with data: {}", leatherId, request);
 
         // 1. Leather tap
@@ -161,7 +157,7 @@ public class LeatherServiceImpl implements LeatherService {
 
     }
 
-    public ResponseLeather updateLeatherStatus(Long leatherId, Enums.AvailabilityStatus newstatus) {
+    public LeatherResponse updateLeatherStatus(Long leatherId, Enums.AvailabilityStatus newstatus) {
         log.info("Updating product ID: {} status to: {}", leatherId, newstatus);
 
         Leather leather = leatherRepository.findById(leatherId)

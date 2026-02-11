@@ -29,8 +29,8 @@ public class AdminServiceImpl {
 
 
     @Transactional
-    public ResponseProductModel createProductModel(
-            RequestCreateProductModel request,
+    public ProductModelResponse createProductModel(
+            CreateProductModelRequest request,
             List<MultipartFile> images
     ) {
         log.info("Creating product: {}", request.getModelName());
@@ -71,7 +71,7 @@ public class AdminServiceImpl {
     }
 
     @Transactional
-    public ResponseProductModel addProductImages(Long productId, List<MultipartFile> images) {
+    public ProductModelResponse addProductImages(Long productId, List<MultipartFile> images) {
         ProductModel product = productModelRepository.findById(productId)
                 .orElseThrow(() -> new BadRequestException("Product not found"));
 
@@ -136,7 +136,7 @@ public class AdminServiceImpl {
     }
 
     @Transactional
-    public ResponseProductModel updateProductModel(Long productId, UpdateProductModelRequest request) {
+    public ProductModelResponse updateProductModel(Long productId, UpdateProductModelRequest request) {
         log.info("Updating product ID: {}", productId);
 
         ProductModel product = productModelRepository.findById(productId)
@@ -160,7 +160,7 @@ public class AdminServiceImpl {
     }
 
     @Transactional
-    public ResponseProductModel updateProductModelStatus(Long productId, Enums.AvailabilityStatus newStatus) {
+    public ProductModelResponse updateProductModelStatus(Long productId, Enums.AvailabilityStatus newStatus) {
         log.info("Updating product ID: {} status to: {}", productId, newStatus);
 
         ProductModel product = productModelRepository.findById(productId)
@@ -217,7 +217,8 @@ public class AdminServiceImpl {
 
     }
 
-    }
+
+}
 
 
 

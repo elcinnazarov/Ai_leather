@@ -3,6 +3,7 @@ package com.aiatelye.leather.dao;
 
 import com.aiatelye.leather.enums.Enums;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -22,7 +23,13 @@ public class ProductGradePrice {
     private BigDecimal price;
 
     @Enumerated(EnumType.STRING)
-    private Enums.Currency currency;// AZN, USD, EUR
+    private Enums.Currency currency= Enums.Currency.AZN;
+
+    @Column(name = "manual_usd")
+    private BigDecimal manualUsd;
+
+    @Column(name = "manual_eur")
+    private BigDecimal manualEur;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -37,5 +44,16 @@ public class ProductGradePrice {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "grade_id", nullable = false)
     private LeatherGrade grade;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 
 }

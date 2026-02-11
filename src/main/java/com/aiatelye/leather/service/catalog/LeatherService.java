@@ -1,10 +1,10 @@
 package com.aiatelye.leather.service.catalog;
 
-import com.aiatelye.leather.dto.RequestCreatLeather;
-import com.aiatelye.leather.dto.ResponseLeather;
+import com.aiatelye.leather.dto.CreatLeatherRequest;
+import com.aiatelye.leather.dto.LeatherResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface LeatherService {
 
-   ResponseLeather createLeather(RequestCreatLeather request, MultipartFile image);
+   LeatherResponse createLeather(CreatLeatherRequest request, MultipartFile image);
 }

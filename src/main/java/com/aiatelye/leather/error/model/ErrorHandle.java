@@ -185,8 +185,38 @@ public class ErrorHandle extends ResponseEntityExceptionHandler {
 
     }
 
+    @ExceptionHandler(PricingRuleAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> PricingRuleAlreadyExistsException(PricingRuleAlreadyExistsException exception,
+                                                                  Locale locale) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse(HttpStatus.BAD_REQUEST.value(),
+                        messageSource.getMessage("""
+  Pricing rule already exists for currency""", null,locale)));
+
+    }
+
+    @ExceptionHandler(BaseCurrencyUpdateException.class)
+    public ResponseEntity<ErrorResponse> BaseCurrencyUpdateException(BaseCurrencyUpdateException exception,
+                                                                           Locale locale) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse(HttpStatus.BAD_REQUEST.value(),
+                        messageSource.getMessage("""
+  Cannot update pricing rule for base currency (AZN)""", null,locale)));
+
+    }
 
 
+    @ExceptionHandler(BaseProductGradePriceNotFoundException.class)
+    public ResponseEntity<ErrorResponse> BaseCurrencyUpdateException(BaseProductGradePriceNotFoundException exception,
+                                                                     Locale locale) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse(HttpStatus.BAD_REQUEST.value(),
+                        messageSource.getMessage("""
+  CPrice configuration error: The base price (AZN) for this item has not been set yet. 
+  Please define the AZN price first to enable USD/EUR calculations or manual overrides""",
+                                null,locale)));
+
+    }
 
 
 

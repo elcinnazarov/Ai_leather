@@ -1,6 +1,24 @@
 version: '3.8'
 
 services:
+  redis:
+    image: redis:7-alpine
+    env_file:
+      - docker.env
+    container_name: ecommerce-redis
+    command: redis-server --requirepass projectleather --appendonly yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "-a", "projectleather", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - ecommerce-network
+
   minio:
     image: minio/minio:latest
     container_name: ecommerce-object-storage
@@ -25,7 +43,10 @@ services:
 volumes:
   minio_data:
     driver: local
+  redis-data:
+    driver: local
 
 networks:
   ecommerce-network:
     driver: bridge
+

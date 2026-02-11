@@ -9,7 +9,7 @@ import lombok.Data;
 @Data
 @Builder
 @AllArgsConstructor
-public class ResponseLeather {
+public class LeatherResponse {
 
     private Long id;
     private String leatherName;

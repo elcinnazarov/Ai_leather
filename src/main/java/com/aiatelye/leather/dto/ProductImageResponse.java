@@ -3,7 +3,7 @@ package com.aiatelye.leather.dto;
 import lombok.Data;
 
 @Data
-public class ResponseProductImage {
+public class ProductImageResponse {
     private Long id;
     private String imageUrl;
     private Integer imageOrder;

@@ -11,12 +11,12 @@ import java.util.List;
 @Data
 @Builder
 @AllArgsConstructor
-public class ResponseProductModel {
+public class ProductModelResponse {
     private Long id;
     private String modelName;
     private Enums.ModelType modelType;
     private String primaryImageUrl;
-    private List<ResponseProductImage> images;
+    private List<ProductImageResponse> images;
     private String description;
     private String dimensions;
     private Enums.AvailabilityStatus availabilityStatus;

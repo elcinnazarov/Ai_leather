@@ -47,3 +47,16 @@ minio:
     product: products
     leather: leather-textures
     ai: ai-renders
+
+data:
+ redis:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
+    password: ${REDIS_PASSWORD}
+    timeout: 6000ms
+cache:
+  redis:
+    account:
+     ttl: 120
+    price:
+      ttl: 30

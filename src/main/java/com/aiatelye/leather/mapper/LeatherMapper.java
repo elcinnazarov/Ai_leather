@@ -2,8 +2,8 @@ package com.aiatelye.leather.mapper;
 
 
 import com.aiatelye.leather.dao.Leather;
-import com.aiatelye.leather.dto.RequestCreatLeather;
-import com.aiatelye.leather.dto.ResponseLeather;
+import com.aiatelye.leather.dto.CreatLeatherRequest;
+import com.aiatelye.leather.dto.LeatherResponse;
 import com.aiatelye.leather.dto.UpdateLeatherRequest;
 import org.mapstruct.*;
 
@@ -18,12 +18,12 @@ public interface LeatherMapper {
     @Mapping(target = "updateAt", ignore = true)
     @Mapping(target = "leatherName", source = "leatherName")
     @Mapping(target = "grade", ignore = true)
-    Leather toLeatherEntity(RequestCreatLeather request);
+    Leather toLeatherEntity(CreatLeatherRequest request);
 
     @Mapping(source = "leathername", target = "leatherName")
     @Mapping(source = "imageUrl", target = "textureImageUrl")
     @Mapping(source = "grade.gradename", target = "gradeType")
-    ResponseLeather toLeatherResponse(Leather entity);
+    LeatherResponse toLeatherResponse(Leather entity);
 
      //Update üçün - PARTIAL (null olanları ignore et)
      @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
