@@ -11,6 +11,7 @@ import com.aiatelye.leather.mapper.ManualPriceMapper;
 import com.aiatelye.leather.repository.PricingRuleRepository;
 import com.aiatelye.leather.repository.ProductGradePriceRepository;
 import com.aiatelye.leather.repository.ProductModelRepository;
+import com.aiatelye.leather.cache.PriceCacheRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,8 @@ public class ManualPriceService {
     private final PricingRuleRepository pricingRuleRepository;
     private final ManualPriceMapper manualPriceMapper;
     private final CalculatePriceService calculatePriceService;
+    private  final PriceCacheRepository priceCacheRepository;
+
 
     @Transactional
     public ListManuelPricesResponse createManualPrices(Long productModelId, ListCreateManualPricesRequest request) {
@@ -69,8 +72,27 @@ public class ManualPriceService {
                 // Manual qiyməti set edirik
                 if (priceRequest.getCurrency() == Enums.Currency.USD) {
                     price.setManualUsd(priceRequest.getManualPrice());
-                } else {
+
+                    priceCacheRepository.savaPrice(
+                            productModelId,
+                            priceRequest.getGradeId(),
+                            Enums.Currency.USD.name(),
+                            priceRequest.getManualPrice());
+
+                    log.info("Manual USD price cached for Product: {} | Grade: {} | Amount: {}",
+                            productModelId, priceRequest.getGradeId(), priceRequest.getManualPrice());
+                }
+                else {
                     price.setManualEur(priceRequest.getManualPrice());
+
+                    priceCacheRepository.savaPrice(
+                            productModelId,
+                            priceRequest.getGradeId(),
+                            Enums.Currency.EUR.name(),
+                            priceRequest.getManualPrice());
+
+                    log.info("Manual EUR price cached for Product: {} | Grade: {} | Amount: {}",
+                            productModelId, priceRequest.getGradeId(), priceRequest.getManualPrice());
                 }
 
                 pricesToUpdate.add(price);
@@ -78,6 +100,7 @@ public class ManualPriceService {
                 successList.add(manualPriceMapper.toResponse(
                         price, priceRequest.getCurrency(), priceRequest.getManualPrice(), autoCalculated
                 ));
+
 
             } catch (Exception e) {
                 errors.add("Grade " + priceRequest.getGradeId() + ": " + e.getMessage());
@@ -121,9 +144,7 @@ public class ManualPriceService {
                 PricingRule usdRule = rulesMap.get(Enums.Currency.USD);
                 BigDecimal autoUsd = calculatePriceService.calculateAutoPrice(price.getPrice(), usdRule);
 
-                responses.add(manualPriceMapper.toResponse(
-                        price, Enums.Currency.USD, price.getManualUsd(), autoUsd
-                ));
+
             }
 
             // EUR üçün: Bazaya getmək yerinə Map-dən (RAM) götürürük
@@ -135,6 +156,7 @@ public class ManualPriceService {
                         price, Enums.Currency.EUR, price.getManualEur(), autoEur
                 ));
             }
+
         }
 
         return ListManuelPricesResponse.builder()
@@ -145,6 +167,7 @@ public class ManualPriceService {
                 .successCount(responses.size())
                 .errors(Collections.emptyList()) // New ArrayList yerinə daha performanslı Collections.emptyList()
                 .build();
+
     }
 
 
@@ -182,10 +205,20 @@ public class ManualPriceService {
                 // Manual qiyməti set edirik
                 if (priceRequest.getCurrency() == Enums.Currency.USD) {
                     price.setManualUsd(priceRequest.getManualPrice());
+
+                    priceCacheRepository.deletePrice(productModelId,
+                            priceRequest.getGradeId(),
+                            Enums.Currency.USD.name());
+                    log.info("delete Cache  old ManuelPrice USD prodcutmodel ID {} grade id {}",
+                            productModelId,priceRequest.getGradeId() );
                 } else {
                     price.setManualEur(priceRequest.getManualPrice());
-                }
 
+                    priceCacheRepository.deletePrice(productModelId,
+                            priceRequest.getGradeId(),
+                            Enums.Currency.EUR.name());
+                } log.info("delete Cache  old ManuelPrice EUR productmodel ID {} grade id {}",
+                        productModelId,priceRequest.getGradeId() );
 
                 ProductGradePrice saved = productGradePriceRepository.save(price);
 
@@ -209,9 +242,16 @@ public class ManualPriceService {
                 log.error("Error processing price for grade {}: {}", priceRequest.getGradeId(), e.getMessage());
                 errors.add("Grade " + priceRequest.getGradeId() + ": " + e.getMessage());
             }
+
+
         }
 
-        return buildBatchResponse(productModelId, product.getModelname(), successList, errors, request.getManualPrices().size());
+
+        return buildBatchResponse(
+                productModelId,
+                product.getModelname(),
+                successList, errors,
+                request.getManualPrices().size());
     }
 
 
@@ -252,6 +292,11 @@ public class ManualPriceService {
         for (DeleteManualPriceRequest req : request.getManualPrices()) {
             try {
                 processSingleDelete(req, priceMap, rulesMap, deletedList, toUpdate);
+
+                priceCacheRepository.invalidateManuelPrices(productModelId,req.getGradeId());
+                log.info("delete Cache  old ManuelPrice USD and EUR at deleteManualPrices  prodcutmodel ID {} grade id {}",
+                        productModelId,req.getGradeId() );
+
             } catch (Exception e) {
                 errors.add("Grade " + req.getGradeId() + ": " + e.getMessage());
             }

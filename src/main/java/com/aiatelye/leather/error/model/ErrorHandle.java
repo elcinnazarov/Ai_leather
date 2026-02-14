@@ -1,8 +1,10 @@
 package com.aiatelye.leather.error.model;
 
+import com.aiatelye.leather.enums.Enums;
 import com.aiatelye.leather.error.Exception.*;
 import io.micrometer.common.lang.NonNull;
 import org.springframework.context.MessageSource;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -212,15 +214,43 @@ public class ErrorHandle extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorResponse(HttpStatus.BAD_REQUEST.value(),
                         messageSource.getMessage("""
-  CPrice configuration error: The base price (AZN) for this item has not been set yet. 
+  C Price configuration error: The base price (AZN) for this item has not been set yet. 
   Please define the AZN price first to enable USD/EUR calculations or manual overrides""",
+                                null,locale)));
+
+    }
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorResponse> BaseCurrencyUpdateException(DataIntegrityViolationException exception,
+                                                                     Locale locale) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(new ErrorResponse(HttpStatus.CONFLICT.value(),
+                        messageSource.getMessage("""
+  This product combination is already available in your order.""",
                                 null,locale)));
 
     }
 
 
+    @ExceptionHandler(OrderSpesificationException.class)
+    public ResponseEntity<ErrorResponse> BaseCurrencyUpdateException(OrderSpesificationException exception,
+                                                                     Locale locale) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                        messageSource.getMessage("""
+                               We are unable to load the order list at the moment. 
+                                Please refresh the page or contact support if the issue persists.
+                                """,null,locale)));
+    }
 
 
+
+    @ExceptionHandler(InvalidOrderStatusTransitionException.class)
+    public ResponseEntity<ErrorResponse> InvalidOrderStatusTransitionException(InvalidStateTransitionException exception,
+                                                                     Locale locale) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse(HttpStatus.BAD_REQUEST.value(),
+                        messageSource.getMessage(exception.getMessage(), null,locale)));
+    }
 
     //coming Error for Handle from Validation
     @Override

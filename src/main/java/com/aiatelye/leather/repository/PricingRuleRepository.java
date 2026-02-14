@@ -4,6 +4,7 @@ import com.aiatelye.leather.dao.PricingRule;
 
 import com.aiatelye.leather.enums.Enums;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,4 +19,7 @@ public interface PricingRuleRepository extends JpaRepository<PricingRule, Long> 
     List<PricingRule> findAllByIsActiveTrue();
 
     Optional<PricingRule> findByTargetCurrencyAndIsActiveTrue(Enums.Currency currency);
+
+    @Query("SELECT r FROM PricingRule r WHERE r.isActive = true")
+    List<PricingRule> findAllActive();
 }

@@ -3,7 +3,6 @@ package com.aiatelye.leather.controller;
 import com.aiatelye.leather.dto.*;
 import com.aiatelye.leather.enums.Enums;
 import com.aiatelye.leather.service.admin.AdminServiceImpl;
-import com.aiatelye.leather.service.catalog.LeatherServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 @RequestMapping("/api/admin")
-public class AdminController {
+public class AdminProductsController {
 
     private final AdminServiceImpl adminService;
 

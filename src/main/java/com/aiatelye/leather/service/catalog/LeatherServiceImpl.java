@@ -7,11 +7,8 @@ import com.aiatelye.leather.dto.UpdateLeatherRequest;
 import com.aiatelye.leather.enums.Enums;
 import com.aiatelye.leather.error.Exception.*;
 import com.aiatelye.leather.mapper.LeatherMapper;
-import com.aiatelye.leather.mapper.ProductModelMapper;
 import com.aiatelye.leather.repository.LeatherRepository;
-import com.aiatelye.leather.repository.ProductImageRepository;
-import com.aiatelye.leather.repository.ProductModelRepository;
-import com.aiatelye.leather.service.MinioService;
+import com.aiatelye.leather.service.Minio.MinioService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -157,42 +154,42 @@ public class LeatherServiceImpl implements LeatherService {
 
     }
 
-    public LeatherResponse updateLeatherStatus(Long leatherId, Enums.AvailabilityStatus newstatus) {
-        log.info("Updating product ID: {} status to: {}", leatherId, newstatus);
+        public LeatherResponse updateLeatherStatus(Long leatherId, Enums.AvailabilityStatus newstatus) {
+            log.info("Updating product ID: {} status to: {}", leatherId, newstatus);
 
-        Leather leather = leatherRepository.findById(leatherId)
-                .orElseThrow(() -> new NotFoundException("Product not found with id: " + leatherId));
+            Leather leather = leatherRepository.findById(leatherId)
+                    .orElseThrow(() -> new NotFoundException("Product not found with id: " + leatherId));
 
-        Enums.AvailabilityStatus  currentStatus = leather.getAvailabilityStatus();
+            Enums.AvailabilityStatus  currentStatus = leather.getAvailabilityStatus();
 
-        // 1. Zəncirvari Validasiya: Aktivlik yoxlaması
-        if (Boolean.FALSE.equals(leather.getIsActive()) && newstatus != Enums.AvailabilityStatus.ACTIVE) {
-            throw new ResourcePassiveException("Resource is in passive state (isActive=false). " +
-                    "Access denied for any update except activation.");
+            // 1. Zəncirvari Validasiya: Aktivlik yoxlaması
+            if (Boolean.FALSE.equals(leather.getIsActive()) && newstatus != Enums.AvailabilityStatus.ACTIVE) {
+                throw new ResourcePassiveException("Resource is in passive state (isActive=false). " +
+                        "Access denied for any update except activation.");
+            }
+
+            // 2. Enum daxilindəki keçid yoxlaması
+            if (leather.getAvailabilityStatus().canTransitionTo(newstatus)) {
+                throw new InvalidStateTransitionException("Illegal move from [currentStatus] to [newStatus]." +
+                        " Business rules violated");
+
+            }
+
+            // 3. Status və isActive sinxronlaşdırılması
+            leather.setAvailabilityStatus(newstatus);
+            Boolean nextIsActive = newstatus.getAssociatedIsActive();
+            if (nextIsActive != null) {
+                leather.setIsActive(nextIsActive);
+            }
+            Leather updated = leatherRepository.save(leather);
+
+            // Cache invalidate--this will be using  future
+            //cacheService.evictProductCache(productId);
+
+            log.info("Product ID: {} status changed from {} to {}", leatherId, currentStatus, newstatus);
+
+            return leatherMapper.toLeatherResponse(updated);
         }
-
-        // 2. Enum daxilindəki keçid yoxlaması
-        if (leather.getAvailabilityStatus().canTransitionTo(newstatus)) {
-            throw new InvalidStateTransitionException("Illegal move from [currentStatus] to [newStatus]." +
-                    " Business rules violated");
-
-        }
-
-        // 3. Status və isActive sinxronlaşdırılması
-        leather.setAvailabilityStatus(newstatus);
-        Boolean nextIsActive = newstatus.getAssociatedIsActive();
-        if (nextIsActive != null) {
-            leather.setIsActive(nextIsActive);
-        }
-        Leather updated = leatherRepository.save(leather);
-
-        // Cache invalidate--this will be using  future
-        //cacheService.evictProductCache(productId);
-
-        log.info("Product ID: {} status changed from {} to {}", leatherId, currentStatus, newstatus);
-
-        return leatherMapper.toLeatherResponse(updated);
-    }
 
 
     @Transactional

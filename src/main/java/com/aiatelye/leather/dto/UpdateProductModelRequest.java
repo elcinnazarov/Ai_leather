@@ -16,7 +16,7 @@ public class UpdateProductModelRequest {
     private String modelName;
 
     @NotNull(message = "Model type is required")
-    private Enums.ModelType modelType;
+    private Enums.ProductCategory modelType;
 
     @Size(max = 2000, message = "Description cannot exceed 2000 characters")
     private String description;

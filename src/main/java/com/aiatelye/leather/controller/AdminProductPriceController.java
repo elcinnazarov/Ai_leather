@@ -50,6 +50,10 @@ public class AdminProductPriceController {
         ProductPriceResponse response = productPriceService.updateProductPrice(productId, gradeId, request);
         return ResponseEntity.ok(ApiResponse.success(response));
     }
+
+
+
+
     @DeleteMapping("/{productId}/prices/{gradeId}")
     public ResponseEntity<ApiResponse<Void>> deleteProductPrice(
             @PathVariable Long productId,
@@ -62,6 +66,15 @@ public class AdminProductPriceController {
 
     }
 
+    @GetMapping("/{productId}/calculated-prices")
+    public ResponseEntity<ApiResponse<AdminCalculatedPriceResponse>> getCalculatedPrices(
+            @PathVariable Long productId) {
 
+        log.info("GET /api/admin/products/{}/calculated-prices", productId);
 
+        AdminCalculatedPriceResponse response = productPriceService.getCalculatedPrices(productId);
+        return ResponseEntity.ok(ApiResponse.success(response));
+    }
 }
+
+

@@ -27,7 +27,7 @@ public class ProductModel {
     private  String modelname;
 
     @Column(name = "model_type", nullable = false)
-    private Enums.ModelType modelType; // WALLET, BAG, BELT
+    private Enums.ProductCategory modelType; // WALLET, BAG, BELT
 
     @Column(columnDefinition = "TEXT")
     private String description;

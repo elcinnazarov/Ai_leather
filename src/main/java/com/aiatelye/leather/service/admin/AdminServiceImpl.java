@@ -8,7 +8,7 @@ import com.aiatelye.leather.mapper.ProductModelMapper;
 import com.aiatelye.leather.repository.LeatherRepository;
 import com.aiatelye.leather.repository.ProductImageRepository;
 import com.aiatelye.leather.repository.ProductModelRepository;
-import com.aiatelye.leather.service.MinioService;
+import com.aiatelye.leather.service.Minio.MinioService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

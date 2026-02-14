@@ -8,9 +8,9 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "order_items",
         uniqueConstraints = @UniqueConstraint(
-        columnNames = {"order_id", "product_model_id"}))
+        columnNames = {"order_id", "product_model_id","leather_id"}))
 @Data
-public class OrderItem {
+public class OrderItem extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

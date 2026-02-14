@@ -1,10 +1,8 @@
-package com.aiatelye.leather.repository.cache;
+package com.aiatelye.leather.cache;
 
+import com.aiatelye.leather.enums.Enums;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-
-
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -12,6 +10,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -59,6 +59,12 @@ public class PriceCacheRepository {
         }
     }
 
+    public void invalidateManuelPrices(Long productId, Long gradeId) {
+        for (String currency : new String[]{"USD", "EUR"}) {
+            deletePrice(productId, gradeId, currency);
+        }
+    }
+
     public void deletePrice(Long productId, Long gradeId, String currency) {
         String key = buildKey(productId, gradeId, currency);
         redisTemplatePrice_PriceCache.delete(key);
@@ -70,4 +76,25 @@ public class PriceCacheRepository {
             return PRICE_PREFIX + productId + ":grade:" + gradeId + ":" + currency;
         }
 
+
+
+    // Birdən çox qiymət yazmaq üçün
+    public void saveAllPrices(Long productId, Long gradeId,
+                              Map<Enums.Currency, BigDecimal> prices) {
+        prices.forEach((currency, amount) ->
+                savaPrice(productId, gradeId, currency.name(), amount)
+        );
+    }
+
+    // Birdən çox qiymət oxumaq üçün
+    public Map<Enums.Currency, BigDecimal> getAllPrices(Long productId, Long gradeId) {
+        Map<Enums.Currency, BigDecimal> result = new EnumMap<>(Enums.Currency.class);
+
+        for (Enums.Currency currency : Enums.Currency.values()) {
+          getPrice(productId, gradeId, currency.name())
+                    .ifPresent(amount -> result.put(currency, amount));
+        }
+
+        return result;
+    }
 }

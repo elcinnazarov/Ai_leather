@@ -1,4 +1,4 @@
-package com.aiatelye.leather.service;
+package com.aiatelye.leather.service.Minio;
 
 
 import com.aiatelye.leather.enums.Enums;

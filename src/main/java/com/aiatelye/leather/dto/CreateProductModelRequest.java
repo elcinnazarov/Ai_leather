@@ -16,7 +16,7 @@ public class CreateProductModelRequest {
     private String modelName;
 
     @NotNull(message = "Model type is required")
-    private Enums.ModelType modelType;
+    private Enums.ProductCategory modelType;
 
     @NotNull(message = "description is  not be  null")
     @Size(max = 2000)
