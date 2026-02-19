@@ -21,8 +21,6 @@ public class LeatherGrade {
     @Column(name = "grade_type",unique = true)
     private Enums.GradeType gradename;// STANDARD, PREMIUM, EXOTIC
 
-    @Column(name = "grade_level")
-    private Integer gradeLevel; // 1, 2, 3 (sorting üçün)
 
     @Column(columnDefinition = "TEXT")
     private String description;

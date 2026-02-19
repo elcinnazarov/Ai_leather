@@ -1,10 +1,13 @@
 package com.aiatelye.leather.service.pricing;
 
+import com.aiatelye.leather.Specification.ProductGradePriceSpecification;
 import com.aiatelye.leather.dao.LeatherGrade;
 import com.aiatelye.leather.dao.PricingRule;
 import com.aiatelye.leather.dao.ProductGradePrice;
 import com.aiatelye.leather.dao.ProductModel;
-import com.aiatelye.leather.dto.*;
+import com.aiatelye.leather.dto.defalutResponse.PageResponse;
+import com.aiatelye.leather.dto.price.*;
+import com.aiatelye.leather.dto.price.product.*;
 import com.aiatelye.leather.enums.Enums;
 import com.aiatelye.leather.error.Exception.BadRequestException;
 import com.aiatelye.leather.error.Exception.NotFoundException;
@@ -16,6 +19,8 @@ import com.aiatelye.leather.repository.ProductModelRepository;
 import com.aiatelye.leather.cache.PriceCacheRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,13 +35,50 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class ProductPriceService {
-    private final ProductGradePriceRepository priceRepository;
+    private final ProductGradePriceRepository priceGradePriceRepository;
     private final ProductModelRepository productModelRepository;
     private final LeatherGradeRepository gradeRepository;
     private final ProductGradePriceMapper productGradePriceMapper;
     private  final PriceCacheRepository priceCacheRepository;
     private  final PricingRuleRepository pricingRuleRepository;
     private  final  CalculatePriceService calculatePriceService;
+
+
+
+    @Transactional(readOnly = true)
+    public PageResponse<ProductPriceResponse> getPrices(ProductPriceFilter filter, Pageable pageable) {
+        log.info("Fetching prices with filter: {}, page: {}", filter, pageable);
+
+        // Boş filter yoxlama
+        boolean isEmptyFilter = ProductGradePriceSpecification.isEmptyFilter(filter);
+        if (isEmptyFilter) {
+            log.info("Empty filter - returning all prices");
+        }
+
+        // Specification ilə filter + EntityGraph ilə N+1 həlli
+        Page<ProductGradePrice> pricePage = priceGradePriceRepository.findAll(
+                ProductGradePriceSpecification.withFilter(filter),
+                pageable
+        );
+
+        // Map to response
+        List<ProductPriceResponse> content = pricePage.getContent().stream()
+                .map(productGradePriceMapper::toResponse)
+                .collect(Collectors.toList());
+
+        return PageResponse.<ProductPriceResponse>builder()
+                .content(content)
+                .pageNumber(pricePage.getNumber())
+                .pageSize(pricePage.getSize())
+                .totalElements(pricePage.getTotalElements())
+                .totalPages(pricePage.getTotalPages())
+                .last(pricePage.isLast())
+                .build();
+    }
+
+
+
+
 
     @Transactional
     public ListProductPriceResponse createProductPrices(Long productModelId, ListCreateProductPricesRequest request) {
@@ -51,7 +93,7 @@ public class ProductPriceService {
                 .collect(Collectors.toSet());
 
         Map<Long, LeatherGrade> gradeMap = fetchRequiredGrades(requestedGradeIds);
-        Set<Long> existingGradeIds = priceRepository.findAllGradeIdsByProductModelId(productModelId);
+        Set<Long> existingGradeIds = priceGradePriceRepository.findAllGradeIdsByProductModelId(productModelId);
 
         log.debug("Data pre-fetched | Grades found: {} | Existing prices: {}", gradeMap.size(), existingGradeIds.size());
 
@@ -118,7 +160,7 @@ public class ProductPriceService {
 
     private void saveAndInvalidateCache(List<ProductGradePrice> entities, Long productId, List<ProductPriceResponse> successList) {
         // Toplu yadda saxla
-        List<ProductGradePrice> saved = priceRepository.saveAll(entities);
+        List<ProductGradePrice> saved = priceGradePriceRepository.saveAll(entities);
         log.info("Successfully persisted {} entities to DB", saved.size());
 
         saved.forEach(s -> {
@@ -160,7 +202,7 @@ public class ProductPriceService {
         ProductModel product = productModelRepository.findById(productModelId)
                 .orElseThrow(() -> new NotFoundException("Product not found: " + productModelId));
 
-        List<ProductGradePrice> prices = priceRepository.
+        List<ProductGradePrice> prices = priceGradePriceRepository.
                 findByProductModelIdOrderByGradeGradeLevelAsc(productModelId);
 
         List<ProductPriceResponse> responses =prices.stream()
@@ -182,13 +224,13 @@ public class ProductPriceService {
     public ProductPriceResponse updateProductPrice(Long productModelId, Long gradeId, UpdateProductPriceRequest request) {
         log.info("Updating price for product: {}, grade: {}", productModelId, gradeId);
 
-        ProductGradePrice price = priceRepository.findByProductModelIdAndGradeId(productModelId, gradeId)
+        ProductGradePrice price = priceGradePriceRepository.findByProductModelIdAndGradeId(productModelId, gradeId)
                 .orElseThrow(() -> new NotFoundException("Price not found for product: " + productModelId + " and grade: " + gradeId));
         BigDecimal oldPrice = price.getPrice();
         price.setPrice(request.getPrice());
         price.setUpdatedAt(java.time.LocalDateTime.now());
 
-        ProductGradePrice updated = priceRepository.save(price);
+        ProductGradePrice updated = priceGradePriceRepository.save(price);
 
         log.info("Price updated: {} -> {} for product: {}, grade: {}",
                 oldPrice, request.getPrice(), productModelId, gradeId);
@@ -222,10 +264,10 @@ public class ProductPriceService {
     public void deleteProductPrice(Long productModelId, Long gradeId) {
         log.info("Deleting price for product: {}, grade: {}", productModelId, gradeId);
 
-        ProductGradePrice price = priceRepository.findByProductModelIdAndGradeId(productModelId, gradeId)
+        ProductGradePrice price = priceGradePriceRepository.findByProductModelIdAndGradeId(productModelId, gradeId)
                 .orElseThrow(() -> new NotFoundException("Price not found for product: " + productModelId + " and grade: " + gradeId));
 
-        priceRepository.delete(price);
+        priceGradePriceRepository.delete(price);
 
         log.info("Price deleted for product: {}, grade: {}", productModelId, gradeId);
 
@@ -250,7 +292,7 @@ public class ProductPriceService {
                 .orElseThrow(() -> new NotFoundException("Product not found: " + productId));
 
         // 2. FETCH JOIN ilə N+1 problemini həll edirik (Repository-də @Query lazımdır)
-        List<ProductGradePrice> gradePrices = priceRepository.findAllByProductModelIdWithGrade(productId);
+        List<ProductGradePrice> gradePrices = priceGradePriceRepository.findAllByProductModelIdWithGrade(productId);
 
         // 3. Aktiv qaydaları Map-ə yığırıq
         Map<Enums.Currency, PricingRule> rulesMap = pricingRuleRepository.findAllByIsActiveTrue()
@@ -279,7 +321,6 @@ public class ProductPriceService {
         return AdminCalculatedPriceResponse.GradePriceDetail.builder()
                 .gradeId(grade.getId())
                 .gradeType(grade.getGradename().name())
-                .gradeLevel(grade.getGradeLevel())
                 .azn(buildPriceDetail(baseAzn, Enums.Currency.AZN, "BASE", null))
                 .usd(calculateAndBuildDetail(baseAzn, Enums.Currency.USD, gp.getManualUsd(), rulesMap.get(Enums.Currency.USD)))
                 .eur(calculateAndBuildDetail(baseAzn, Enums.Currency.EUR, gp.getManualEur(), rulesMap.get(Enums.Currency.EUR)))

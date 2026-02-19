@@ -1,7 +1,10 @@
 package com.aiatelye.leather.service.admin;
+import com.aiatelye.leather.cache.ProductCatalogCacheRepository;
 import com.aiatelye.leather.dao.ProductImage;
 import com.aiatelye.leather.dao.ProductModel;
-import com.aiatelye.leather.dto.*;
+import com.aiatelye.leather.dto.product.CreateProductModelRequest;
+import com.aiatelye.leather.dto.product.ProductModelResponse;
+import com.aiatelye.leather.dto.product.UpdateProductModelRequest;
 import com.aiatelye.leather.enums.Enums;
 import com.aiatelye.leather.error.Exception.*;
 import com.aiatelye.leather.mapper.ProductModelMapper;
@@ -25,8 +28,7 @@ public class AdminServiceImpl {
     private final ProductImageRepository productImageRepository;
     private final MinioService minioService;
     private final ProductModelMapper productMapper;
-    private final LeatherRepository leatherRepository;
-
+    ProductCatalogCacheRepository productCatalogCacheRepository;
 
     @Transactional
     public ProductModelResponse createProductModel(
@@ -66,6 +68,9 @@ public class AdminServiceImpl {
 
         ProductModel saved = productModelRepository.save(product);
         log.info("Product saved with ID: {}", saved.getId());
+
+        productCatalogCacheRepository.invalidateAllInitialPages();
+        log.info("Product catalog cache invalidate");
         return productMapper.toProductModelResponse(saved);
 
     }
@@ -156,6 +161,8 @@ public class AdminServiceImpl {
         ProductModel updated = productModelRepository.save(product);
         log.info("Product ID: {} updated successfully", productId);
 
+        productCatalogCacheRepository.invalidateProductDetail(productId);
+        log.info("ProductDeatil  invalidate ");
         return productMapper.toProductModelResponse(updated);
     }
 
@@ -215,6 +222,10 @@ public class AdminServiceImpl {
         productModelRepository.save(product);
         log.info("Leather status updated. ID: {}, New Status: {}", productId, product.getAvailabilityStatus());
 
+        productCatalogCacheRepository.invalidateProductDetail(productId);
+        productCatalogCacheRepository.invalidateAllInitialPages();
+        log.info("Cache eviction triggered: Product ID [{}] " +
+                "detail and all initial pages cleared to ensure data consistency.", productId);
     }
 
 

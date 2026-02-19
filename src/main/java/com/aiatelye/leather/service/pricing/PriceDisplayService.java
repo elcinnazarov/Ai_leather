@@ -2,7 +2,7 @@ package com.aiatelye.leather.service.pricing;
 import com.aiatelye.leather.config.infrastructure.CurrencyContext;
 import com.aiatelye.leather.dao.CalculatedPrice;
 import com.aiatelye.leather.dao.ProductGradePrice;
-import com.aiatelye.leather.dto.DisplayPriceResponse;
+import com.aiatelye.leather.dto.price.DisplayPriceResponse;
 import com.aiatelye.leather.enums.Enums;
 import com.aiatelye.leather.repository.ProductGradePriceRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ public class PriceDisplayService {
 
 
         /* Bütün grade-lər üçün bütün valyutaları hesabla
-     * YENİ: Bir grade üçün 3 valutanı birdən alır (optimallaşdırılmış)
+     *  Bir grade üçün 3 valutanı birdən alır (optimallaşdırılmış)
      */
     @Transactional(readOnly = true)
     public List<DisplayPriceResponse> getProductDisplayPrices(Long productId) {
@@ -72,8 +72,8 @@ public class PriceDisplayService {
 
 
     /**
-     * Sürətli preview (bir valyuta üçün)
-     * Əvvəlki kimi işləyir (tək valyuta)
+     * 1 model 1 gradetype 1 valuta
+     * netice bir qiymet
      */
     public DisplayPriceResponse.PriceDetail getQuickPrice(Long productId, Long gradeId,
                                                           Enums.Currency currency) {

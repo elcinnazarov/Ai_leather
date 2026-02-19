@@ -34,6 +34,8 @@ public class Leather {
     @Column(name = "origin",nullable = false)
     private String origin; // "Italy", "Turkey", "France"
 
+    @Column(name = "description",nullable = false)
+    private  String description;
     /*@Column(name = "stock_amount")
      //private Integer stockAmount;*/
 
@@ -47,7 +49,6 @@ public class Leather {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
 
     @Enumerated(EnumType.STRING)
     @Column(name = "availability_status", nullable = false)

@@ -1,8 +1,8 @@
 package com.aiatelye.leather.mapper;
 
 import com.aiatelye.leather.dao.PricingRule;
-import com.aiatelye.leather.dto.CreatePricingRuleRequest;
-import com.aiatelye.leather.dto.PricingRuleResponse;
+import com.aiatelye.leather.dto.price.Rule.CreatePricingRuleRequest;
+import com.aiatelye.leather.dto.price.manuel.PricingRuleResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;

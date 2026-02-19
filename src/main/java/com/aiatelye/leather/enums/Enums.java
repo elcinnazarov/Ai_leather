@@ -28,12 +28,15 @@ public class Enums {
 
 
     }
+
+
+
+
     public enum AvailabilityStatus {
         ACTIVE,
         DRAFT,
         ARCHIVED,
         OUT_OF_STOCK;
-
 
         public boolean canTransitionTo(AvailabilityStatus next) {
             if (this == next) return false;
@@ -50,6 +53,8 @@ public class Enums {
                 case ARCHIVED -> false;
                 case DRAFT -> null; // Mövcud vəziyyəti qoru
             };
+
+
        /* public boolean canTransitionTo(AvailabilityStatus next) {
             if (this == next) return true; // Eyni vəziyyətə keçid həmişə mümkündür
 

@@ -1,9 +1,9 @@
 package com.aiatelye.leather.service.pricing;
 
 import com.aiatelye.leather.dao.PricingRule;
-import com.aiatelye.leather.dto.CreatePricingRuleRequest;
-import com.aiatelye.leather.dto.PricingRuleResponse;
-import com.aiatelye.leather.dto.UpdatePricingRuleRequest;
+import com.aiatelye.leather.dto.price.Rule.CreatePricingRuleRequest;
+import com.aiatelye.leather.dto.price.manuel.PricingRuleResponse;
+import com.aiatelye.leather.dto.price.Rule.UpdatePricingRuleRequest;
 import com.aiatelye.leather.enums.Enums;
 import com.aiatelye.leather.error.Exception.BadRequestException;
 import com.aiatelye.leather.error.Exception.NotFoundException;

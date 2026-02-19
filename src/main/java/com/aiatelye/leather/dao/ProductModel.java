@@ -17,7 +17,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductModel {
+public class ProductModel{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

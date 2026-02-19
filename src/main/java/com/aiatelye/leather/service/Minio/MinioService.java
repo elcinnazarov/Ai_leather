@@ -155,7 +155,7 @@ public class MinioService {
 
         long sizeInMb = file.getSize() / (1024 * 1024);
         if (sizeInMb > maxSizeMb) {
-            throw new FileTooLargeException("File too large: " + sizeInMb + "MB");
+            throw new FileTooLargeException( "File too large: " + sizeInMb + "MB");
         }
 
         String extension = Objects.requireNonNull(file.getOriginalFilename())

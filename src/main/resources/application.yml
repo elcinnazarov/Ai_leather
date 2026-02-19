@@ -54,9 +54,18 @@ data:
     port: ${REDIS_PORT}
     password: ${REDIS_PASSWORD}
     timeout: 6000ms
+
 cache:
   redis:
     account:
-     ttl: 120
+      ttl: 120
     price:
+      ttl: 12
+    product-list:
       ttl: 30
+    product-detail:
+      ttl: 1440
+    leather:
+      ttl: 10
+    grade:
+      ttl: 60

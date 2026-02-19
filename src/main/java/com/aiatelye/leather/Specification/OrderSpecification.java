@@ -1,7 +1,7 @@
 package com.aiatelye.leather.Specification;
 
 import com.aiatelye.leather.dao.Order;
-import com.aiatelye.leather.dto.OrderFilter;
+import com.aiatelye.leather.dto.order.OrderFilter;
 import com.aiatelye.leather.enums.Enums;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -24,6 +24,9 @@ public class OrderSpecification implements Specification<Order> {
     public Predicate toPredicate(Root<Order> root,
                                  CriteriaQuery<?> query,
                                  CriteriaBuilder criteriaBuilder) {
+
+
+
         List<Predicate> predicates = new ArrayList<>();
 
         // ID

@@ -3,10 +3,12 @@ package com.aiatelye.leather.mapper;
 import com.aiatelye.leather.dao.LeatherGrade;
 import com.aiatelye.leather.dao.ProductGradePrice;
 import com.aiatelye.leather.dao.ProductModel;
-import com.aiatelye.leather.dto.CreateProductPriceRequest;
-import com.aiatelye.leather.dto.ProductPriceResponse;
+import com.aiatelye.leather.dto.price.product.CreateProductPriceRequest;
+import com.aiatelye.leather.dto.price.product.ProductPriceResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+
+import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface ProductGradePriceMapper {
@@ -26,8 +28,18 @@ public interface ProductGradePriceMapper {
     @Mapping(target = "productModelName", source = "entity.productModel.modelname")
     @Mapping(target = "gradeId", source = "entity.grade.id")
     @Mapping(target = "gradeType", source = "entity.grade.gradename")
-    @Mapping(target = "gradeLevel", source = "entity.grade.gradeLevel")
     @Mapping(target = "priceAzn", source = "price")
     ProductPriceResponse toProductPriceResponse(ProductGradePrice entity);
+
+
+
+    @Mapping(target = "productModelId", source = "productModel.id")
+    @Mapping(target = "productModelName", source = "productModel.modelname")
+    @Mapping(target = "gradeId", source = "grade.id")
+    @Mapping(target = "gradeName", source = "grade.gradename")
+    @Mapping(target = "basePrice", source = "price")
+    ProductPriceResponse toResponse(ProductGradePrice entity);
+
+    List<ProductPriceResponse> toResponseList(List<ProductGradePrice> entities);
 
 }

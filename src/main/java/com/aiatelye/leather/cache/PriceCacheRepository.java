@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -15,29 +14,31 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+
 @Repository
 @Slf4j
 @RequiredArgsConstructor
 public class PriceCacheRepository {
-    @Qualifier("PriceCache")
-   private  RedisTemplate<String, String> redisTemplatePrice_PriceCache;
+
+    @Qualifier("priceRedisCacheTemplate")
+    private final RedisTemplate<String, String> redisTemplatePrice_PriceCache;
 
     @Value("${cache.redis.price.ttl}")
-    private Long ttlMinutes;
+    private Long  ttlMinutes;
 
     private static final String PRICE_PREFIX = "price:product:";
 
-   public void savaPrice(Long productId, Long gradeId, String currency, BigDecimal price){
+    public void savaPrice(Long productId, Long gradeId, String currency, BigDecimal price) {
 
-       String key= buildKey(productId,gradeId,currency);
-       redisTemplatePrice_PriceCache.opsForValue().set(
-               key,
-               price.toString(),
-               ttlMinutes,
-               TimeUnit.MINUTES
-       );
-       log.info("Price cached: {}", key);
-   }
+        String key = buildKey(productId, gradeId, currency);
+        redisTemplatePrice_PriceCache.opsForValue().set(
+                key,
+                price.toString(),
+                ttlMinutes,
+                TimeUnit.HOURS
+        );
+        log.info("Price cached: {}", key);
+    }
 
 
     public Optional<BigDecimal> getPrice(Long productId, Long gradeId, String currency) {
@@ -54,7 +55,7 @@ public class PriceCacheRepository {
     }
 
     public void invalidateProductPrices(Long productId, Long gradeId) {
-        for (String currency : new String[]{"USD", "EUR","AZN"}) {
+        for (String currency : new String[]{"USD", "EUR", "AZN"}) {
             deletePrice(productId, gradeId, currency);
         }
     }
@@ -72,10 +73,9 @@ public class PriceCacheRepository {
     }
 
 
-    private String buildKey (Long productId, Long gradeId, String currency){
-            return PRICE_PREFIX + productId + ":grade:" + gradeId + ":" + currency;
-        }
-
+    private String buildKey(Long productId, Long gradeId, String currency) {
+        return PRICE_PREFIX + productId + ":grade:" + gradeId + ":" + currency;
+    }
 
 
     // Birdən çox qiymət yazmaq üçün
@@ -91,7 +91,7 @@ public class PriceCacheRepository {
         Map<Enums.Currency, BigDecimal> result = new EnumMap<>(Enums.Currency.class);
 
         for (Enums.Currency currency : Enums.Currency.values()) {
-          getPrice(productId, gradeId, currency.name())
+            getPrice(productId, gradeId, currency.name())
                     .ifPresent(amount -> result.put(currency, amount));
         }
 

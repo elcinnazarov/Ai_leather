@@ -1,7 +1,7 @@
 package com.aiatelye.leather.mapper;
 
 import com.aiatelye.leather.dao.ProductGradePrice;
-import com.aiatelye.leather.dto.ManualPriceResponse;
+import com.aiatelye.leather.dto.price.manuel.ManualPriceResponse;
 import com.aiatelye.leather.enums.Enums;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

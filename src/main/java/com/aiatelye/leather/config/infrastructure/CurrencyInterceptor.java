@@ -6,12 +6,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
-    @Component
-    public class CurrencyInterceptor implements HandlerInterceptor {
 
-        @Override
-        public boolean preHandle(HttpServletRequest request, @NotNull HttpServletResponse response,
-                                 @NotNull Object handler) {
+@Component
+public class CurrencyInterceptor implements HandlerInterceptor {
+
+    @Override
+    public boolean preHandle(HttpServletRequest request, @NotNull HttpServletResponse response,
+                             @NotNull Object handler) {
         // Header-dən oxu: X-Currency: USD
         String currencyHeader = request.getHeader("X-Currency");
 

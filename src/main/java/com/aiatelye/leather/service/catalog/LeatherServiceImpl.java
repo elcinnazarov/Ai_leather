@@ -1,9 +1,11 @@
 package com.aiatelye.leather.service.catalog;
+import com.aiatelye.leather.cache.LeatherCacheRepository;
+import com.aiatelye.leather.cache.LeatherCatalogCacheRepository;
 import com.aiatelye.leather.dao.Leather;
 import com.aiatelye.leather.dao.LeatherGrade;
-import com.aiatelye.leather.dto.CreatLeatherRequest;
-import com.aiatelye.leather.dto.LeatherResponse;
-import com.aiatelye.leather.dto.UpdateLeatherRequest;
+import com.aiatelye.leather.dto.leather.CreatLeatherRequest;
+import com.aiatelye.leather.dto.leather.LeatherResponse;
+import com.aiatelye.leather.dto.leather.UpdateLeatherRequest;
 import com.aiatelye.leather.enums.Enums;
 import com.aiatelye.leather.error.Exception.*;
 import com.aiatelye.leather.mapper.LeatherMapper;
@@ -24,7 +26,8 @@ public class LeatherServiceImpl implements LeatherService {
     private final LeatherMapper leatherMapper;
     private final MinioService minioService;
     private final LeatherRepository leatherRepository;
-
+    private  final LeatherCacheRepository leatherCacheRepository;
+    private  final LeatherCatalogCacheRepository leatherCatalogCacheRepository;
 
     @Override
     @Transactional
@@ -50,6 +53,7 @@ public class LeatherServiceImpl implements LeatherService {
         Leather leather = leatherMapper.toLeatherEntity(request);
         leather.setImageUrl(imageUrl);
         Leather saved = leatherRepository.save(leather);
+        clearAllCaches();
         return leatherMapper.toLeatherResponse(saved);
 
     }
@@ -79,7 +83,7 @@ public class LeatherServiceImpl implements LeatherService {
         // 2. Entity-dən sil (null et)
         leather.setImageUrl(null);
         leatherRepository.save(leather);
-
+        clearAllCaches();
         log.info("Image URL removed from leather ID: {}", leatherId);
 
     }
@@ -118,7 +122,7 @@ public class LeatherServiceImpl implements LeatherService {
 
         Leather updated = leatherRepository.save(leather);
         log.info("Leather ID: {} image updated_successfully", leatherId);
-
+        clearAllCaches();
         return leatherMapper.toLeatherResponse(updated);
     }
 
@@ -149,6 +153,10 @@ public class LeatherServiceImpl implements LeatherService {
 
         log.info("Leather ID: {} updated successfully", leatherId);
 
+        leatherCacheRepository.invalidateAll();
+        log.info("Leather ID: {} updated by Admin. " +
+                "lobal leather cache invalidated to ensure data consistency.", leatherId);
+        clearAllCaches();
         return leatherMapper.toLeatherResponse(updated);
 
 
@@ -187,7 +195,7 @@ public class LeatherServiceImpl implements LeatherService {
             //cacheService.evictProductCache(productId);
 
             log.info("Product ID: {} status changed from {} to {}", leatherId, currentStatus, newstatus);
-
+            clearAllCaches();
             return leatherMapper.toLeatherResponse(updated);
         }
 
@@ -207,6 +215,17 @@ public class LeatherServiceImpl implements LeatherService {
         leather.setAvailabilityStatus(Enums.AvailabilityStatus.ARCHIVED);
 
         leatherRepository.save(leather);
+        clearAllCaches();
         log.info("Leather status updated. ID: {}, New Status: {}", leatherId, leather.getAvailabilityStatus());
     }
+
+
+    public void clearAllCaches() {
+     try {
+         leatherCatalogCacheRepository.invalidateAll();
+         log.info("Admin: All caches cleared");
+     }catch (Exception e){
+         log.error(" LeatherCatalogCacheRepository cleared  be failed ");
+
+     }}
 }
