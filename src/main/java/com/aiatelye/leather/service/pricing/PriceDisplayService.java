@@ -2,7 +2,7 @@ package com.aiatelye.leather.service.pricing;
 import com.aiatelye.leather.config.infrastructure.CurrencyContext;
 import com.aiatelye.leather.dao.CalculatedPrice;
 import com.aiatelye.leather.dao.ProductGradePrice;
-import com.aiatelye.leather.dto.price.DisplayPriceResponse;
+import com.aiatelye.leather.dto.admin.price.DisplayPriceResponse;
 import com.aiatelye.leather.enums.Enums;
 import com.aiatelye.leather.repository.ProductGradePriceRepository;
 import lombok.RequiredArgsConstructor;

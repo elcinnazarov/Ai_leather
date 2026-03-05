@@ -4,8 +4,8 @@ import com.aiatelye.leather.dao.Order;
 import com.aiatelye.leather.dao.OrderItem;
 import com.aiatelye.leather.dao.Payment;
 import com.aiatelye.leather.dao.User;
-import com.aiatelye.leather.dto.order.AdminOrderDetailResponse;
-import com.aiatelye.leather.dto.order.AdminOrderListResponse;
+import com.aiatelye.leather.dto.admin.order.AdminOrderDetailResponse;
+import com.aiatelye.leather.dto.admin.order.AdminOrderListResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

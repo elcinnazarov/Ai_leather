@@ -21,24 +21,30 @@ public class Order extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "order_number", unique = true, nullable = false)
+    @Column(name = "order_number", unique = true, nullable = false, length = 50)
     private String orderNumber; // ORD-20260121-001
+
+    @Column(name = "idempotency_key",unique = true,length = 100)
+    private String idempotencyKey;
 
     @Column(name = "sub_total", precision = 19, scale = 4)
     private BigDecimal subTotal; // mehsul qiymeti . SNAPSHOT məlumatlar (dəyişməz)
 
-    @Column(name = "shipping_fee", nullable = false)
-    private BigDecimal shippingFee; // cadirlma xerci
+    @Column(name = "shipping_fee", precision = 19, scale = 4)
+    private BigDecimal shippingFee;
+
 
     @Column(name = "final_price", nullable = false)
     private BigDecimal finalPrice; // Dəyişməz qiymət
-
 
     @Column(name = "customer_email")
     private String customerEmail;
 
     @Column(name = "customer_phone")
     private String customerPhone;
+
+    @Column(name = "postal_code", length = 20)
+    private String postalCode;
 
     @Column(name = "delivery_address", columnDefinition = "TEXT")
     private String deliveryAddress;
@@ -51,16 +57,24 @@ public class Order extends BaseEntity {
     private Enums.OrderType orderType;
 
     @Enumerated(EnumType.STRING)
-    private Enums.DesignProcessStatus designStatus; // GENERATING, SUCCESS, FAILED
+    @Column(name = "design_status")
+    private Enums.DesignProcessStatus designStatus;
+
 
     @Enumerated(EnumType.STRING)
-    private Enums.Currency currency; // Sifariş anındakı valyuta
+    @Column(name = "currency", nullable = false)
+    private Enums.Currency currency;
+
 
     @Enumerated(EnumType.STRING)
-    private Enums.OrderStatus status; // PENDING-dən COMPLETED-ə qədər
+    @Column(name = "status", nullable = false)
+    @Builder.Default
+    private Enums.OrderStatus status = Enums.OrderStatus.PENDING;
 
     @Enumerated(EnumType.STRING)
-    private Enums.PaymentStatus paymentStatus;
+    @Column(name = "payment_status", nullable = false)
+    @Builder.Default
+    private Enums.PaymentStatus paymentStatus = Enums.PaymentStatus.WAITING;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -85,6 +99,8 @@ public class Order extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "payment_id")
     private Payment payment;
+
+
 
     // ========== HELPER METODLAR ==========
 

@@ -1,7 +1,7 @@
 package com.aiatelye.leather.Specification;
 
 import com.aiatelye.leather.dao.Order;
-import com.aiatelye.leather.dto.order.OrderFilter;
+import com.aiatelye.leather.dto.admin.order.OrderFilter;
 import com.aiatelye.leather.enums.Enums;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;

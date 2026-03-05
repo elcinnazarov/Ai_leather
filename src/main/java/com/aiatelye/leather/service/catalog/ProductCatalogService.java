@@ -7,7 +7,7 @@ import com.aiatelye.leather.dao.CalculatedPrice;
 import com.aiatelye.leather.dao.Leather;
 import com.aiatelye.leather.dao.ProductGradePrice;
 import com.aiatelye.leather.dao.ProductModel;
-import com.aiatelye.leather.dto.catalog.*;
+import com.aiatelye.leather.dto.catalog.product.*;
 import com.aiatelye.leather.enums.Enums;
 import com.aiatelye.leather.error.Exception.NotFoundException;
 import com.aiatelye.leather.mapper.AvailableLeatherMapper;

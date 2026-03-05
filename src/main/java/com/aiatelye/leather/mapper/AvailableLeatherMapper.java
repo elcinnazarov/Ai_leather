@@ -1,7 +1,7 @@
 package com.aiatelye.leather.mapper;
 
 import com.aiatelye.leather.dao.Leather;
-import com.aiatelye.leather.dto.catalog.P_AvailableLeatherResponse;
+import com.aiatelye.leather.dto.catalog.product.P_AvailableLeatherResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

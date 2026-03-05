@@ -91,7 +91,7 @@ public class ErrorHandle extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<ErrorResponse> MinioException(BadRequestException exception,
+    public ResponseEntity<ErrorResponse> BadRequest(BadRequestException exception,
                                                         Locale locale) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorResponse(HttpStatus.BAD_REQUEST.value(),
@@ -244,6 +244,7 @@ public class ErrorHandle extends ResponseEntityExceptionHandler {
 
 
 
+
     @ExceptionHandler(InvalidOrderStatusTransitionException.class)
     public ResponseEntity<ErrorResponse> InvalidOrderStatusTransitionException(InvalidStateTransitionException exception,
                                                                      Locale locale) {
@@ -251,6 +252,65 @@ public class ErrorHandle extends ResponseEntityExceptionHandler {
                 .body(new ErrorResponse(HttpStatus.BAD_REQUEST.value(),
                         messageSource.getMessage(exception.getMessage(), null,locale)));
     }
+
+
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<ErrorResponse> ConflictException(ConflictException exception,
+                                                                     Locale locale) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(new ErrorResponse(HttpStatus.CONFLICT.value(),
+                        messageSource.getMessage("""
+ Shipping location already exists for this country and city".""",
+                                null,locale)));
+
+    }
+
+    @ExceptionHandler(PostalCodeRequiredException.class)
+    public ResponseEntity<ErrorResponse> PostalCodeRequiredException(PostalCodeRequiredException exception,
+                                                                               Locale locale) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse(HttpStatus.BAD_REQUEST.value(),
+                        messageSource.getMessage(exception.getMessage(), null,locale)));
+    }
+
+    @ExceptionHandler(PriceMismatchException.class)
+    public ResponseEntity<ErrorResponse> PriceMismatchException(PriceMismatchException exception,
+                                                                     Locale locale) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(new ErrorResponse(HttpStatus.CONFLICT.value(),
+                        messageSource.getMessage(exception.getMessage(), null,locale)));
+    }
+
+
+    @ExceptionHandler(OrderAlreadyProcessingException.class)
+    public ResponseEntity<ErrorResponse> OrderAlreadyProcessingException(OrderAlreadyProcessingException exception,
+                                                                Locale locale) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(new ErrorResponse(HttpStatus.CONFLICT.value(),
+                        messageSource.getMessage(exception.getMessage(), null,locale)));
+    }
+
+
+    @ExceptionHandler(OrderAlreadyCreatedException.class)
+    public ResponseEntity<ErrorResponse> OrderAlreadyCreatedException(OrderAlreadyCreatedException exception,
+                                                                         Locale locale) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(new ErrorResponse(HttpStatus.CONFLICT.value(),
+                        messageSource.getMessage(exception.getMessage(), null,locale)));
+    }
+
+
+    @ExceptionHandler(DuplicateOrderException.class)
+    public ResponseEntity<ErrorResponse> DuplicateOrderException(DuplicateOrderException exception,
+                                                                      Locale locale) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(new ErrorResponse(HttpStatus.CONFLICT.value(),
+                        messageSource.getMessage(exception.getMessage(), null,locale)));
+    }
+
+
+
+
 
     //coming Error for Handle from Validation
     @Override

@@ -3,8 +3,8 @@ package com.aiatelye.leather.mapper;
 import com.aiatelye.leather.dao.LeatherGrade;
 import com.aiatelye.leather.dao.ProductGradePrice;
 import com.aiatelye.leather.dao.ProductModel;
-import com.aiatelye.leather.dto.price.product.CreateProductPriceRequest;
-import com.aiatelye.leather.dto.price.product.ProductPriceResponse;
+import com.aiatelye.leather.dto.admin.price.product.CreateProductPriceRequest;
+import com.aiatelye.leather.dto.admin.price.product.ProductPriceResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

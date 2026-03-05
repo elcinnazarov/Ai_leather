@@ -1,9 +1,9 @@
 package com.aiatelye.leather.controller.admin;
 
 import com.aiatelye.leather.dto.defalutResponse.ApiResponse;
-import com.aiatelye.leather.dto.product.CreateProductModelRequest;
-import com.aiatelye.leather.dto.product.ProductModelResponse;
-import com.aiatelye.leather.dto.product.UpdateProductModelRequest;
+import com.aiatelye.leather.dto.admin.product.CreateProductModelRequest;
+import com.aiatelye.leather.dto.admin.product.ProductModelResponse;
+import com.aiatelye.leather.dto.admin.product.UpdateProductModelRequest;
 import com.aiatelye.leather.enums.Enums;
 import com.aiatelye.leather.service.admin.AdminServiceImpl;
 import jakarta.validation.Valid;

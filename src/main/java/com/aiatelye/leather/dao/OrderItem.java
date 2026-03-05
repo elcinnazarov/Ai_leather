@@ -1,6 +1,6 @@
 package com.aiatelye.leather.dao;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -10,6 +10,11 @@ import java.time.LocalDateTime;
         uniqueConstraints = @UniqueConstraint(
         columnNames = {"order_id", "product_model_id","leather_id"}))
 @Data
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class OrderItem extends BaseEntity{
 
     @Id
@@ -47,5 +52,14 @@ public class OrderItem extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
+
+    public void calculateTotal() {
+        if (this.unitPrice != null && this.quantity != null) {
+            this.totalPrice = this.unitPrice.multiply(BigDecimal.valueOf(this.quantity));
+        } else {
+            this.totalPrice = BigDecimal.ZERO;
+        }
+
+    }
 
 }

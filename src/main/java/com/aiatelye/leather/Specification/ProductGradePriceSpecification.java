@@ -1,7 +1,7 @@
 package com.aiatelye.leather.Specification;
 
 import com.aiatelye.leather.dao.ProductGradePrice;
-import com.aiatelye.leather.dto.price.product.ProductPriceFilter;
+import com.aiatelye.leather.dto.admin.price.product.ProductPriceFilter;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 import java.util.ArrayList;

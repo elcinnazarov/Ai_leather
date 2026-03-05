@@ -71,5 +71,34 @@ public class Enums {
         }*/
 
         }
+
     }
+        public enum Country {
+            // Yerli
+            AZERBAIJAN,
+
+            // Avropa (Keyfiyyət və Sənətkarlıq)
+            GERMANY,
+            FRANCE,
+            ITALY,
+            UNITED_KINGDOM,
+            SWITZERLAND,
+
+            // Şimali Amerika (Böyük Bazar)
+            USA,
+            CANADA,
+
+            // Asiya və Okeaniya (Detallara önəm verənlər)
+            JAPAN,
+            AUSTRALIA,
+
+            // Körfəz ölkələri (Lüks seqment)
+            UAE,
+            SAUDI_ARABIA,
+
+            // Digər
+            INTERNATIONAL_OTHER
+        }
+
+
 }

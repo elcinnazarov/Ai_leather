@@ -66,6 +66,10 @@ public interface ProductModelRepository extends JpaRepository<ProductModel,Long>
     Optional<ProductModel> findByIdWithDetails(@Param("id") Long id);
 
 
-
+    @Query("SELECT DISTINCT pm FROM ProductModel pm " +
+            "LEFT JOIN FETCH pm.images " +
+            "WHERE pm.id IN :ids AND pm.isActive = true " +
+            "AND pm.availabilityStatus = 'ACTIVE'")
+    List<ProductModel> findActiveByIds(@Param("ids") List<Long> ids);
 
 }

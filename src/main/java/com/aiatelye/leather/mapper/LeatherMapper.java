@@ -2,16 +2,10 @@ package com.aiatelye.leather.mapper;
 
 
 import com.aiatelye.leather.dao.*;
-import com.aiatelye.leather.dto.catalog.LeatherByGradeResponse;
-import com.aiatelye.leather.dto.catalog.LeatherDetailResponse;
-import com.aiatelye.leather.dto.catalog.LeatherListResponse;
-import com.aiatelye.leather.dto.leather.CreatLeatherRequest;
-import com.aiatelye.leather.dto.leather.LeatherResponse;
-import com.aiatelye.leather.dto.leather.UpdateLeatherRequest;
+import com.aiatelye.leather.dto.admin.leather.CreatLeatherRequest;
+import com.aiatelye.leather.dto.admin.leather.LeatherResponse;
+import com.aiatelye.leather.dto.admin.leather.UpdateLeatherRequest;
 import org.mapstruct.*;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring",
 unmappedTargetPolicy = ReportingPolicy.ERROR)

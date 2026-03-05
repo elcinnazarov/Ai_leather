@@ -3,10 +3,10 @@ package com.aiatelye.leather.mapper;
 
 import com.aiatelye.leather.dao.ProductImage;
 import com.aiatelye.leather.dao.ProductModel;
-import com.aiatelye.leather.dto.product.CreateProductModelRequest;
-import com.aiatelye.leather.dto.product.ProductImageResponse;
-import com.aiatelye.leather.dto.product.ProductModelResponse;
-import com.aiatelye.leather.dto.product.UpdateProductModelRequest;
+import com.aiatelye.leather.dto.admin.product.CreateProductModelRequest;
+import com.aiatelye.leather.dto.admin.product.ProductImageResponse;
+import com.aiatelye.leather.dto.admin.product.ProductModelResponse;
+import com.aiatelye.leather.dto.admin.product.UpdateProductModelRequest;
 import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")

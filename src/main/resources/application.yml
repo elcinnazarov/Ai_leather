@@ -69,3 +69,5 @@ cache:
       ttl: 10
     grade:
       ttl: 60
+    orderIdempotency:
+      ttl: 30

@@ -1,6 +1,6 @@
 package com.aiatelye.leather.controller.catalog;
 
-import com.aiatelye.leather.dto.catalog.*;
+import com.aiatelye.leather.dto.catalog.leather.*;
 import com.aiatelye.leather.dto.defalutResponse.ApiResponse;
 import com.aiatelye.leather.dto.defalutResponse.PageResponse;
 import com.aiatelye.leather.enums.Enums;

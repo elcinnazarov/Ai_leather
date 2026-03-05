@@ -1,9 +1,9 @@
 package com.aiatelye.leather.controller.admin;
 
 import com.aiatelye.leather.dto.defalutResponse.ApiResponse;
-import com.aiatelye.leather.dto.price.Rule.CreatePricingRuleRequest;
-import com.aiatelye.leather.dto.price.manuel.PricingRuleResponse;
-import com.aiatelye.leather.dto.price.Rule.UpdatePricingRuleRequest;
+import com.aiatelye.leather.dto.admin.price.Rule.CreatePricingRuleRequest;
+import com.aiatelye.leather.dto.admin.price.manuel.PricingRuleResponse;
+import com.aiatelye.leather.dto.admin.price.Rule.UpdatePricingRuleRequest;
 import com.aiatelye.leather.enums.Enums;
 import com.aiatelye.leather.service.pricing.PricingRuleService;
 import jakarta.validation.Valid;

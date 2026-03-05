@@ -1,6 +1,6 @@
 package com.aiatelye.leather.cache;
 
-import com.aiatelye.leather.dto.catalog.ProductCatalogResponse;
+import com.aiatelye.leather.dto.catalog.product.ProductCatalogResponse;
 import com.aiatelye.leather.enums.Enums;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;

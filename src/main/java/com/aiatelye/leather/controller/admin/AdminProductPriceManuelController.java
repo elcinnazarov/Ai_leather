@@ -1,8 +1,8 @@
 package com.aiatelye.leather.controller.admin;
 
-import com.aiatelye.leather.dto.price.manuel.ListCreateManualPricesRequest;
-import com.aiatelye.leather.dto.price.manuel.ListDeleteManualPricesRequest;
-import com.aiatelye.leather.dto.price.manuel.ListManuelPricesResponse;
+import com.aiatelye.leather.dto.admin.price.manuel.ListCreateManualPricesRequest;
+import com.aiatelye.leather.dto.admin.price.manuel.ListDeleteManualPricesRequest;
+import com.aiatelye.leather.dto.admin.price.manuel.ListManuelPricesResponse;
 import com.aiatelye.leather.dto.defalutResponse.ApiResponse;
 import com.aiatelye.leather.service.pricing.ManualPriceService;
 import jakarta.validation.Valid;

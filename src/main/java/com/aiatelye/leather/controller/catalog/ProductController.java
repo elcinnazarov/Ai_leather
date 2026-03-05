@@ -1,6 +1,6 @@
 package com.aiatelye.leather.controller.catalog;
 
-import com.aiatelye.leather.dto.catalog.*;
+import com.aiatelye.leather.dto.catalog.product.*;
 import com.aiatelye.leather.dto.defalutResponse.ApiResponse;
 import com.aiatelye.leather.service.catalog.ProductCatalogService;
 import jakarta.validation.Valid;
@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController

@@ -80,5 +80,11 @@ public interface LeatherRepository extends JpaRepository<Leather,Long> {
 
     List<LeatherGrade> findByIsActiveTrueOrderByGradenameAsc();*/
 
+    @Query("SELECT DISTINCT l FROM Leather l " +
+            "LEFT JOIN FETCH l.grade g " +
+            "WHERE l.id IN :ids AND l.isActive = true " +
+            "AND l.availabilityStatus = 'ACTIVE'")
+    List<Leather> findActiveByIds(@Param("ids") List<Long> ids);
+
 
 }

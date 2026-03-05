@@ -1,6 +1,6 @@
 package com.aiatelye.leather.mapper;
 
-import com.aiatelye.leather.dto.catalog.*;
+import com.aiatelye.leather.dto.catalog.leather.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 import com.aiatelye.leather.dao.*;
