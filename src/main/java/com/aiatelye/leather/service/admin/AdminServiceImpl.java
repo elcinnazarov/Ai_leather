@@ -8,6 +8,7 @@ import com.aiatelye.leather.dto.admin.product.UpdateProductModelRequest;
 import com.aiatelye.leather.enums.Enums;
 import com.aiatelye.leather.error.Exception.*;
 import com.aiatelye.leather.mapper.ProductModelMapper;
+import com.aiatelye.leather.repository.LeatherRepository;
 import com.aiatelye.leather.repository.ProductImageRepository;
 import com.aiatelye.leather.repository.ProductModelRepository;
 import com.aiatelye.leather.service.Minio.MinioService;
@@ -37,7 +38,7 @@ public class AdminServiceImpl {
         log.info("Creating product: {}", request.getModelName());
 
         // Validation
-        if (productModelRepository.existsByModelnameIgnoreCaseAndIsActiveTrue(
+        if (productModelRepository.existsBymodelnameIgnoreCaseAndIsActiveTrue(
                 request.getModelName()
         )) {
             throw new BadRequestException("Product already exists: " + request.getModelName());
@@ -149,7 +150,7 @@ public class AdminServiceImpl {
         if (request.getModelName() != null &&
                 !request.getModelName().equalsIgnoreCase(product.getModelname())) {
 
-            if (productModelRepository.existsByModelnameIgnoreCaseAndIsActiveTrueAndIdNot(
+            if (productModelRepository.existsBymodelnameIgnoreCaseAndIdNotAndIsActiveTrue(
                     request.getModelName(), productId)) {
                 throw new BadRequestException("Product with name '" + request.getModelName() + "' already exists");
             }

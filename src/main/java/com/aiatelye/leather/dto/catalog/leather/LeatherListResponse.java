@@ -12,7 +12,7 @@ public class LeatherListResponse {
     private Long id;
     private String name;
     private String color;
-    private String textureUrl; // Kiçik preview şəkil
+    private String imageUrl; // Kiçik preview şəkil
     private String origin;
     //private Integer stockAmount;
 

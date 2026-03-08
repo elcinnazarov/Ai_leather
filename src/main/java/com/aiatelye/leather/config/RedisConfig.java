@@ -36,7 +36,7 @@ public class RedisConfig {
         return template;
     }
 
-    @Bean(name = "LeatherCatalogCacheRepository")
+    @Bean(name = "LeatherCatalogCache")
     public RedisTemplate<String, String> LeatherCatalogCacheRepository(RedisConnectionFactory connectionFactory) {
         RedisTemplate<String, String> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);
@@ -48,6 +48,15 @@ public class RedisConfig {
 
     @Bean(name ="OrderIdempotencyCache")
     public RedisTemplate<String, String> OrderIdempotencyCache(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, String> template = new RedisTemplate<>();
+        template.setConnectionFactory(connectionFactory);
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new StringRedisSerializer());
+        return template;
+    }
+
+    @Bean(name = "designCache")
+    public RedisTemplate<String, String> designCacheTemplate(RedisConnectionFactory connectionFactory) {
         RedisTemplate<String, String> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);
         template.setKeySerializer(new StringRedisSerializer());

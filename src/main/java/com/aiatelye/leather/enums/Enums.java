@@ -7,11 +7,18 @@ public class Enums {
     public enum AuthProvider { LOCAL, GOOGLE }
     public enum Currency { AZN, USD, EUR }
     public enum NotificationType { ORDER_CONFIRMATION, ORDER_SHIPPED, PAYMENT_FAILED, ADMIN_NEW_ORDER }// musteriye melumat gondermek ucun
-    public enum DesignProcessStatus { GENERATING, SUCCESS, FAILED }
+    public enum DesignProcessStatus { GENERATING, SUCCESS, FAILED ,COMPLETED}
     public  enum ProductCategory {BAG, BELT, WALLET}
     public enum OrderType {READY_PRODUCT, AI_CUSTOM_DESIGN }
     public enum FavoriteTargetType {PRODUCT_MODEL, AI_DESIGN}
     public enum MinioFolderType {PRODUCT, LEATHER, AI}
+    public enum Gender {MALE, FEMALE, UNISEX}
+    public enum DesignCategory {CLASSIC, MODERN, LUXURY, MINIMALIST, VINTAGE}
+    public enum CacheKeyType {
+        STANDARD,   // MD5 hash (32 char)
+        CUSTOM,     // UUID format
+        UNKNOWN     // Tanınmayan
+    }
 
     public enum OrderStatus {
         PENDING, PAID, MANUFACTURING, SHIPPED, COMPLETED, CANCELLED;

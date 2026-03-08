@@ -22,8 +22,8 @@ import java.util.stream.Collectors;
 public interface ProductModelRepository extends JpaRepository<ProductModel,Long> ,
         JpaSpecificationExecutor<ProductModel> {
 
-    boolean existsByModelnameIgnoreCaseAndIsActiveTrue(String modelname);
-    boolean existsByModelnameIgnoreCaseAndIsActiveTrueAndIdNot(String modelName, Long id);
+    boolean existsBymodelnameIgnoreCaseAndIsActiveTrue(String modelname);
+    boolean existsBymodelnameIgnoreCaseAndIdNotAndIsActiveTrue(String modelName, Long id);
 
     @Query("SELECT p.modelname FROM ProductModel p WHERE p.id = :id")
     Optional<String> findModelNameById(@Param("id") Long id);
@@ -72,4 +72,8 @@ public interface ProductModelRepository extends JpaRepository<ProductModel,Long>
             "AND pm.availabilityStatus = 'ACTIVE'")
     List<ProductModel> findActiveByIds(@Param("ids") List<Long> ids);
 
+
+    @Query("SELECT pi.imageUrl FROM ProductImage pi " +
+            "WHERE pi.productModel.id = :id AND pi.isPrimary = true")
+    Optional<String> findPrimaryProductImageUrl(@Param("id") Long id);
 }

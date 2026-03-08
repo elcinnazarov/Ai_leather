@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ProductModelResponse {
     private Long id;
-    private String modelName;
+    private String modelname;
     private Enums.ProductCategory modelType;
     private String primaryImageUrl;
     private List<ProductImageResponse> images;

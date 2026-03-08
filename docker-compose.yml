@@ -40,13 +40,33 @@ services:
     networks:
       - ecommerce-network
 
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: ecommerce-rabbitmq
+    ports:
+      - "5672:5672"   # Spring Boot və n8n-in mesaj göndərəcəyi əsas port
+      - "15672:15672" # Sənin üçün vizual İdarəetmə Paneli (Dashboard) portu
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: password123
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "-q", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - ecommerce-network
+
 volumes:
   minio_data:
     driver: local
   redis-data:
     driver: local
+  rabbitmq_data: # RabbitMQ üçün yaddaş həcmi
+    driver: local
 
 networks:
   ecommerce-network:
     driver: bridge
-

@@ -11,18 +11,19 @@ import org.mapstruct.*;
 unmappedTargetPolicy = ReportingPolicy.ERROR)
 public interface LeatherMapper {
 
-    @Mapping(target = "leatherName", source = "leatherName")
+    @Mapping(source = "leatherName", target = "leathername")
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "isActive", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updateAt", ignore = true)
-    @Mapping(target = "leatherName", source = "leatherName")
     @Mapping(target = "grade", ignore = true)
+    // Bura diqqət! Xətanı aradan qaldıran hissə:
+    @Mapping(target = "imageUrl", ignore = true)
+    @Mapping(target = "color", ignore = true)
+    @Mapping(target = "availabilityStatus", ignore = true)
     Leather toLeatherEntity(CreatLeatherRequest request);
 
     @Mapping(source = "leathername", target = "leatherName")
     @Mapping(source = "imageUrl", target = "textureImageUrl")
-    @Mapping(source = "grade.gradename", target = "gradeType")
+    @Mapping(source = "grade.gradeType", target = "gradeType")
     LeatherResponse toLeatherResponse(Leather entity);
 
      //Update üçün - PARTIAL (null olanları ignore et)
@@ -34,6 +35,7 @@ public interface LeatherMapper {
      @Mapping(target = "availabilityStatus", ignore = true) // Başqa endpointdə
      @Mapping(target = "grade", ignore = true)           // Manual set edilir
      @Mapping(target = "leathername", source = "leatherName")
+     @Mapping(target = "imageUrl", ignore = true)
      void updateLeatherEntityFromRequest(UpdateLeatherRequest leatherUpdateRequest, @MappingTarget Leather entity);
 
 

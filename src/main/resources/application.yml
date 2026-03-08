@@ -48,6 +48,21 @@ minio:
     leather: leather-textures
     ai: ai-renders
 
+rabbitmq:
+  host: localhost      # Əgər Spring Boot-u IDE-də (IntelliJ) işlədirsənsə 'localhost' qalır. Docker-ə salsan 'ecommerce-rabbitmq' olacaq.
+  port: 5672
+  username: ${RABBITMQ_username}
+  password: ${RABBITMQ_password}
+  listener:
+    simple:
+      retry:
+        enabled: true
+        initial-interval: 3s
+        max-attempts: 3
+        max-interval: 10s
+ai:
+  callback:
+    secret: ${AI_CALLBACK_SECRET:my-super-secret-key-12345}
 data:
  redis:
     host: ${REDIS_HOST}
@@ -71,3 +86,10 @@ cache:
       ttl: 60
     orderIdempotency:
       ttl: 30
+    design:
+      ttl: 86400
+      generating:
+         ttl: 300
+      popular:
+        ttl:3600
+

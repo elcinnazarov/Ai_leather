@@ -14,13 +14,19 @@ public interface ProductModelMapper {
 
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "images", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "images", ignore = true)
+    @Mapping(source = "modelName", target = "modelname")
+    @Mapping(target = "isActive", ignore = true)
+    @Mapping(target = "availabilityStatus", ignore = true)
+    @Mapping(target = "gradePrices", ignore = true)
+    @Mapping(target = "favorites", ignore = true)
     ProductModel toProductModelEntity(CreateProductModelRequest request);
 
     @Mapping(target = "primaryImageUrl",
             expression = "java(getPrimaryImageUrl(entity))")
+
     ProductModelResponse toProductModelResponse(ProductModel entity);
 
 
@@ -37,8 +43,15 @@ public interface ProductModelMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "images", ignore = true)
-    @Mapping(target = "createdAt",ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
+// 1. Ad fərqliliyini buraya da əlavə edirik (Request -> Entity)
+    @Mapping(source = "modelName", target = "modelname")
+// 2. Yeniləmə zamanı dəyişməməsi gərəkən daxili sahələri ignore edirik
+    @Mapping(target = "isActive", ignore = true)
+    @Mapping(target = "availabilityStatus", ignore = true)
+    @Mapping(target = "gradePrices", ignore = true)
+    @Mapping(target = "favorites", ignore = true)
     void updateProductModelEntity(UpdateProductModelRequest request, @MappingTarget ProductModel entity);
 
 

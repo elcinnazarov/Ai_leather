@@ -1,6 +1,5 @@
 package com.aiatelye.leather.error.model;
 
-import com.aiatelye.leather.enums.Enums;
 import com.aiatelye.leather.error.Exception.*;
 import io.micrometer.common.lang.NonNull;
 import org.springframework.context.MessageSource;
@@ -308,6 +307,91 @@ public class ErrorHandle extends ResponseEntityExceptionHandler {
                         messageSource.getMessage(exception.getMessage(), null,locale)));
     }
 
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ErrorResponse> UnauthorizedException(UnauthorizedException exception,
+                                                                 Locale locale) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(new ErrorResponse(HttpStatus.FORBIDDEN.value(),
+                        messageSource.getMessage(exception.getMessage(), null,locale)));
+    }
+
+    @ExceptionHandler(OrderCannotBeCancelledException.class)
+    public ResponseEntity<ErrorResponse> OrderCannotBeCancelledException(OrderCannotBeCancelledException exception,
+                                                               Locale locale) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(new ErrorResponse(HttpStatus.FORBIDDEN.value(),
+                        messageSource.getMessage(exception.getMessage(), null,locale)));
+    }
+
+
+    @ExceptionHandler(InsufficientQuotaException.class)
+    public ResponseEntity<ErrorResponse> InsufficientQuotaException(InsufficientQuotaException exception,
+                                                                         Locale locale) {
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
+                .body(new ErrorResponse(HttpStatus.TOO_MANY_REQUESTS.value(),
+                        messageSource.getMessage("\"The daily custom design limit has been exceeded.: "+exception.getMessage(), null,locale)));
+    }
+
+
+    @ExceptionHandler(DailyUsageLimitException.class)
+    public ResponseEntity<ErrorResponse> DailyUsageLimitException(DailyUsageLimitException exception,
+                                                                    Locale locale) {
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
+                .body(new ErrorResponse(HttpStatus.TOO_MANY_REQUESTS.value(),
+                        messageSource.getMessage(" Daily standard design limit is over " ,null,locale)));
+    }
+
+
+    @ExceptionHandler(UserLimitNotFoundException.class)
+    public ResponseEntity<ErrorResponse> UserLimitNotFoundException(UserLimitNotFoundException exception,
+                                                                         Locale locale) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(new ErrorResponse(HttpStatus.FORBIDDEN.value(),
+                        messageSource.getMessage(exception.getMessage(), null,locale)));
+    }
+
+
+    @ExceptionHandler(UserCustomLimitNotFound.class)
+    public ResponseEntity<ErrorResponse> UserCustomLimitNotFound(UserCustomLimitNotFound exception,
+                                                                    Locale locale) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(new ErrorResponse(HttpStatus.FORBIDDEN.value(),
+                        messageSource.getMessage(exception.getMessage(), null,locale)));
+    }
+
+
+
+    @ExceptionHandler(AiCustomDesingProssesingException.class)
+    public ResponseEntity<ErrorResponse> AiPrepossessingException(AiCustomDesingProssesingException exception,
+                                                                  Locale locale) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                        messageSource.getMessage(exception.getMessage(), null,locale)));
+    }
+
+    @ExceptionHandler(AiStandardDesignProcessingException.class)
+    public ResponseEntity<ErrorResponse> AiStandartDesingProssesingException(AiStandardDesignProcessingException exception,
+                                                                             Locale locale) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                        messageSource.getMessage(exception.getMessage(), null,locale)));
+    }
+
+    @ExceptionHandler(AIImageProcessingException.class)
+    public ResponseEntity<ErrorResponse> AIImageProcessingException(AIImageProcessingException exception,
+                                                                             Locale locale) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                        messageSource.getMessage(exception.getMessage(), null,locale)));
+    }
+    @ExceptionHandler(DesignNotFoundException.class)
+    public ResponseEntity<ErrorResponse> AIImageProcessingException(DesignNotFoundException exception,
+                                                                    Locale locale) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ErrorResponse(HttpStatus.NOT_FOUND.value(),
+                        messageSource.getMessage(exception.getMessage(), null,locale)));
+    }
 
 
 

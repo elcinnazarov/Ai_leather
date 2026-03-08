@@ -18,12 +18,12 @@ import java.util.concurrent.TimeUnit;
 public class LeatherCatalogCacheRepository {
 
 
-    @Qualifier("LeatherCatalogCacheRepository") // Və ya "leatherCache" əlavə edin
+    @Qualifier("LeatherCatalogCache") // Və ya "leatherCache" əlavə edin
     private final RedisTemplate<String, String> leatherCatalog_redisTemplate;
 
     private final ObjectMapper objectMapper;
 
-    @Value("${cache.redis.}") // 10 dəqiqə default
+    @Value("${cache.redis.leather.ttl}") // 10 dəqiqə default
     private Long ttlMinutes;
 
     @Value("${cache.redis.grade.ttl:60}") // 60 dəqiqə (grade-lər az dəyişir)

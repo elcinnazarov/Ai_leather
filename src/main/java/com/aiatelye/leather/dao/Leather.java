@@ -2,21 +2,19 @@ package com.aiatelye.leather.dao;
 
 import com.aiatelye.leather.enums.Enums;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "leathers")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Leather {
+public class Leather extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +24,7 @@ public class Leather {
     private  String leathername;
 
     @Column(name = "texture_image_url", nullable = false)
-    private String imageUrl; // AI-nın "geyindirəcəyi" tekstura
+    private String imageUrl;
 
     @Column(name = "color",nullable = false)
     private String color; // "Black", "Brown", "Red"
@@ -43,12 +41,6 @@ public class Leather {
     @Builder.Default
     private Boolean isActive = false;
 
-    @Column(name = "created_at")
-    @CreationTimestamp
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "availability_status", nullable = false)
@@ -58,10 +50,5 @@ public class Leather {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "grade_id",nullable = false)
     private LeatherGrade grade;
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
 
 }

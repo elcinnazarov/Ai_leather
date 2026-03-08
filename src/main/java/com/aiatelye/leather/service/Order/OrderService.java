@@ -3,12 +3,14 @@ package com.aiatelye.leather.service.Order;
 import com.aiatelye.leather.cache.OrderIdempotencyCacheRepository;
 import com.aiatelye.leather.componet.OrderNumberGenerator;
 import com.aiatelye.leather.dao.*;
+import com.aiatelye.leather.dto.admin.order.OrderDetailResponse;
 import com.aiatelye.leather.dto.defalutResponse.PageResponse;
 import com.aiatelye.leather.dto.order.CreateOrderRequest;
 import com.aiatelye.leather.dto.order.OrderResponse;
 import com.aiatelye.leather.dto.order.OrderSummaryResponse;
 import com.aiatelye.leather.enums.Enums;
 import com.aiatelye.leather.error.Exception.*;
+import com.aiatelye.leather.error.Exception.OrderCannotBeCancelledException;
 import com.aiatelye.leather.mapper.OrderMapper;
 import com.aiatelye.leather.repository.*;
 import com.aiatelye.leather.service.pricing.CalculatePriceService;
@@ -28,6 +30,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -203,6 +206,7 @@ public class OrderService {
                 .leatherId(itemRequest.getLeatherId())
                 .leatherName(itemRequest.getLeatherName())
                 .renderImageUrl(itemRequest.getRenderImageUrl())
+                .designId(itemRequest.getDesignId())
                 .quantity(itemRequest.getQuantity())
                 .unitPrice(realUnitPrice)
                 .build();
@@ -260,7 +264,7 @@ public class OrderService {
 
 
     @Transactional(readOnly = true)
-    public PageResponse<OrderSummaryResponse> getMyOrders(int userId, int page, int size) {
+    public PageResponse<OrderSummaryResponse> getMyOrders(long userId, int page, int size) {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
 
@@ -278,5 +282,51 @@ public class OrderService {
                 .totalPages(pageResult.getTotalPages())
                 .last(pageResult.isLast())
                 .build();
+    }
+
+
+
+    @Transactional(readOnly = true)
+    public OrderDetailResponse getOrderById(Long orderId, Long userId) {
+        Order order = orderRepository.findByIdWithDetailswithuser(orderId)
+                .orElseThrow(() -> new NotFoundException("Order not found: " + orderId));
+
+        // sifarişin sahibi deyilsə -> Giriş qadağandır
+        if (!Objects.equals(order.getUser().getId(), userId)) {
+            log.warn("Unauthorized access attempt: User {} tried to view Order {} of User {}",
+                    userId, orderId, order.getUser().getId());
+            throw new UnauthorizedException("You can only view your own orders");
+        }
+
+        return orderMapper.toDetailResponse(order);
+    }
+
+    @Transactional
+    public OrderResponse cancelOrder(Long orderId, Long userId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new NotFoundException("Order not found: " + orderId));
+
+        // Təhlükəsizlik: Yalnız öz sifarişini ləğv edə bilər
+        if (!Objects.equals(order.getUser().getId(), userId)) {
+            throw new UnauthorizedException("You can only cancel your own orders");
+        }
+
+        if (order.getStatus() == Enums.OrderStatus.CANCELLED) {
+            return orderMapper.toResponse(order); // Artıq ləğv edilibsə, sadəcə cavab ver
+        }
+
+        // Yalnız PENDING status-da ləğv edilə bilər
+        if (order.getStatus() != Enums.OrderStatus.PENDING) {
+            throw new OrderCannotBeCancelledException(
+                    "Order cannot be cancelled. Current status: " + order.getStatus()
+            );
+        }
+
+        order.setStatus(Enums.OrderStatus.CANCELLED);
+        Order savedOrder = orderRepository.save(order);
+
+        log.info("Order cancelled: {} by user: {}", savedOrder.getOrderNumber(), userId);
+
+        return orderMapper.toResponse(savedOrder);
     }
 }

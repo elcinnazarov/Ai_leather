@@ -62,7 +62,7 @@ public class PriceDisplayService {
         return DisplayPriceResponse.builder()
                 .productId(productId)
                 .gradeId(price.getGrade().getId())
-                .gradeType(price.getGrade().getGradename().name())
+                .gradeType(price.getGrade().getGradeType().name())
                 .prices(priceMap)
                 .currentCurrency(currentCurrency)
                 .currentAmount(currentDetail.getAmount())

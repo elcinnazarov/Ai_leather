@@ -40,7 +40,7 @@ public class OrderController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
 
-        int userId = currentContext.getCurrentUserId();
+        long userId = currentContext.getCurrentUserId();
         log.info("GET /api/orders/me - User: {}, page: {}", userId, page);
 
         PageResponse<OrderSummaryResponse> response = orderService.getMyOrders(userId, page, size);
@@ -50,10 +50,21 @@ public class OrderController {
     @GetMapping("/{id}")
 
     public ResponseEntity<ApiResponse<OrderDetailResponse>> getOrderById(@PathVariable Long id) {
-        int userId = currentContext.getCurrentUserId();
+        long userId = currentContext.getCurrentUserId();
         log.info("GET /api/orders/{} - User: {}", id, userId);
 
         OrderDetailResponse response = orderService.getOrderById(id, userId);
         return ResponseEntity.ok(ApiResponse.success(response));
     }
+
+
+    @PutMapping("/{id}/cancel")
+    public ResponseEntity<ApiResponse<OrderResponse>> cancelOrder(@PathVariable Long id) {
+        Long userId = currentContext.getCurrentUserId();
+        log.info("PUT /api/orders/{}/cancel - User: {}", id, userId);
+
+        OrderResponse response = orderService.cancelOrder(id, userId);
+        return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
 }

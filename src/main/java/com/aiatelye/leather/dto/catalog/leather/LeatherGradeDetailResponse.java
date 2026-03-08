@@ -11,7 +11,7 @@ import java.util.List;
 public class LeatherGradeDetailResponse {
 
     private Long id;
-    private String name; // STANDARD, PREMIUM, EXOTIC
+    private String gradeType; // STANDARD, PREMIUM, EXOTIC
     private String description;
 
     // Bu grade-ə aid dərilər

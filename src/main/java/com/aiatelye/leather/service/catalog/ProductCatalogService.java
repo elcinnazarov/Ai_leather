@@ -189,7 +189,7 @@ public class ProductCatalogService {
 
         Map<String, ProductPriceMatrixResponse.GradePriceMatrix> matrix = product.getGradePrices().stream()
                 .collect(Collectors.toMap(
-                        pgp -> pgp.getGrade().getGradename().name(),
+                        pgp -> pgp.getGrade().getGradeType().name(),
                         this::buildGradePriceMatrix
                 ));
 
@@ -213,7 +213,7 @@ public class ProductCatalogService {
 
         return ProductDetailResponse.GradePriceSummary.builder()
                 .gradeId(pgp.getGrade().getId())
-                .gradeType(pgp.getGrade().getGradename().name())
+                .gradeType(pgp.getGrade().getGradeType().name())
                 .amount(priceDetail.getAmount())
                 .formatted(priceDetail.getFormatted())
                 .build();
@@ -236,7 +236,7 @@ public class ProductCatalogService {
 
         return ProductPriceMatrixResponse.GradePriceMatrix.builder()
                 .gradeId(pgp.getGrade().getId())
-                .gradeType(pgp.getGrade().getGradename().name())
+                .gradeType(pgp.getGrade().getGradeType().name())
                 .prices(priceDetails)
                 .build();
     }

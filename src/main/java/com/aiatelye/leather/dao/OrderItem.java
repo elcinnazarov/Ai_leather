@@ -5,6 +5,7 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "order_items",
         uniqueConstraints = @UniqueConstraint(
@@ -36,6 +37,9 @@ public class OrderItem extends BaseEntity{
 
     @Column(name = "render_image_url")
     private String renderImageUrl;
+
+    @Column(name = "design_id")
+    private Long designId;
 
     @Column(nullable = false)
     private Integer quantity;

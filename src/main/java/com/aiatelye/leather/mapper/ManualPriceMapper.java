@@ -15,7 +15,7 @@ public interface ManualPriceMapper {
     @Mapping(target = "productModelId", source = "entity.productModel.id")
     @Mapping(target = "productModelName", source = "entity.productModel.modelname")
     @Mapping(target = "gradeId", source = "entity.grade.id")
-    @Mapping(target = "gradeType", expression = "java(entity.getGrade().getGradename().name())")
+    @Mapping(target = "gradeType", expression = "java(entity.getGrade().getGradeType().name())")
     @Mapping(target = "currency", source = "currency")
     @Mapping(target = "manualPrice", source = "manualPrice")
     @Mapping(target = "autoCalculated", source = "autoCalculated")

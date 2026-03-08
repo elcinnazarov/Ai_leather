@@ -12,10 +12,7 @@ import com.aiatelye.leather.enums.Enums;
 import com.aiatelye.leather.error.Exception.BadRequestException;
 import com.aiatelye.leather.error.Exception.NotFoundException;
 import com.aiatelye.leather.mapper.ProductGradePriceMapper;
-import com.aiatelye.leather.repository.LeatherGradeRepository;
-import com.aiatelye.leather.repository.PricingRuleRepository;
-import com.aiatelye.leather.repository.ProductGradePriceRepository;
-import com.aiatelye.leather.repository.ProductModelRepository;
+import com.aiatelye.leather.repository.*;
 import com.aiatelye.leather.cache.PriceCacheRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +39,7 @@ public class ProductPriceService {
     private  final PriceCacheRepository priceCacheRepository;
     private  final PricingRuleRepository pricingRuleRepository;
     private  final  CalculatePriceService calculatePriceService;
+
 
 
 
@@ -320,7 +318,7 @@ public class ProductPriceService {
 
         return AdminCalculatedPriceResponse.GradePriceDetail.builder()
                 .gradeId(grade.getId())
-                .gradeType(grade.getGradename().name())
+                .gradeType(grade.getGradeType().name())
                 .azn(buildPriceDetail(baseAzn, Enums.Currency.AZN, "BASE", null))
                 .usd(calculateAndBuildDetail(baseAzn, Enums.Currency.USD, gp.getManualUsd(), rulesMap.get(Enums.Currency.USD)))
                 .eur(calculateAndBuildDetail(baseAzn, Enums.Currency.EUR, gp.getManualEur(), rulesMap.get(Enums.Currency.EUR)))

@@ -7,7 +7,7 @@ import lombok.Data;
 @Builder
 public class GradeListResponse {
     private Long id;
-    private String name; // STANDARD, PREMIUM, EXOTIC
+    private String gradeType; // STANDARD, PREMIUM, EXOTIC
     private String description;
     private Integer leatherCount;
 }

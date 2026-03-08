@@ -16,8 +16,9 @@ public class AdminOrderListResponse {
 
     private String customerName;
     private String customerEmail;
-
-    private BigDecimal totalAmount;
+    private BigDecimal shippingFee;
+    private BigDecimal subTotal;
+    private BigDecimal finalPrice;
     private Enums.Currency currency;
     private Enums.OrderStatus status;
     private Enums.PaymentStatus paymentStatus;

@@ -56,6 +56,9 @@ dependencies {
     implementation "org.mapstruct:mapstruct:${mapstructVersion}"//3 annotasiya-->Mapstruct ile islemek ucun
     annotationProcessor 'org.projectlombok:lombok'
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+
+//RabitMQ
+    implementation 'org.springframework.boot:spring-boot-starter-amqp'
 }
 
 tasks.named('test') {

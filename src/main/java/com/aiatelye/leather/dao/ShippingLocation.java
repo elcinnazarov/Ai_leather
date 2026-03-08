@@ -2,14 +2,12 @@ package com.aiatelye.leather.dao;
 
 import com.aiatelye.leather.enums.Enums;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 
 import java.math.BigDecimal;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "shipping_locations",
         uniqueConstraints = @UniqueConstraint(columnNames = {"country", "city_name","currency"}))

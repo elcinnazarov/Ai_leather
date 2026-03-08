@@ -22,6 +22,7 @@ public class LeatherController {
 
     private final LeatherCatalogService leatherCatalogService;
 
+
     @GetMapping
     public ResponseEntity<ApiResponse<PageResponse<LeatherListResponse>>> getLeathers(
             @Valid @ModelAttribute LeatherFilterRequest filter) {
@@ -58,23 +59,5 @@ public class LeatherController {
     }
 
 
-    @GetMapping
-    public ResponseEntity<ApiResponse<List<GradeListResponse>>> getAllGrades() {
-
-        log.info("GET /api/grades - All grades requested");
-
-        List<GradeListResponse> response =leatherCatalogService.getAllGrades();
-        return ResponseEntity.ok(ApiResponse.success(response));
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<LeatherGradeDetailResponse>> getGradeDetail(
-            @PathVariable Long id) {
-
-        log.info("GET /api/grades/{} - Grade detail requested", id);
-
-        LeatherGradeDetailResponse response = leatherCatalogService.getGradeDetail(id);
-        return ResponseEntity.ok(ApiResponse.success(response));
-    }
 
 }

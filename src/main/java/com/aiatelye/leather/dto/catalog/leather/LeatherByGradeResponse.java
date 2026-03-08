@@ -11,7 +11,7 @@ public class LeatherByGradeResponse {
     private Long id;
     private String name;
     private String color;
-    private String textureUrl;
+    private String imageUrl;
     private String origin;
     private LocalDateTime createdAt;
 }

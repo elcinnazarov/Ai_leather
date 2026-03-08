@@ -2,6 +2,7 @@ package com.aiatelye.leather.mapper;
 
 import com.aiatelye.leather.dao.Order;
 import com.aiatelye.leather.dao.OrderItem;
+import com.aiatelye.leather.dto.admin.order.OrderDetailResponse;
 import com.aiatelye.leather.dto.order.OrderResponse;
 import com.aiatelye.leather.dto.order.OrderSummaryResponse;
 import org.mapstruct.Mapper;
@@ -50,5 +51,12 @@ public interface OrderMapper {
         }
         return order.getOrderItems().get(0).getProductModelName();
     }
+
+   //getMapping{id}
+    @Mapping(target = "orderId", source = "id")
+    @Mapping(target = "customerEmail", source = "user.email")
+    @Mapping(target = "items", expression = "java(mapOrderItems(order.getOrderItems()))")
+    @Mapping(target = "paymentStatus", source = "payment.status")
+    OrderDetailResponse toDetailResponse(Order order);
 
 }

@@ -44,6 +44,12 @@ public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecific
 
 
 
-    Page<Order> findByUserId(int userId, Pageable pageable);
+    Page<Order> findByUserId(long userId, Pageable pageable);
+
+    @Query("SELECT o FROM Order o " +
+            "LEFT JOIN FETCH o.orderItems " +
+            "LEFT JOIN FETCH o.payment" +
+            " WHERE o.id = :id")
+    Optional<Order> findByIdWithDetailswithuser(@Param("id") Long id);
 
 }

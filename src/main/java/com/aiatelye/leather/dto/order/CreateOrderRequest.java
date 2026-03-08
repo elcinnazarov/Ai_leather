@@ -54,6 +54,8 @@ public class CreateOrderRequest {
 
         private String renderImageUrl;
 
+        private Long designId;
+
         @NotNull
         @Min(value = 1, message = "Say minimum 1 olmalıdır")
         private Integer quantity;

@@ -9,8 +9,8 @@ public class P_AvailableLeatherResponse {
     private Long id;
     private String name;
     private String color;
-    private String textureUrl;
-    private Integer stockAmount;
+    private String imageUrl;
+    //private Integer stockAmount;
     private String gradeType;
     private String origin;
 }

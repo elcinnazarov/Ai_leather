@@ -16,7 +16,7 @@ public interface LeatherCatalogMapper {
 
 
     @Mapping(target = "name", source = "leathername")
-    @Mapping(target = "gradeType", source = "grade.gradename")
+    @Mapping(target = "gradeType", source = "grade.gradeType")
     @Mapping(target = "gradeLevel", source = "grade.gradeLevel")
     LeatherListResponse toListResponse(Leather leather);
 
@@ -24,7 +24,7 @@ public interface LeatherCatalogMapper {
 
 
     @Mapping(target = "name", source = "leathername")
-    @Mapping(target = "additionalImages", ignore = true) // Əgər varsa əlavə et
+    @Mapping(target = "textureUrl", ignore = true) // Əgər varsa əlavə et
     @Mapping(target = "description", ignore = true) // Entity-də yoxdursa
     @Mapping(target = "grade", source = "grade")
     @Mapping(target = "usedInProducts", expression = "java(mapUsedInProducts(leather.getGrade()))")
@@ -34,7 +34,7 @@ public interface LeatherCatalogMapper {
         if (grade == null) return null;
         return LeatherDetailResponse.GradeInfo.builder()
                 .id(grade.getId())
-                .name(grade.getGradename().name())
+                .name(grade.getGradeType().name())
                 .description(grade.getDescription())
                 .build();
     }
@@ -70,12 +70,12 @@ public interface LeatherCatalogMapper {
     List<LeatherByGradeResponse> toResponseList(List<Leather> leathers);
 
 
-    @Mapping(target = "name", source = "gradename")
+    @Mapping(target = "gradeType", source = "gradeType")
     @Mapping(target = "leatherCount", ignore = true)
     GradeListResponse toResponse(LeatherGrade grade);
 
 
-    @Mapping(target = "name", source = "gradename")
+    @Mapping(target = "gradeType", source = "gradeType")
     @Mapping(target = "leathers", expression = "java(mapLeathers(grade))")
     LeatherGradeDetailResponse toDetailResponse(LeatherGrade grade);
 

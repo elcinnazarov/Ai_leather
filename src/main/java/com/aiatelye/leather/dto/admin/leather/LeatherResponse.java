@@ -16,7 +16,6 @@ public class LeatherResponse {
     private String textureImageUrl;
     private String color;
     private String origin;
-    private Integer stockAmount;
     private Boolean isActive;
     private Enums.AvailabilityStatus availabilityStatus;
     private Enums.GradeType gradeType;

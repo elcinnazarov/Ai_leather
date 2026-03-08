@@ -19,8 +19,11 @@ public class LeatherGrade {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "grade_type",unique = true)
-    private Enums.GradeType gradename;// STANDARD, PREMIUM, EXOTIC
+    private Enums.GradeType gradeType;// STANDARD, PREMIUM, EXOTIC
 
+    // Bax, sənə lazım olan sütun budur:
+    @Column(name = "grade_level", nullable = false)
+    private Integer gradeLevel; // 1, 2, 3 rəqəmlərini burada saxlayacağıq
 
     @Column(columnDefinition = "TEXT")
     private String description;

@@ -11,7 +11,7 @@ import java.util.List;
 public interface AvailableLeatherMapper {
 
     @Mapping(target = "name", source = "leathername")
-    @Mapping(target = "gradeType", source = "grade.gradename")
+    @Mapping(target = "gradeType", source = "grade.gradeType")
     P_AvailableLeatherResponse toResponse(Leather leather);
 
     List<P_AvailableLeatherResponse> toResponseList(List<Leather> leathers);

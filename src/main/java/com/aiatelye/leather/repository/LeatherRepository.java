@@ -2,7 +2,6 @@ package com.aiatelye.leather.repository;
 
 
 import com.aiatelye.leather.dao.Leather;
-import com.aiatelye.leather.dao.LeatherGrade;
 import com.aiatelye.leather.enums.Enums;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,15 +10,16 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-
+@Repository
 public interface LeatherRepository extends JpaRepository<Leather,Long> {
 
-    boolean existsByLeathernameIgnoreCaseAndIsActiveTrue(String leatherName);
+    boolean existsByleathernameIgnoreCaseAndIsActiveTrue(String leatherName);
 
-    boolean existsByLeathernameIgnoreCaseAndIsActiveTrue(String leatherName,Long leatherId);
+    boolean existsByleathernameIgnoreCaseAndIdNotAndIsActiveTrue(String leatherName, Long leatherId);
 
     @Query("""
         SELECT DISTINCT l FROM Leather l
@@ -55,7 +55,7 @@ public interface LeatherRepository extends JpaRepository<Leather,Long> {
      */
     @EntityGraph(attributePaths = {"grade"})
     @Query("SELECT l FROM Leather l " +
-            "WHERE l.grade.gradename = :gradeType " +
+            "WHERE l.grade.gradeType = :gradeType " +
             "AND l.isActive = true " +
             "AND l.availabilityStatus = 'ACTIVE'")
     Page<Leather> findByGradeType(@Param("gradeType") Enums.GradeType gradeType, Pageable pageable);
@@ -72,7 +72,7 @@ public interface LeatherRepository extends JpaRepository<Leather,Long> {
             "LEFT JOIN g.leathers l " +
             "WHERE g.isActive = true " +
             "GROUP BY g " +
-            "ORDER BY g.gradename")
+            "ORDER BY g.gradeType")
     List<Object[]> findAllWithLeatherCount();
 
     /*
@@ -86,5 +86,8 @@ public interface LeatherRepository extends JpaRepository<Leather,Long> {
             "AND l.availabilityStatus = 'ACTIVE'")
     List<Leather> findActiveByIds(@Param("ids") List<Long> ids);
 
+
+    @Query("SELECT l.imageUrl FROM Leather l WHERE l.id = :id")
+    Optional<String> findLeatherImageUrl(@Param("id") Long id);
 
 }

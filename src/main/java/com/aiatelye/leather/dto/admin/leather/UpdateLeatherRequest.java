@@ -16,6 +16,9 @@ public class UpdateLeatherRequest {
     @Size(min = 2, max = 100, message = "Origin must be between 2 and 100 characters")
     private String origin;
 
+    @Size(min = 3, max = 100, message = "Leather des must be between 3 and 100 characters")
+    private String description;
+
     /*@PositiveOrZero(message = "Stock amount cannot be negative")
     private Integer stockAmount;*/
 

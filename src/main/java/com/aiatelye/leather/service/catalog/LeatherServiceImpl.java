@@ -34,7 +34,7 @@ public class LeatherServiceImpl implements LeatherService {
     public LeatherResponse createLeather(CreatLeatherRequest request, MultipartFile image) {
         log.info("Creating leather: {}", request.getLeatherName());
 
-        if (leatherRepository.existsByLeathernameIgnoreCaseAndIsActiveTrue(request.getLeatherName())) {
+        if (leatherRepository.existsByleathernameIgnoreCaseAndIsActiveTrue(request.getLeatherName())) {
 
             throw new BadRequestException(
                     "Leather with name '" + request.getLeatherName() + "' already exists");
@@ -143,7 +143,7 @@ public class LeatherServiceImpl implements LeatherService {
         if (request.getLeatherName() != null &&
                 !request.getLeatherName().equalsIgnoreCase(leather.getLeathername())) {
 
-            if (leatherRepository.existsByLeathernameIgnoreCaseAndIsActiveTrue(
+            if (leatherRepository.existsByleathernameIgnoreCaseAndIdNotAndIsActiveTrue(
                     request.getLeatherName(), leatherId)) {
                 throw new BadRequestException("Leather with name '" + request.getLeatherName() + "' already exists");
             }
