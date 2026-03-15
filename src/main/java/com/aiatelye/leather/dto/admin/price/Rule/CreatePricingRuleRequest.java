@@ -1,6 +1,6 @@
 package com.aiatelye.leather.dto.admin.price.Rule;
 
-import com.aiatelye.leather.enums.Enums;
+import com.aiatelye.leather.dao.enums.Enums;
 import com.aiatelye.leather.validators.MultiplierMinimum1;
 import com.aiatelye.leather.validators.NotBaseCurrencyAZN;
 import jakarta.validation.constraints.NotNull;

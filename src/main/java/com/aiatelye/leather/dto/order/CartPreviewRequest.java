@@ -1,6 +1,6 @@
 package com.aiatelye.leather.dto.order;
 
-import com.aiatelye.leather.enums.Enums;
+import com.aiatelye.leather.dao.enums.Enums;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;

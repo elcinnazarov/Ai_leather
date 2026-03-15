@@ -1,7 +1,7 @@
 package com.aiatelye.leather.service.Minio;
 
 
-import com.aiatelye.leather.enums.Enums;
+import com.aiatelye.leather.dao.enums.Enums;
 import com.aiatelye.leather.error.Exception.*;
 import io.minio.*;
 import lombok.RequiredArgsConstructor;

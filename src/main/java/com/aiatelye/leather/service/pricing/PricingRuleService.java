@@ -4,7 +4,7 @@ import com.aiatelye.leather.dao.PricingRule;
 import com.aiatelye.leather.dto.admin.price.Rule.CreatePricingRuleRequest;
 import com.aiatelye.leather.dto.admin.price.manuel.PricingRuleResponse;
 import com.aiatelye.leather.dto.admin.price.Rule.UpdatePricingRuleRequest;
-import com.aiatelye.leather.enums.Enums;
+import com.aiatelye.leather.dao.enums.Enums;
 import com.aiatelye.leather.error.Exception.BadRequestException;
 import com.aiatelye.leather.error.Exception.NotFoundException;
 import com.aiatelye.leather.error.Exception.PricingRuleAlreadyExistsException;

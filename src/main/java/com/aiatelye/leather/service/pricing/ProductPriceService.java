@@ -8,7 +8,7 @@ import com.aiatelye.leather.dao.ProductModel;
 import com.aiatelye.leather.dto.admin.price.AdminCalculatedPriceResponse;
 import com.aiatelye.leather.dto.admin.price.product.*;
 import com.aiatelye.leather.dto.defalutResponse.PageResponse;
-import com.aiatelye.leather.enums.Enums;
+import com.aiatelye.leather.dao.enums.Enums;
 import com.aiatelye.leather.error.Exception.BadRequestException;
 import com.aiatelye.leather.error.Exception.NotFoundException;
 import com.aiatelye.leather.mapper.ProductGradePriceMapper;

@@ -3,7 +3,7 @@ package com.aiatelye.leather.service.design;
 import com.aiatelye.leather.cache.DesignCacheRepository;
 import com.aiatelye.leather.dao.*;
 import com.aiatelye.leather.dto.AiDesinger.GenerateDesignRequest;
-import com.aiatelye.leather.enums.Enums;
+import com.aiatelye.leather.dao.enums.Enums;
 import com.aiatelye.leather.error.Exception.NotFoundException;
 import com.aiatelye.leather.error.Exception.UserCustomLimitNotFound;
 import com.aiatelye.leather.error.Exception.UserLimitNotFoundException;

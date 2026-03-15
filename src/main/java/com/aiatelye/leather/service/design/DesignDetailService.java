@@ -48,7 +48,7 @@ public class DesignDetailService {
             Long currentUserId = currentContext.getCurrentUserId();
             Long ownerId = design.getUser().getId();
             boolean isOwner = Objects.equals(ownerId, currentUserId);
-            boolean isAdmin = currentContext.hasRole("ADMIN");
+            boolean isAdmin = currentContext.UseROle("ADMIN");
 
             if (!isOwner && !isAdmin) {
                 log.error("Səlahiyyətsiz giriş! User: {}, Owner: {}, Design: {}",

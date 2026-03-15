@@ -1,11 +1,10 @@
 package com.aiatelye.leather.dao;
 
 
-import com.aiatelye.leather.enums.Enums;
+import com.aiatelye.leather.dao.enums.Enums;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "custom_designs") // Adı düzəltdik: designs

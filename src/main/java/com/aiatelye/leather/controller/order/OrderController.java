@@ -1,4 +1,4 @@
-package com.aiatelye.leather.controller;
+package com.aiatelye.leather.controller.order;
 
 import com.aiatelye.leather.componet.CurrentContext;
 import com.aiatelye.leather.dto.admin.order.OrderDetailResponse;

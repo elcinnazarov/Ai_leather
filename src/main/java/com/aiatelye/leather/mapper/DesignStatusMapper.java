@@ -3,7 +3,7 @@ package com.aiatelye.leather.mapper;
 import com.aiatelye.leather.cache.DesignCacheRepository;
 import com.aiatelye.leather.dao.CustomDesigns;
 import com.aiatelye.leather.dto.AiDesinger.DesignStatusResponse;
-import com.aiatelye.leather.enums.Enums;
+import com.aiatelye.leather.dao.enums.Enums;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

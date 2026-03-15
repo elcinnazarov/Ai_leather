@@ -6,7 +6,7 @@ import com.aiatelye.leather.dao.LeatherGrade;
 import com.aiatelye.leather.dto.admin.leather.CreatLeatherRequest;
 import com.aiatelye.leather.dto.admin.leather.LeatherResponse;
 import com.aiatelye.leather.dto.admin.leather.UpdateLeatherRequest;
-import com.aiatelye.leather.enums.Enums;
+import com.aiatelye.leather.dao.enums.Enums;
 import com.aiatelye.leather.error.Exception.*;
 import com.aiatelye.leather.mapper.LeatherMapper;
 import com.aiatelye.leather.repository.LeatherRepository;

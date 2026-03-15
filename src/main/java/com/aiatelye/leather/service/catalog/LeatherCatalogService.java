@@ -6,7 +6,7 @@ import com.aiatelye.leather.dao.Leather;
 import com.aiatelye.leather.dao.LeatherGrade;
 import com.aiatelye.leather.dto.catalog.leather.*;
 import com.aiatelye.leather.dto.defalutResponse.PageResponse;
-import com.aiatelye.leather.enums.Enums;
+import com.aiatelye.leather.dao.enums.Enums;
 import com.aiatelye.leather.error.Exception.NotFoundException;
 import com.aiatelye.leather.mapper.LeatherCatalogMapper;
 import com.aiatelye.leather.repository.LeatherGradeRepository;

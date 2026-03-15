@@ -2,7 +2,7 @@ package com.aiatelye.leather.Specification;
 
 import com.aiatelye.leather.dao.Leather;
 import com.aiatelye.leather.dto.catalog.leather.LeatherFilterRequest;
-import com.aiatelye.leather.enums.Enums;
+import com.aiatelye.leather.dao.enums.Enums;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;

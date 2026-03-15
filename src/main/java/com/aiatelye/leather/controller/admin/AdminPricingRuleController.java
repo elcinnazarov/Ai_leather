@@ -4,7 +4,7 @@ import com.aiatelye.leather.dto.defalutResponse.ApiResponse;
 import com.aiatelye.leather.dto.admin.price.Rule.CreatePricingRuleRequest;
 import com.aiatelye.leather.dto.admin.price.manuel.PricingRuleResponse;
 import com.aiatelye.leather.dto.admin.price.Rule.UpdatePricingRuleRequest;
-import com.aiatelye.leather.enums.Enums;
+import com.aiatelye.leather.dao.enums.Enums;
 import com.aiatelye.leather.service.pricing.PricingRuleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/api/admin/pricing")
+    @RequestMapping("/api/admin/pricing")
 public class AdminPricingRuleController {
 
     private  final PricingRuleService pricingRuleService;

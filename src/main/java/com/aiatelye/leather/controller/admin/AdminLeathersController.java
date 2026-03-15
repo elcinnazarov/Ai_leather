@@ -4,7 +4,7 @@ import com.aiatelye.leather.dto.defalutResponse.ApiResponse;
 import com.aiatelye.leather.dto.admin.leather.CreatLeatherRequest;
 import com.aiatelye.leather.dto.admin.leather.LeatherResponse;
 import com.aiatelye.leather.dto.admin.leather.UpdateLeatherRequest;
-import com.aiatelye.leather.enums.Enums;
+import com.aiatelye.leather.dao.enums.Enums;
 import com.aiatelye.leather.service.catalog.LeatherServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

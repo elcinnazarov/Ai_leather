@@ -2,7 +2,7 @@ package com.aiatelye.leather.messaging.rabbitMQ;
 
 import com.aiatelye.leather.cache.DesignCacheRepository;
 import com.aiatelye.leather.config.RabbitConfig;
-import com.aiatelye.leather.enums.Enums;
+import com.aiatelye.leather.dao.enums.Enums;
 import com.aiatelye.leather.messaging.rabbitMQ.event.DesignGenerationEvent;
 import com.aiatelye.leather.repository.CustomDesignRepository;
 import lombok.RequiredArgsConstructor;

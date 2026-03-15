@@ -3,7 +3,7 @@ package com.aiatelye.leather.service.pricing;
 import com.aiatelye.leather.dao.CalculatedPrice;
 import com.aiatelye.leather.dao.PricingRule;
 import com.aiatelye.leather.dao.ProductGradePrice;
-import com.aiatelye.leather.enums.Enums;
+import com.aiatelye.leather.dao.enums.Enums;
 import com.aiatelye.leather.repository.PricingRuleRepository;
 import com.aiatelye.leather.repository.ProductGradePriceRepository;
 import com.aiatelye.leather.cache.PriceCacheRepository;

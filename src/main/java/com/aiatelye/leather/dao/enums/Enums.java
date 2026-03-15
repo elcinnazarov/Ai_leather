@@ -1,7 +1,8 @@
-package com.aiatelye.leather.enums;
+package com.aiatelye.leather.dao.enums;
+
 
 public class Enums {
-    public enum UserRole { ADMIN, CUSTOMER }
+
     public enum GradeType { STANDARD, PREMIUM, EXOTIC }
     public enum PaymentStatus { WAITING, SUCCESS, FAILED }
     public enum AuthProvider { LOCAL, GOOGLE }
@@ -35,9 +36,6 @@ public class Enums {
 
 
     }
-
-
-
 
     public enum AvailabilityStatus {
         ACTIVE,

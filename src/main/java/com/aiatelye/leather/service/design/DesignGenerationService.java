@@ -7,7 +7,7 @@ import com.aiatelye.leather.dao.ProductModel;
 import com.aiatelye.leather.dao.UserLimit;
 import com.aiatelye.leather.dto.AiDesinger.DesignResponse;
 import com.aiatelye.leather.dto.AiDesinger.GenerateDesignRequest;
-import com.aiatelye.leather.enums.Enums;
+import com.aiatelye.leather.dao.enums.Enums;
 import com.aiatelye.leather.error.Exception.*;
 import com.aiatelye.leather.repository.CustomDesignRepository;
 import com.aiatelye.leather.repository.LeatherRepository;

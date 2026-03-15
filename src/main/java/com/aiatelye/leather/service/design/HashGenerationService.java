@@ -1,7 +1,7 @@
 package com.aiatelye.leather.service.design;
 
 import com.aiatelye.leather.dto.AiDesinger.GenerateDesignRequest;
-import com.aiatelye.leather.enums.Enums;
+import com.aiatelye.leather.dao.enums.Enums;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;

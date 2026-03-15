@@ -1,6 +1,8 @@
 package com.aiatelye.leather.dao;
-import com.aiatelye.leather.enums.Enums;
+import com.aiatelye.leather.Securty.model.Enums.UserRole;
+import com.aiatelye.leather.dao.enums.Enums;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -8,13 +10,17 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 @Data
-public class User{
+
+public class User extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column(unique = true, nullable = false)
     private String email;
+
+    @Column(name = "password", nullable = false)
+    private String password;
 
     @Column(nullable = false)
     private String name;
@@ -24,7 +30,7 @@ public class User{
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Enums.UserRole role;
+    private UserRole role;
 
     @Enumerated(EnumType.STRING)
     private Enums.AuthProvider provider;// Local veya Google

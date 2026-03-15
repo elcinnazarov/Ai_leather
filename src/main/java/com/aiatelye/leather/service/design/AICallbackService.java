@@ -3,7 +3,7 @@ package com.aiatelye.leather.service.design;
 import com.aiatelye.leather.cache.DesignCacheRepository;
 import com.aiatelye.leather.dao.CustomDesigns;
 import com.aiatelye.leather.dto.AiDesinger.AICallbackRequest;
-import com.aiatelye.leather.enums.Enums;
+import com.aiatelye.leather.dao.enums.Enums;
 import com.aiatelye.leather.error.Exception.DesignNotFoundException;
 import com.aiatelye.leather.repository.CustomDesignRepository;
 import com.aiatelye.leather.service.Minio.AIMinioService;

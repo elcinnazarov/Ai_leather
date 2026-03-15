@@ -4,7 +4,7 @@ import com.aiatelye.leather.dao.PricingRule;
 import com.aiatelye.leather.dao.ProductGradePrice;
 import com.aiatelye.leather.dao.ProductModel;
 import com.aiatelye.leather.dto.admin.price.manuel.*;
-import com.aiatelye.leather.enums.Enums;
+import com.aiatelye.leather.dao.enums.Enums;
 import com.aiatelye.leather.error.Exception.BaseProductGradePriceNotFoundException;
 import com.aiatelye.leather.error.Exception.NotFoundException;
 import com.aiatelye.leather.mapper.ManualPriceMapper;

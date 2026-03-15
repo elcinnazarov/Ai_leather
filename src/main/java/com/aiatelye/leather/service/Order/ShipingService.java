@@ -1,7 +1,7 @@
 package com.aiatelye.leather.service.Order;
 
 import com.aiatelye.leather.dao.ShippingLocation;
-import com.aiatelye.leather.enums.Enums;
+import com.aiatelye.leather.dao.enums.Enums;
 import com.aiatelye.leather.error.Exception.NotFoundException;
 import com.aiatelye.leather.repository.ShippingLocationRepository;
 import lombok.RequiredArgsConstructor;

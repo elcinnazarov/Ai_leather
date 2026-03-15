@@ -1,6 +1,6 @@
 package com.aiatelye.leather.config.infrastructure;
 
-import com.aiatelye.leather.enums.Enums;
+import com.aiatelye.leather.dao.enums.Enums;
 
 public class CurrencyContext {
 

@@ -1,7 +1,7 @@
 package com.aiatelye.leather.dto.admin.leather;
 
 
-import com.aiatelye.leather.enums.Enums;
+import com.aiatelye.leather.dao.enums.Enums;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

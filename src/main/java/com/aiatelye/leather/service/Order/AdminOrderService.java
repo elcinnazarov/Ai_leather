@@ -4,7 +4,7 @@ import com.aiatelye.leather.Specification.OrderSpecification;
 import com.aiatelye.leather.dao.Order;
 import com.aiatelye.leather.dto.admin.order.*;
 import com.aiatelye.leather.dto.defalutResponse.PageResponse;
-import com.aiatelye.leather.enums.Enums;
+import com.aiatelye.leather.dao.enums.Enums;
 import com.aiatelye.leather.error.Exception.InvalidOrderStatusTransitionException;
 import com.aiatelye.leather.error.Exception.NotFoundException;
 import com.aiatelye.leather.error.Exception.OrderSpesificationException;

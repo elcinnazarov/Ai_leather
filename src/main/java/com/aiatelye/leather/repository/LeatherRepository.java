@@ -2,7 +2,7 @@ package com.aiatelye.leather.repository;
 
 
 import com.aiatelye.leather.dao.Leather;
-import com.aiatelye.leather.enums.Enums;
+import com.aiatelye.leather.dao.enums.Enums;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;

@@ -8,7 +8,7 @@ import com.aiatelye.leather.dto.defalutResponse.PageResponse;
 import com.aiatelye.leather.dto.order.CreateOrderRequest;
 import com.aiatelye.leather.dto.order.OrderResponse;
 import com.aiatelye.leather.dto.order.OrderSummaryResponse;
-import com.aiatelye.leather.enums.Enums;
+import com.aiatelye.leather.dao.enums.Enums;
 import com.aiatelye.leather.error.Exception.*;
 import com.aiatelye.leather.error.Exception.OrderCannotBeCancelledException;
 import com.aiatelye.leather.mapper.OrderMapper;
@@ -60,7 +60,7 @@ public class OrderService {
         }
 
         try {
-            User user = userRepository.findById(Math.toIntExact(userId))
+            User user = userRepository.findById((long) Math.toIntExact(userId))
                     .orElseThrow(() -> new NotFoundException("User not found  " + userId));
 
             // Postal code validation

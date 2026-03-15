@@ -5,7 +5,7 @@ import com.aiatelye.leather.dao.ProductImage;
 import com.aiatelye.leather.dao.ProductModel;
 import com.aiatelye.leather.dto.order.CartPreviewRequest;
 import com.aiatelye.leather.dto.order.CartPreviewResponse;
-import com.aiatelye.leather.enums.Enums;
+import com.aiatelye.leather.dao.enums.Enums;
 import com.aiatelye.leather.error.Exception.BadRequestException;
 import com.aiatelye.leather.mapper.CartPreviewMapper;
 import com.aiatelye.leather.repository.LeatherRepository;

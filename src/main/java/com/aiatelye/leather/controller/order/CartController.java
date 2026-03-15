@@ -1,4 +1,4 @@
-package com.aiatelye.leather.controller;
+package com.aiatelye.leather.controller.order;
 
 import com.aiatelye.leather.dto.defalutResponse.ApiResponse;
 import com.aiatelye.leather.dto.order.CartPreviewRequest;
