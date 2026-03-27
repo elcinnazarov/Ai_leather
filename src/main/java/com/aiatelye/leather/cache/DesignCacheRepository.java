@@ -16,8 +16,9 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-@Slf4j
+
 @Repository
+@Slf4j
 @RequiredArgsConstructor
 public class DesignCacheRepository {
 
@@ -31,7 +32,7 @@ public class DesignCacheRepository {
     @Value("${cache.redis.design.generating.ttl}")
     private long GENERATING_TTL_SECONDS;
 
-    @Value("${cache.redis.design.popular}")
+    @Value("${cache.redis.design.popular.ttl}")
     private long POPULAR_TTL_SECONDS;
 
     // Prefixlər

@@ -24,18 +24,16 @@ public class AICallbackService {
 
     @Transactional
     public void processCallback(AICallbackRequest request) {
-        log.info(" AI Callback received: designId={}, status={}, hasImage={}",
-                request.getDesignId(),
-                request.getStatus(),
-                request.hasGeneratedImage());
+        log.info(" AI Callback received: designId={}, status={}",
+                request.getDesignId(), request.getStatus());
 
-        // 1. FAILED və ya şəkil yoxdursa
+        //  FAILED olubsa və ya minioObjectKey yoxdursa
         if (!request.isSuccess()) {
             handleFailure(request);
             return;
         }
 
-        // 2. DB-dən design tap
+        //  DB-dən design tap
         CustomDesigns design = customDesignRepository.findById(request.getDesignId())
                 .orElseThrow(() -> {
                     log.error(" Design not found: designId={}", request.getDesignId());
@@ -43,17 +41,18 @@ public class AICallbackService {
                 });
 
         try {
-            // 3. Şəkili MinIO-ya yüklə (YENI SERVICE)
-            AIMinioService.AIImageUploadResult uploadResult = uploadImage(request);
+            //  ƏN BÖYÜK FƏRQ: Şəkil yükləmirik!
+            // n8n şəkli artıq MinIO-ya yükləyib. Biz sadəcə o addan istifadə edib Frontend üçün vaxtlı link yaradırıq.
+            String presignedUrl = aiMinioService.getPresignedUrl(request.getMinioObjectKey());
 
-            // 4. DB update
-            updateDesignSuccess(design, uploadResult, request);
+            // DB update
+            updateDesignSuccess(design, presignedUrl, request);
 
-            // 5. Redis update (generating → completed)
-            updateRedisCache(request, uploadResult, design);
+            //  Redis update (generating -> completed)
+            updateRedisCache(request, presignedUrl, design);
 
-            log.info(" AI Callback processed: designId={}, objectKey={}",
-                    request.getDesignId(), uploadResult.getObjectKey());
+            log.info("AI Callback processed successfully: designId={}, objectKey={}",
+                    request.getDesignId(), request.getMinioObjectKey());
 
         } catch (Exception e) {
             log.error(" Callback processing failed: designId={}", request.getDesignId(), e);
@@ -61,74 +60,48 @@ public class AICallbackService {
         }
     }
 
-    // ==========================================
-    // PRIVATE METHODS
-    // ==========================================
+    // PRIVATE METHODS (YALNIZ DB VƏ REDIS)
 
-    private AIMinioService.AIImageUploadResult uploadImage(AICallbackRequest request) {
-        if (request.getGeneratedImageBase64() != null && !request.getGeneratedImageBase64().isEmpty()) {
-            // Prioritet: Base64
-            log.debug("Uploading Base64 image: designId={}", request.getDesignId());
-            return aiMinioService.uploadGeneratedImage(
-                    request.getGeneratedImageBase64(),
-                    request.getDesignId(),
-                    "png"
-            );
-        } else {
-            // Alternativ: URL
-            log.debug("Uploading from URL: designId={}, url={}",
-                    request.getDesignId(), request.getGeneratedImageUrl());
-            return aiMinioService.uploadFromUrl(
-                    request.getGeneratedImageUrl(),
-                    request.getDesignId()
-            );
-        }
-    }
 
-    private void updateDesignSuccess(CustomDesigns design, AIMinioService.AIImageUploadResult result,
-                                     AICallbackRequest request) {
-        design.setRenderImageUrl(result.getPresignedUrl());     // 1 saatlıq URL
-        design.setMinioObjectKey(result.getObjectKey());        // Daimi key
+    private void updateDesignSuccess(CustomDesigns design, String presignedUrl, AICallbackRequest request) {
+        design.setRenderImageUrl(presignedUrl);                // Frontend-də göstərmək üçün URL
+        design.setMinioObjectKey(request.getMinioObjectKey()); // Daimi saxlama açarı (MinIO yolu)
         design.setStatus(Enums.DesignProcessStatus.COMPLETED);
         design.setPromptUsed(request.getPromptUsed());
 
         customDesignRepository.save(design);
 
-        log.debug("💾 Design updated: designId={}, url={}", design.getId(), result.getPresignedUrl());
+        log.debug(" Design updated in DB: designId={}, url={}", design.getId(), presignedUrl);
     }
 
-    private void updateRedisCache(AICallbackRequest request, AIMinioService.AIImageUploadResult result,
-                                  CustomDesigns design) {
-        // Generating status sil
+    private void updateRedisCache(AICallbackRequest request, String presignedUrl, CustomDesigns design) {
+        // Generating statusunu silirik
         designCacheRepository.removeGeneratingStatus(request.getCacheKey());
 
-        // Completed status əlavə et
+        // Completed statusunu əlavə edirik
         designCacheRepository.saveCompletedDesign(
                 request.getCacheKey(),
-                result.getPresignedUrl(),    // Frontend üçün hazır URL
-                result.getObjectKey(),       // Fallback üçün
+                presignedUrl,                  // Frontend üçün hazır URL
+                request.getMinioObjectKey(),
                 request.getDesignId(),
-                !design.isCustom(),          // isPublic = !isCustom
+                !design.isCustom(),            // isPublic = !isCustom
                 request.getUserId()
         );
 
-        log.debug(" Redis updated: cacheKey={}", request.getCacheKey());
+        log.debug(" Redis cache updated: cacheKey={}", request.getCacheKey());
     }
 
     private void handleFailure(AICallbackRequest request) {
-        // 1. DB status failed
+        //  DB statusunu FAILED et
         customDesignRepository.findById(request.getDesignId()).ifPresent(design -> {
             design.setStatus(Enums.DesignProcessStatus.FAILED);
             customDesignRepository.save(design);
-            log.warn("⚠ Design marked FAILED: designId={}", request.getDesignId());
+            log.warn(" Design marked as FAILED in DB: designId={}", request.getDesignId());
         });
 
-        // 2. Redis təmizlə
+        // Redis-i təmizlə
         if (request.getCacheKey() != null) {
             designCacheRepository.removeGeneratingStatus(request.getCacheKey());
         }
-
-        // 3. (Optional) User notification
-        // notificationService.notifyDesignFailed(request.getUserId(), request.getDesignId());
     }
 }

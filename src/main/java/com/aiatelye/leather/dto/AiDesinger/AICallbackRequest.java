@@ -18,9 +18,7 @@ public class AICallbackRequest {
     private Long userId;
 
     // AI Generation nəticəsi
-    private String generatedImageBase64;  // AI tərəfindən yaradılmış şəkil (Base64)
-    private String generatedImageUrl;     // Vəya direct URL (Gemini-dən gələn)
-
+    private String minioObjectKey;
     // Metadata
     private Enums.DesignProcessStatus status;  // SUCCESS və ya FAILED
     private String promptUsed;             // n8n-də istifadə olunan final prompt
@@ -33,12 +31,13 @@ public class AICallbackRequest {
     private String leatherImageUrl;        // Orijinal dəri şəkli
 
     // Validation
-    public boolean hasGeneratedImage() {
-        return (generatedImageBase64 != null && !generatedImageBase64.isEmpty()) ||
-                (generatedImageUrl != null && !generatedImageUrl.isEmpty());
+    public boolean isSuccess() {
+        // Artıq Base64 axtarmırıq, minioObjectKey-in olub-olmadığını yoxlayırıq
+        return status == Enums.DesignProcessStatus.SUCCESS &&
+                minioObjectKey != null &&
+                !minioObjectKey.trim().isEmpty();
     }
 
-    public boolean isSuccess() {
-        return status == Enums.DesignProcessStatus.SUCCESS && hasGeneratedImage();
-    }
+
+
 }

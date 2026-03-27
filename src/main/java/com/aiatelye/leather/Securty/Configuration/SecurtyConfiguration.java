@@ -45,12 +45,14 @@ public class SecurtyConfiguration {
             "/api/designs/popular",
             "/api/designs/recent",
             "/api/internal/ai-callback",
+            //swager
             "/swagger-ui/**",
             "/swagger-ui.html",
             "/v3/api-docs/**",
             "/swagger-resources/**",
             "/configuration/**",
-            "/webjars/**"
+            "/webjars/**",
+            "/swagger-ui/index.html"
     };
 
 

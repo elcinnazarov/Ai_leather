@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProductImageRepository extends JpaRepository<ProductImage, Long> {
@@ -22,5 +23,8 @@ public interface ProductImageRepository extends JpaRepository<ProductImage, Long
             "WHERE pi.productModel.id IN :productIds " +
             "AND pi.isPrimary = true")
     List<ProductImage> findPrimaryImagesByProductIds(@Param("productIds") List<Long> productIds);
+
+
+
 
 }

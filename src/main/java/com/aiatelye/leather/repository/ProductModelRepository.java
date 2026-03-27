@@ -76,4 +76,6 @@ public interface ProductModelRepository extends JpaRepository<ProductModel,Long>
     @Query("SELECT pi.imageUrl FROM ProductImage pi " +
             "WHERE pi.productModel.id = :id AND pi.isPrimary = true")
     Optional<String> findPrimaryProductImageUrl(@Param("id") Long id);
+
+
 }

@@ -34,7 +34,7 @@ public class MinioService {
     @Value("${minio.image.max-size-mb}")
     private int maxSizeMb;
 
-    @Value("${minio.folders.    product}")
+    @Value("${minio.folders.product}")
     private String productFolder;
 
     @Value("${minio.folders.leather}")

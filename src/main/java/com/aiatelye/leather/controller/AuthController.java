@@ -1,5 +1,6 @@
 package com.aiatelye.leather.controller;
 
+import com.aiatelye.leather.dto.admin.Securty.LoginRequestDto;
 import com.aiatelye.leather.dto.admin.Securty.RegisterRequest;
 import com.aiatelye.leather.service.Securty.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -19,5 +20,15 @@ public class AuthController {
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
         return authService.register(request);
     }
+
+    //  Bu metod əslində heç vaxt işləməyəcək!
+    // Sorğu bura çatmamış JwtUsernameAndPasswordAuthenticationFilter tərəfindən tutulur.
+    // Bu sadəcə Swagger-də görünmək üçündür.
+    @PostMapping("/login")
+    public void fakeLogin(@RequestBody LoginRequestDto request) {
+        throw new IllegalStateException("Bu metod heç vaxt çağırılmamalıdır. Spring Security Filter işləyir.");
+    }
+
+
 
 }

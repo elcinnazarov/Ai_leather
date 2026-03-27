@@ -5,15 +5,25 @@ import com.aiatelye.leather.dao.CustomDesigns;
 import com.aiatelye.leather.dao.Leather;
 import com.aiatelye.leather.dao.ProductModel;
 import com.aiatelye.leather.dao.UserLimit;
+import com.aiatelye.leather.dto.AiDesinger.CatalogDesignResponse;
 import com.aiatelye.leather.dto.AiDesinger.DesignResponse;
 import com.aiatelye.leather.dto.AiDesinger.GenerateDesignRequest;
 import com.aiatelye.leather.dao.enums.Enums;
+import com.aiatelye.leather.dto.AiDesinger.MyDesignsResponse;
+import com.aiatelye.leather.dto.defalutResponse.PageResponse;
 import com.aiatelye.leather.error.Exception.*;
+import com.aiatelye.leather.mapper.AiCatalogMapper;
+import com.aiatelye.leather.mapper.DesignMapper;
 import com.aiatelye.leather.repository.CustomDesignRepository;
 import com.aiatelye.leather.repository.LeatherRepository;
 import com.aiatelye.leather.repository.ProductModelRepository;
+import com.aiatelye.leather.service.Minio.AIMinioService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +42,10 @@ public class DesignGenerationService {
     private final LeatherRepository leatherRepository;
     private final DesignCacheRepository designCacheRepository;
     private final HashGenerationService hashService;
+    private final DesignMapper designMapper;
+    private final AIMinioService aiMinioService;
+    private final AiCatalogMapper aiCatalogMapper;
+
 
     @Transactional(readOnly = true)
     public DesignResponse generateDesign(Long userId, GenerateDesignRequest request) {
@@ -207,4 +221,81 @@ public class DesignGenerationService {
         if (text == null || text.trim().isEmpty()) return null;
         return text.trim().toLowerCase().replaceAll("\\s+", " ");
     }
+
+
+
+
+    ///api/designs/me
+    @Transactional(readOnly = true)
+    public PageResponse<MyDesignsResponse> getMyDesigns(Long userId, int page, int size) {
+
+        // Sadə pagination: createdAt DESC (ən yenilər əvvəldə)
+        Pageable pageable = PageRequest.of(
+                page,
+                size,
+                Sort.by(Sort.Direction.DESC, "createdAt")
+        );
+
+        // Yalnız userId ilə filter - başqa heç bir parameter yoxdur
+        Page<CustomDesigns> designPage = customDesignRepository.findByUserId(userId, pageable);
+
+        // Lazy Refresh: URL-ləri yoxla və yenilə
+        designPage.getContent().forEach(this::refreshImageUrlIfNeeded);
+
+        return designMapper.toMyDesignsPageResponse(designPage);
+
+
+    }
+    ///api/designs//catalog
+    @Transactional(readOnly = true)
+    public PageResponse<CatalogDesignResponse> getPublicCatalog(int page, int size, String sortBy) {
+
+        // Sıralama seçimi
+        Sort sort = createSort(sortBy);
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        // Yalnız PUBLIC və COMPLETED status olanlar
+        Page<CustomDesigns> designPage = customDesignRepository.findByIsPublicTrueAndStatus(
+                Enums.DesignProcessStatus.COMPLETED,
+                pageable
+        );
+
+        // Lazy Refresh URL-ləri
+        designPage.getContent().forEach(this::refreshImageUrlIfNeeded);
+
+        return aiCatalogMapper.toCatalogPageResponse(designPage);
+    }
+
+    private Sort createSort(String sortBy) {
+        if ("newest".equalsIgnoreCase(sortBy)) {
+            return Sort.by(Sort.Direction.DESC, "createdAt");
+        }
+        // Default: popular (hitCount)
+        return Sort.by(Sort.Direction.DESC, "hitCount");
+    }
+
+
+
+
+
+
+    private void refreshImageUrlIfNeeded(CustomDesigns design) {
+        if (design.getStatus().name().equals("COMPLETED") &&
+                design.getRenderImageUrl() != null &&
+                design.getMinioObjectKey() != null) {
+
+            try {
+                String freshUrl = aiMinioService.getPresignedUrl(
+                        design.getMinioObjectKey()
+                );
+                design.setRenderImageUrl(freshUrl);
+            } catch (Exception e) {
+                log.warn("Failed to refresh URL for designId={}: {}", design.getId(), e.getMessage());
+            }
+        }
+    }
+
+
+
 }

@@ -22,9 +22,10 @@ import org.springframework.web.multipart.MultipartFile;
 public class AdminLeathersController {
     private  final LeatherServiceImpl leatherService;
 
-    @PostMapping(
-            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
-    )
+
+
+
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<LeatherResponse>> createLeather(
             @RequestPart("data") @Valid CreatLeatherRequest request,
             @RequestPart("image") MultipartFile image

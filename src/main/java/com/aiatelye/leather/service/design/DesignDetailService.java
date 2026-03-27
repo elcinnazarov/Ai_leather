@@ -3,14 +3,22 @@ package com.aiatelye.leather.service.design;
 import com.aiatelye.leather.cache.DesignCacheRepository;
 import com.aiatelye.leather.componet.CurrentContext;
 import com.aiatelye.leather.dao.CustomDesigns;
+import com.aiatelye.leather.dao.enums.Enums;
+import com.aiatelye.leather.dto.AiDesinger.CatalogDesignResponse;
 import com.aiatelye.leather.dto.AiDesinger.DesignDetailResponse;
+import com.aiatelye.leather.dto.defalutResponse.PageResponse;
 import com.aiatelye.leather.error.Exception.NotFoundException;
 import com.aiatelye.leather.error.Exception.UnauthorizedException;
+import com.aiatelye.leather.mapper.AiCatalogMapper;
 import com.aiatelye.leather.mapper.DesignDetailMapper;
 import com.aiatelye.leather.repository.CustomDesignRepository;
 import com.aiatelye.leather.service.Minio.AIMinioService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +41,7 @@ public class DesignDetailService {
     private final DesignDetailMapper designDetailMapper;
     private final CurrentContext currentContext;
     private final AIMinioService aiMinioService;
+
 
     @Transactional(readOnly = true)
     public DesignDetailResponse getDesignDetail(Long designId) {
@@ -191,4 +200,6 @@ public class DesignDetailService {
         }
         return "unknown";
     }
+
+
 }

@@ -18,7 +18,7 @@ import java.util.List;
 @RequestMapping("/api/leatherGrade")
 @RequiredArgsConstructor
 @Slf4j
-public class LeatherGrade {
+public class LeatherGradeController {
 
     private final LeatherCatalogService leatherCatalogService;
 

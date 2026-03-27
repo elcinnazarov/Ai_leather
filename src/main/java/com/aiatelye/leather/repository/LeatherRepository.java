@@ -90,4 +90,7 @@ public interface LeatherRepository extends JpaRepository<Leather,Long> {
     @Query("SELECT l.imageUrl FROM Leather l WHERE l.id = :id")
     Optional<String> findLeatherImageUrl(@Param("id") Long id);
 
+
+
+
 }

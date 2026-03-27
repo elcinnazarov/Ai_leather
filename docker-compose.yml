@@ -1,6 +1,25 @@
 version: '3.8'
 
 services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: aiatelye-postgres
+    environment:
+      POSTGRES_USER: ${DB_USERNAME:-aiatelye}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-password123}
+      POSTGRES_DB: ${DB_NAME:-aiatelye_db}
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-aiatelye} -d ${DB_NAME:-aiatelye_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - ecommerce-network
+
   redis:
     image: redis:7-alpine
     env_file:
@@ -44,8 +63,8 @@ services:
     image: rabbitmq:3-management-alpine
     container_name: ecommerce-rabbitmq
     ports:
-      - "5672:5672"   # Spring Boot və n8n-in mesaj göndərəcəyi əsas port
-      - "15672:15672" # Sənin üçün vizual İdarəetmə Paneli (Dashboard) portu
+      - "5672:5672"
+      - "15672:15672"
     environment:
       RABBITMQ_DEFAULT_USER: admin
       RABBITMQ_DEFAULT_PASS: password123
@@ -59,12 +78,60 @@ services:
     networks:
       - ecommerce-network
 
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: aiatelye-n8n
+    restart: unless-stopped
+    ports:
+      - "5678:5678"
+    environment:
+      # Database configuration (PostgreSQL)
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_HOST: postgres
+      DB_POSTGRESDB_PORT: 5432
+      DB_POSTGRESDB_DATABASE: ${DB_NAME:-postgres}
+      DB_POSTGRESDB_USER: ${DB_USERNAME:-aiatelye}
+      DB_POSTGRESDB_PASSWORD: ${DB_PASSWORD:-password123}
+
+      # n8n core settings
+      N8N_BASIC_AUTH_ACTIVE: "false"
+      N8N_PORT: 5678
+      N8N_PROTOCOL: http
+      N8N_HOST: localhost
+
+      # Webhook and Editor URLs (ngrok)
+      N8N_EDITOR_BASE_URL: https://furless-birgit-journalary.ngrok-free.dev
+      WEBHOOK_URL: https://furless-birgit-journalary.ngrok-free.dev
+
+      # Community packages and tools
+      N8N_COMMUNITY_PACKAGES_ALLOW_TOOL_USAGE: "true"
+      N8N_DEFAULT_BINARY_DATA_MODE: filesystem
+
+      # Security and proxy
+      N8N_PROXY_HOPS: 1
+
+      # Timezone
+      GENERIC_TIMEZONE: Asia/Baku
+    volumes:
+      - n8n_data:/home/node/.n8n
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - ecommerce-network
+
 volumes:
+  postgres_data:
+    driver: local
   minio_data:
     driver: local
   redis-data:
     driver: local
-  rabbitmq_data: # RabbitMQ üçün yaddaş həcmi
+  rabbitmq_data:
+    driver: local
+  n8n_data:
     driver: local
 
 networks:

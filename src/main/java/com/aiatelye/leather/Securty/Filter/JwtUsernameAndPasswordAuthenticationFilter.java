@@ -68,7 +68,7 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
         User user = authUserRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User tapılmadı"));
 
-        // Sizin JwtTokenUtil metoduna uyğun: email, role, user
+        // JwtTokenUtil metoduna uyğun: email, role, user
         String token = jwtTokenUtil.generateToken(
                 email,
                 user.getRole(),

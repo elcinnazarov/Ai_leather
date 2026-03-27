@@ -8,12 +8,12 @@ spring:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
 
-  hikari:
-    minimum-idle: 3
-    maximum-pool-size: 6
-    idle-timeout: 30000
-    max-lifetime: 2000000
-    connection-timeout: 60000
+    hikari:
+      minimum-idle: 3
+      maximum-pool-size: 6
+      idle-timeout: 30000
+      max-lifetime: 2000000
+      connection-timeout: 60000
 
   jpa:
     show-sql: true
@@ -21,19 +21,37 @@ spring:
     hibernate:
       ddl-auto: update
 
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 6MB
+      max-request-size: 30MB
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: ${RABBITMQ_username}
+    password: ${RABBITMQ_password}
+    listener:
+      simple:
+        retry:
+          enabled: true
+          initial-interval: 3s
+          max-attempts: 3
+          max-interval: 10s
+
 server:
-  port: 1111
+  port: 8080
 
 logging:
   level:
     root: info
 
-servlet:
-  multipart:
-    enabled: true
-    max-file-size: 6MB        # Maksimum fayl ölçüsü
-    max-request-size: 30MB
-
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
 
 minio:
   url: ${MINIO_URL}
@@ -48,23 +66,12 @@ minio:
     leather: leather-textures
     ai: ai-renders
 
-rabbitmq:
-  host: localhost      # Əgər Spring Boot-u IDE-də (IntelliJ) işlədirsənsə 'localhost' qalır. Docker-ə salsan 'ecommerce-rabbitmq' olacaq.
-  port: 5672
-  username: ${RABBITMQ_username}
-  password: ${RABBITMQ_password}
-  listener:
-    simple:
-      retry:
-        enabled: true
-        initial-interval: 3s
-        max-attempts: 3
-        max-interval: 10s
 ai:
   callback:
     secret: ${AI_CALLBACK_SECRET:my-super-secret-key-12345}
+
 data:
- redis:
+  redis:
     host: ${REDIS_HOST}
     port: ${REDIS_PORT}
     password: ${REDIS_PASSWORD}
@@ -89,7 +96,6 @@ cache:
     design:
       ttl: 86400
       generating:
-         ttl: 300
+        ttl: 300
       popular:
-        ttl:3600
-
+        ttl: 3600

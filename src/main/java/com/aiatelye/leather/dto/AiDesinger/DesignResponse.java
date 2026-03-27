@@ -17,5 +17,6 @@ public class DesignResponse {
     private Boolean isCustom;
     private Integer dailyLimit;
     private Integer usedToday;
+    private boolean isPublic;
 
 }

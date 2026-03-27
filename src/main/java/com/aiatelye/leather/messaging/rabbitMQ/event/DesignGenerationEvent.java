@@ -17,8 +17,8 @@ public class DesignGenerationEvent implements Serializable {
 
     private Long designId;
     private Long userId;
-    private Long productModelId;
-    private Long leatherId;
+    private long productModelId;
+    private long leatherId;
     private String productModelImageUrl;
     private String leatherImageUrl;
     private String userText;
