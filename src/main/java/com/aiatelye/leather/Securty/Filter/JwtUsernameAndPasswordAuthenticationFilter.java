@@ -64,7 +64,7 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
 
         String email = authResult.getName();
 
-        // User obyekti çək (JwtTokenUtil üçün lazımdır)
+
         User user = authUserRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User tapılmadı"));
 

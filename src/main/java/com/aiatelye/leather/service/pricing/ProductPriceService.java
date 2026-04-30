@@ -121,7 +121,7 @@ public class ProductPriceService {
         ProductModel product = productModelRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Product not found: " + id));
         if (!Boolean.TRUE.equals(product.getIsActive())) {
-            throw new BadRequestException("Prices cannot be set for inactive product: " + id);
+            throw new BadRequestException("error.product.inactive.prices");
         }
         return product;
     }

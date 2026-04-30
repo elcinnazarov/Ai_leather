@@ -42,7 +42,7 @@ public class CartPreviewService {
                 request.getItems().size(), request.getCurrency());
 
         if (request.getItems() == null || request.getItems().isEmpty()) {
-            throw new BadRequestException("Cart cannot be empty.");
+            throw new BadRequestException("error.cart.empty");
         }
         // 1. ID-ləri topla
         List<Long> productIds = extractProductIds(request);

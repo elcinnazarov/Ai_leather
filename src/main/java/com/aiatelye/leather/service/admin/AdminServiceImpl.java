@@ -27,24 +27,33 @@ public class AdminServiceImpl {
     private final ProductImageRepository productImageRepository;
     private final MinioService minioService;
     private final ProductModelMapper productMapper;
-    ProductCatalogCacheRepository productCatalogCacheRepository;
+    private final ProductCatalogCacheRepository productCatalogCacheRepository;
+
 
     @Transactional
-    public ProductModelResponse createProductModel(
-            CreateProductModelRequest request,
-            List<MultipartFile> images
-    ) {
+    public ProductModelResponse createProductModel(CreateProductModelRequest request,
+                                                   List<MultipartFile> images) {
+
         log.info("Creating product: {}", request.getModelName());
 
+        String normalizedName = request.getModelName().trim();
+
+        if (productModelRepository.existsByModelnameIgnoreCase(normalizedName)) {
+            throw new BadRequestException("error.product.already-exists");
+        }
+
         // Validation
+        String trimmedName = request.getModelName()
+                .trim()
+                .replaceAll("\\s+", " ");
         if (productModelRepository.existsBymodelnameIgnoreCaseAndIsActiveTrue(
-                request.getModelName()
+                trimmedName
         )) {
-            throw new BadRequestException("Product already exists: " + request.getModelName());
+            throw new BadRequestException("error.product.already-exists");
         }
 
         if (images == null || images.isEmpty()) {
-            throw new BadRequestException("At least one image required");
+            throw new BadRequestException("error.image.required");
         }
 
         // MinIO bucket check
@@ -77,14 +86,14 @@ public class AdminServiceImpl {
     @Transactional
     public ProductModelResponse addProductImages(Long productId, List<MultipartFile> images) {
         ProductModel product = productModelRepository.findById(productId)
-                .orElseThrow(() -> new BadRequestException("Product not found"));
+                .orElseThrow(() -> new BadRequestException("error.product.not-found"));
 
         int currentOrder = product.getImages().size();
 
         try {
             for (MultipartFile image : images) {
 
-                if (currentOrder >= 6) throw new MultiFileLimitException("Only 6 images allowed");
+                if (currentOrder >= 6) throw new MultiFileLimitException("error.file.max-count", 6);
 
                 String imageUrl = minioService.uploadImage(image, Enums.MinioFolderType.PRODUCT);
 
@@ -101,7 +110,7 @@ public class AdminServiceImpl {
             ProductModel updated = productModelRepository.save(product);
             return productMapper.toProductModelResponse(updated);
         } catch (Exception e) {
-            throw new AddProductImagesException(" add Product iMages  error");
+            throw new AddProductImagesException("error.product.images-add-failed");
         }
     }
 
@@ -109,10 +118,10 @@ public class AdminServiceImpl {
     @Transactional
     public void deleteProductImage(Long imageId) {
         ProductImage image = productImageRepository.findById(imageId)
-                .orElseThrow(() -> new ImageNotFoundException("Image not found"));
+                .orElseThrow(() -> new ImageNotFoundException("error.image.not-found"));
 
         if (image.getIsPrimary()) {
-            throw new PrimaryImageException("Cannot delete primary image");
+            throw new PrimaryImageException("error.image.primary-delete");
         }
 
         minioService.deleteImage(image.getImageUrl());
@@ -125,11 +134,11 @@ public class AdminServiceImpl {
 
         ProductImage image = productImageRepository
                 .findById(imageId)
-                .orElseThrow(() -> new ImageNotFoundException("Image not found"));
+                .orElseThrow(() -> new ImageNotFoundException("error.image.not-found"));
 
         // təhlükəsizlik üçün tək real check
         if (!image.getProductModel().getId().equals(productId)) {
-            throw new ImageNotFoundException("Image does not belong to this product");
+            throw new ImageNotFoundException("error.image.not-belong-product");
         }
 
         // əvvəlki primary-ni söndür
@@ -151,7 +160,7 @@ public class AdminServiceImpl {
 
             if (productModelRepository.existsBymodelnameIgnoreCaseAndIdNotAndIsActiveTrue(
                     request.getModelName(), productId)) {
-                throw new BadRequestException("Product with name '" + request.getModelName() + "' already exists");
+                throw new BadRequestException("error.product.inactive");
             }
         }
 
@@ -176,14 +185,13 @@ public class AdminServiceImpl {
 
         // 1. Zəncirvari Validasiya: Aktivlik yoxlaması
         if (Boolean.FALSE.equals(product.getIsActive()) && newStatus != Enums.AvailabilityStatus.ACTIVE) {
-            throw new ResourcePassiveException("Resource is in passive state (isActive=false). " +
-                    "Access denied for any update except activation.");
+            throw new ResourcePassiveException("error.resource.passive");
         }
 
         // 2. Enum daxilindəki keçid yoxlaması
         if (product.getAvailabilityStatus().canTransitionTo(newStatus)) {
-            throw new InvalidStateTransitionException("Illegal move from [currentStatus] to [newStatus]." +
-                    " Business rules violated");
+            throw new InvalidStateTransitionException("error.status.invalid-transition",
+                    product.getAvailabilityStatus(), newStatus);
 
         }
 
@@ -212,7 +220,7 @@ public class AdminServiceImpl {
                 .orElseThrow(() -> new NotFoundException("Product not found with id: " + productId));
 
         if (!product.getIsActive()) {
-            throw new BadRequestException("Product is already inactive");
+            throw new BadRequestException("error.product.inactive");
         }
 
         product.setIsActive(false);

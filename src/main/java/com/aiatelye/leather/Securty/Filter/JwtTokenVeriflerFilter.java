@@ -43,11 +43,15 @@ public class JwtTokenVeriflerFilter extends OncePerRequestFilter {
                     .parseClaimsJws(token);
 
             Claims body = claimsJws.getBody();
-            var authorities = (List<Map<String, String>>) body.get("authorities");
             String username = body.getSubject();
 
+            // 🛠️ XƏTANIN HƏLL EDİLDİYİ YER: Təhlükəsiz oxuma (Safe Extract)
+            List<?> authorities = body.get("authorities", List.class);
             Set<SimpleGrantedAuthority> simpleGrantedAuthorities = authorities.stream()
-                    .map(authority -> new SimpleGrantedAuthority(authority.get("authority")))
+                    .map(auth -> {
+                        Map<?, ?> authMap = (Map<?, ?>) auth; // Wildcard istifadə edərək təhlükəsiz çevirmə
+                        return new SimpleGrantedAuthority((String) authMap.get("authority"));
+                    })
                     .collect(Collectors.toSet());
 
             var usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(

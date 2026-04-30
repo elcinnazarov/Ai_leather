@@ -1,7 +1,14 @@
 package com.aiatelye.leather.error.Exception;
 
+import lombok.Getter;
+
+@Getter
 public class MinioDeleteException extends RuntimeException {
-    public MinioDeleteException(String message) {
-        super(message);
+    private final Object[] args;
+
+    public MinioDeleteException(String messageKey, Object... args) {
+        super(messageKey);
+        this.args = args;
     }
+
 }

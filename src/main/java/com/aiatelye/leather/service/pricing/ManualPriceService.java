@@ -64,7 +64,7 @@ public class ManualPriceService {
                 }
 
                 ProductGradePrice price = priceMap.get(priceRequest.getGradeId());
-                if (price == null) throw new BaseProductGradePriceNotFoundException("Base price for grade " + priceRequest.getGradeId() + " not found");
+                if (price == null)throw new BaseProductGradePriceNotFoundException("error.pricing.base-not-found", priceRequest.getGradeId());
 
                 PricingRule rule = rulesMap.get(priceRequest.getCurrency());
                 BigDecimal autoCalculated = calculatePriceService.calculateAutoPrice(price.getPrice(), rule);
@@ -197,7 +197,7 @@ public class ManualPriceService {
 
                 // Base qiyməti tapırıq
                 ProductGradePrice price = productGradePriceRepository.findByProductModelIdAndGradeId(productModelId, priceRequest.getGradeId())
-                        .orElseThrow(() -> new BaseProductGradePriceNotFoundException("base price not set"));
+                        .orElseThrow(() ->new BaseProductGradePriceNotFoundException("error.pricing.base-not-set"));
 
                 // Köhnə qiyməti loglama üçün saxlayırıq
                 BigDecimal oldManual = (priceRequest.getCurrency() == Enums.Currency.USD) ? price.getManualUsd() : price.getManualEur();

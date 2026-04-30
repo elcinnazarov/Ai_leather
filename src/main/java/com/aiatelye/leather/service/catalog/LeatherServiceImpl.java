@@ -9,6 +9,7 @@ import com.aiatelye.leather.dto.admin.leather.UpdateLeatherRequest;
 import com.aiatelye.leather.dao.enums.Enums;
 import com.aiatelye.leather.error.Exception.*;
 import com.aiatelye.leather.mapper.LeatherMapper;
+import com.aiatelye.leather.repository.LeatherGradeRepository;
 import com.aiatelye.leather.repository.LeatherRepository;
 import com.aiatelye.leather.service.Minio.MinioService;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ public class LeatherServiceImpl implements LeatherService {
     private final LeatherMapper leatherMapper;
     private final MinioService minioService;
     private final LeatherRepository leatherRepository;
+    private final LeatherGradeRepository leatherGradeRepository;
     private  final LeatherCacheRepository leatherCacheRepository;
     private  final LeatherCatalogCacheRepository leatherCatalogCacheRepository;
 
@@ -37,11 +39,11 @@ public class LeatherServiceImpl implements LeatherService {
         if (leatherRepository.existsByleathernameIgnoreCaseAndIsActiveTrue(request.getLeatherName())) {
 
             throw new BadRequestException(
-                    "Leather with name '" + request.getLeatherName() + "' already exists");
+                    "error.leather.already-exists");
         }
 
-        LeatherGrade grade = leatherRepository.findById(request.getGradeId())
-                .orElseThrow(() -> new NotFoundException("Leather grade not found with id: " + request.getGradeId())).getGrade();
+        LeatherGrade grade = leatherGradeRepository.findById(request.getGradeId())
+                .orElseThrow(() -> new NotFoundException("Leather grade not found with id: " + request.getGradeId()));
 
         // MinIO bucket check
         minioService.ensureBucketExists();
@@ -52,7 +54,9 @@ public class LeatherServiceImpl implements LeatherService {
 
         Leather leather = leatherMapper.toLeatherEntity(request);
         leather.setImageUrl(imageUrl);
+        leather.setGrade(grade);
         Leather saved = leatherRepository.save(leather);
+        log.info("Leather  saved at DB: {}", imageUrl);
         clearAllCaches();
         return leatherMapper.toLeatherResponse(saved);
 
@@ -68,7 +72,7 @@ public class LeatherServiceImpl implements LeatherService {
         String imageUrl = leather.getImageUrl();
 
         if (imageUrl == null || imageUrl.isBlank()) {
-            throw new BadRequestException("Leather has no image to delete");
+            throw new BadRequestException("error.leather.no-image");
         }
 
         // 1. MinIO-dan sil
@@ -77,7 +81,7 @@ public class LeatherServiceImpl implements LeatherService {
             log.info("Image deleted from MinIO: {}", imageUrl);
         } catch (Exception e) {
             log.error("Failed to delete image from MinIO: {}", imageUrl, e);
-            throw new MinioDeleteException("Failed to delete image from storage");
+            throw new MinioDeleteException("error.minio.delete-failed");
         }
 
         // 2. Entity-dən sil (null et)
@@ -92,7 +96,7 @@ public class LeatherServiceImpl implements LeatherService {
     public LeatherResponse updateLeatherImage(Long leatherId, MultipartFile newImage) {
 
         if (newImage == null || newImage.isEmpty()) {
-            throw new ImageFileRequired("Image file is required");
+            throw new ImageFileRequired("error.image.required");
         }
 
         // 1. Leather tap
@@ -136,7 +140,7 @@ public class LeatherServiceImpl implements LeatherService {
 
         // 2. Active yoxlaması (silinmiş leather update oluna bilməz)
         if (!Boolean.TRUE.equals(leather.getIsActive())) {
-            throw new ResourcePassiveException("Cannot update inactive/deleted leather");
+            throw new ResourcePassiveException("error.leather.passive-update");
         }
 
         // 3. Duplicate name check (əgər ad dəyişirsə)
@@ -145,7 +149,7 @@ public class LeatherServiceImpl implements LeatherService {
 
             if (leatherRepository.existsByleathernameIgnoreCaseAndIdNotAndIsActiveTrue(
                     request.getLeatherName(), leatherId)) {
-                throw new BadRequestException("Leather with name '" + request.getLeatherName() + "' already exists");
+                throw new BadRequestException("error.leather.already-exists");
             }
         }
         leatherMapper.updateLeatherEntityFromRequest(request, leather);
@@ -172,14 +176,13 @@ public class LeatherServiceImpl implements LeatherService {
 
             // 1. Zəncirvari Validasiya: Aktivlik yoxlaması
             if (Boolean.FALSE.equals(leather.getIsActive()) && newstatus != Enums.AvailabilityStatus.ACTIVE) {
-                throw new ResourcePassiveException("Resource is in passive state (isActive=false). " +
-                        "Access denied for any update except activation.");
+                throw new ResourcePassiveException("error.resource.passive-update");
             }
 
             // 2. Enum daxilindəki keçid yoxlaması
             if (leather.getAvailabilityStatus().canTransitionTo(newstatus)) {
-                throw new InvalidStateTransitionException("Illegal move from [currentStatus] to [newStatus]." +
-                        " Business rules violated");
+                throw new InvalidStateTransitionException("error.status.invalid-transition",
+                        leather.getAvailabilityStatus(), newstatus);
 
             }
 
@@ -208,7 +211,7 @@ public class LeatherServiceImpl implements LeatherService {
                 .orElseThrow(() -> new NotFoundException("Leather not found with id: " + leatherId));
 
         if (!leather.getIsActive()) {
-            throw new ResourcePassiveException("leather is already inactive");
+            throw new ResourcePassiveException("error.leather.already-inactive");
         }
 
         leather.setIsActive(false);

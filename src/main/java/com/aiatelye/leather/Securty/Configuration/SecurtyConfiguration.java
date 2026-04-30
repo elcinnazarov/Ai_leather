@@ -21,6 +21,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import static com.aiatelye.leather.Securty.model.Enums.UserRole.ADMIN;
+import static com.aiatelye.leather.Securty.model.Enums.UserRole.CUSTOMER;
 
 
 @Configuration
@@ -52,7 +53,8 @@ public class SecurtyConfiguration {
             "/swagger-resources/**",
             "/configuration/**",
             "/webjars/**",
-            "/swagger-ui/index.html"
+            "/swagger-ui/index.html",
+            "/error"
     };
 
 
@@ -72,8 +74,8 @@ public class SecurtyConfiguration {
                   .authorizeHttpRequests(auth -> auth
                         .requestMatchers(PUBLIC_URLS).permitAll()
                         .requestMatchers(HttpMethod.PUT, "/api/v1/customers/**").hasRole(ADMIN.name())
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/designs/generate").hasAuthority("design:create")
+                        .requestMatchers("/api/admin/**").hasRole(ADMIN.name())
+                        .requestMatchers("/api/designs/generate").hasRole(CUSTOMER.name())
                         .requestMatchers("/api/orders").hasAuthority("order:create")
                         .anyRequest().authenticated())
 

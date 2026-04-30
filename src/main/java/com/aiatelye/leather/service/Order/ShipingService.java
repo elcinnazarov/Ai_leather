@@ -1,7 +1,9 @@
 package com.aiatelye.leather.service.Order;
 
+import com.aiatelye.leather.common.CountryCurrencyMapper;
 import com.aiatelye.leather.dao.ShippingLocation;
 import com.aiatelye.leather.dao.enums.Enums;
+import com.aiatelye.leather.error.Exception.BadRequestException;
 import com.aiatelye.leather.error.Exception.NotFoundException;
 import com.aiatelye.leather.repository.ShippingLocationRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +20,15 @@ public class ShipingService {
     private final ShippingLocationRepository locationRepository;
 
     public BigDecimal calculate(Enums.Country country, String city, Enums.Currency currency, BigDecimal subTotal) {
+// 🔒 Mapper vasitəsilə Tələb Olunan Valyutanı tap (DRY Prinsipi)
+        Enums.Currency expected = CountryCurrencyMapper.getCurrencyForCountry(country);
 
+        if (currency != expected) {
+            log.error("Arbitraj Cəhdi! Çatdırılma ölkəsi: {}, Göndərilən Valyuta: {}", country, currency);
+            throw new BadRequestException(
+                    "For " + country + " shipping, currency must be " + expected
+            );
+        }
         // 1. Spesifik -> 2. Ölkə Standartı -> 3. Qlobal Standart (Zəncirvari axtarış)
         ShippingLocation location = locationRepository
                 .findByCountryAndCityNameAndCurrencyAndIsActiveTrue(country, city, currency) // 1. City Level

@@ -6,6 +6,8 @@ import com.aiatelye.leather.dto.admin.leather.LeatherResponse;
 import com.aiatelye.leather.dto.admin.leather.UpdateLeatherRequest;
 import com.aiatelye.leather.dao.enums.Enums;
 import com.aiatelye.leather.service.catalog.LeatherServiceImpl;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,10 +25,9 @@ public class AdminLeathersController {
     private  final LeatherServiceImpl leatherService;
 
 
-
-
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<LeatherResponse>> createLeather(
+            @Parameter(content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
             @RequestPart("data") @Valid CreatLeatherRequest request,
             @RequestPart("image") MultipartFile image
     ) {

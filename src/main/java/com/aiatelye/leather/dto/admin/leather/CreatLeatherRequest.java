@@ -1,5 +1,6 @@
 package com.aiatelye.leather.dto.admin.leather;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,11 @@ public class CreatLeatherRequest {
     @Size(max = 2000)
     private String description;
 
-    @NotBlank(message = "Grade is required")
+    @NotNull(message = "Grade ID is not be null ")
     private Long gradeId;
+
+    @NotNull(message = " color is not be null ")
+    private String  color;
+
+
 }

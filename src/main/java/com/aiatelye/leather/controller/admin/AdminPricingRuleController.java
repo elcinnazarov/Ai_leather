@@ -18,7 +18,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-    @RequestMapping("/api/admin/pricing")
+@RequestMapping("/api/admin/pricing")
 public class AdminPricingRuleController {
 
     private  final PricingRuleService pricingRuleService;

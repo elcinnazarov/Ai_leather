@@ -3,6 +3,7 @@ package com.aiatelye.leather.controller;
 import com.aiatelye.leather.dto.admin.Securty.LoginRequestDto;
 import com.aiatelye.leather.dto.admin.Securty.RegisterRequest;
 import com.aiatelye.leather.service.Securty.AuthService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +18,7 @@ public class AuthController {
  private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<?> register(@RequestBody  @Valid RegisterRequest request) {
         return authService.register(request);
     }
 

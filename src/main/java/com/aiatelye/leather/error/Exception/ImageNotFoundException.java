@@ -1,7 +1,14 @@
 package com.aiatelye.leather.error.Exception;
 
+import lombok.Getter;
+
+@Getter
 public class ImageNotFoundException extends RuntimeException {
-    public ImageNotFoundException(String message) {
-        super(message);
+    private final Object[] args;
+
+    public ImageNotFoundException(String messageKey, Object... args) {
+        super(messageKey);
+        this.args = args;
     }
+
 }

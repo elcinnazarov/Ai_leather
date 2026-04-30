@@ -76,7 +76,7 @@ public class MinioService {
                 log.info("✅ MinIO bucket created: {}", bucketName);
             }
         } catch (Exception e) {
-            throw new MinioCreatFaildException("Failed to create MinIO bucket");
+            throw new MinioCreatFaildException("error.minio.bucket-create-failed");
         }
     }
 
@@ -84,15 +84,18 @@ public class MinioService {
         validateImage(file);
 
         String folder = resolveFolder(minioFolderType);
-        String fileName = generateFileName(file, folder);
 
+        // 1. Sadəcə unikal və təmiz fayl adı yaradırıq (məs: UUID.png)
+        String fileName = generateFileName(file);
+
+        // 2. Tam obyekti yolunu BİR DƏFƏ qururuq (məs: leather-textures/UUID.png)
         String objectPath = buildObjectPath(folder, fileName);
 
         try (InputStream inputStream = file.getInputStream()) {
             minioClient.putObject(
                     PutObjectArgs.builder()
                             .bucket(bucketName)
-                            .object(fileName)
+                            .object(objectPath) // 🚨 DİQQƏT: Artıq bura 'fileName' yox, 'objectPath' veririk!
                             .stream(inputStream, file.getSize(), -1)
                             .contentType(file.getContentType())
                             .build()
@@ -117,7 +120,7 @@ public class MinioService {
                             .build()
             );
         } catch (Exception e) {
-            throw new MinioDeleteException("Failed to delete image");
+            throw new MinioDeleteException("error.minio.delete-failed");
         }
     }
 
@@ -137,10 +140,11 @@ public class MinioService {
         return String.format("%s/%s/%s", minioUrl, bucketName, objectPath);
     }
 
-    private String generateFileName(MultipartFile file, String folder) {
+    private String generateFileName(MultipartFile file) {
         String extension = Objects.requireNonNull(file.getOriginalFilename())
                 .substring(file.getOriginalFilename().lastIndexOf("."));
-        return String.format("%s/%s_%s%s", folder, folder, UUID.randomUUID(), extension);
+
+        return UUID.randomUUID().toString() + extension;
     }
 
     private String extractFileNameFromUrl(String url) {
@@ -150,12 +154,12 @@ public class MinioService {
 
     private void validateImage(MultipartFile file) {
         if (file.isEmpty()) {
-            throw new FileEmptyException("File is empty");
+            throw new FileEmptyException("error.file.empty");
         }
 
         long sizeInMb = file.getSize() / (1024 * 1024);
         if (sizeInMb > maxSizeMb) {
-            throw new FileTooLargeException( "File too large: " + sizeInMb + "MB");
+            throw new FileTooLargeException("error.file.too-large", sizeInMb);
         }
 
         String extension = Objects.requireNonNull(file.getOriginalFilename())
@@ -164,12 +168,12 @@ public class MinioService {
 
         List<String> allowed = Arrays.asList(allowedExtensions.split(","));
         if (!allowed.contains(extension)) {
-            throw new FileInvalidTypeException("Invalid file type: " + extension);
+            throw new FileInvalidTypeException("error.file.invalid-type", extension);
         }
 
         String contentType = file.getContentType();
         if (contentType == null || !contentType.startsWith("image/")) {
-            throw new FileEmptyException("File is not an image");
+            throw new FileEmptyException("error.file.not-image");
         }
     }
 

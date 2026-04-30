@@ -22,7 +22,7 @@ public class AuthService {
     private final PasswordConfiguration passwordConfiguration;
     private final JwtTokenUtil jwtTokenUtil;
 
-    public ResponseEntity<?> register(RegisterRequest request) {
+    public ResponseEntity<?>    register(RegisterRequest request) {
         try {
             if (authUserRepository.findByEmail(request.getEmail()).isPresent()) {
                 return ResponseEntity.status(HttpStatus.CONFLICT)
@@ -33,7 +33,6 @@ public class AuthService {
             newUser.setEmail(request.getEmail());
             newUser.setPassword(passwordConfiguration.passwordEncoder().encode(request.getPassword()));
             newUser.setName(request.getName());
-            newUser.setWhatsappNumber(request.getWhatsappNumber());
             newUser.setRole(UserRole.CUSTOMER);
             newUser.setProvider(Enums.AuthProvider.LOCAL);
             newUser.setIsActive(true);
@@ -42,7 +41,7 @@ public class AuthService {
 
             authUserRepository.save(newUser);
 
-            // Sizin JwtTokenUtil metoduna uyğun: email, role, user
+
             String token = jwtTokenUtil.generateToken(
                     newUser.getEmail(),
                     newUser.getRole(),

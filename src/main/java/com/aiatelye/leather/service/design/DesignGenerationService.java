@@ -1,10 +1,7 @@
 package com.aiatelye.leather.service.design;
 
 import com.aiatelye.leather.cache.DesignCacheRepository;
-import com.aiatelye.leather.dao.CustomDesigns;
-import com.aiatelye.leather.dao.Leather;
-import com.aiatelye.leather.dao.ProductModel;
-import com.aiatelye.leather.dao.UserLimit;
+import com.aiatelye.leather.dao.*;
 import com.aiatelye.leather.dto.AiDesinger.CatalogDesignResponse;
 import com.aiatelye.leather.dto.AiDesinger.DesignResponse;
 import com.aiatelye.leather.dto.AiDesinger.GenerateDesignRequest;
@@ -14,9 +11,7 @@ import com.aiatelye.leather.dto.defalutResponse.PageResponse;
 import com.aiatelye.leather.error.Exception.*;
 import com.aiatelye.leather.mapper.AiCatalogMapper;
 import com.aiatelye.leather.mapper.DesignMapper;
-import com.aiatelye.leather.repository.CustomDesignRepository;
-import com.aiatelye.leather.repository.LeatherRepository;
-import com.aiatelye.leather.repository.ProductModelRepository;
+import com.aiatelye.leather.repository.*;
 import com.aiatelye.leather.service.Minio.AIMinioService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
@@ -45,11 +41,12 @@ public class DesignGenerationService {
     private final DesignMapper designMapper;
     private final AIMinioService aiMinioService;
     private final AiCatalogMapper aiCatalogMapper;
+    private final UserRepository userRepository;
+    private  final UserLimitRepository userLimitRepository;
 
 
-    @Transactional(readOnly = true)
-    public DesignResponse generateDesign(Long userId, GenerateDesignRequest request) {
-        UserLimit userLimit = getOrCreateUserLimitWithRetry(userId);
+      public DesignResponse   generateDesign(Long userId, GenerateDesignRequest request) {
+        UserLimit userLimit = getOrCreateAndResetLimit(userId);
 
         if (request.isCustomRequest()) {
             return handleCustomDesign(userId, request, userLimit);
@@ -57,21 +54,28 @@ public class DesignGenerationService {
         return handleStandardDesign(userId, request, userLimit);
     }
 
-    private UserLimit getOrCreateUserLimitWithRetry(Long userId) {
-        int maxRetries = 3;
-        for (int i = 0; i < maxRetries; i++) {
-            try {
-                return persistenceService.getOrCreateAndResetLimit(userId);
-            } catch (ObjectOptimisticLockingFailureException e) {
-                log.warn("Limit check lock failed, retry {}/{}", i + 1, maxRetries);
-                if (i == maxRetries - 1) throw e;
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException ignored) {}
-            }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public UserLimit getOrCreateAndResetLimit(Long userId) {
+
+        Optional<UserLimit> optionalLimit = userLimitRepository.findByUserId(userId);
+
+        if (optionalLimit.isPresent()) {
+            return optionalLimit.get();
         }
-        throw new RuntimeException("Failed to get user limit");
+
+        // LİMİT YOXDURSA YENİSİNİ YARADIRIQ
+
+        User user =userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("İstifadəçi tapılmadı: " + userId));
+
+        UserLimit newLimit = new UserLimit();
+        newLimit.setUser(user);
+
+        return userLimitRepository.save(newLimit);
     }
+
+
 
     // ==========================================
     // CUSTOM DESIGN (Limitli, birbaşa API)

@@ -17,7 +17,6 @@ public interface LeatherMapper {
     @Mapping(target = "grade", ignore = true)
     // Bura diqqət! Xətanı aradan qaldıran hissə:
     @Mapping(target = "imageUrl", ignore = true)
-    @Mapping(target = "color", ignore = true)
     @Mapping(target = "availabilityStatus", ignore = true)
     Leather toLeatherEntity(CreatLeatherRequest request);
 

@@ -36,11 +36,11 @@ public class PricingRuleService {
 
         // Duplicate check
         if (pricingRuleRepository.existsByTargetCurrency(request.getTargetCurrency())) {
-            throw new PricingRuleAlreadyExistsException("Pricing rule already exists for currency: " + request.getTargetCurrency());
+            throw new PricingRuleAlreadyExistsException("error.pricing.rule-exists", request.getTargetCurrency());
         }
 
         if (request.getMultiplier().compareTo(BigDecimal.ONE) < 0) {
-            throw new BadRequestException("Multiplier must be at least 1.0");
+            throw new BadRequestException("error.pricing.multiplier-min");
         }
         PricingRule entity = pricingRuleMapper.toPricingRuleEntity(request);
         PricingRule saved = pricingRuleRepository.save(entity);
@@ -69,7 +69,7 @@ public class PricingRuleService {
 
         // AZN üçün update oluna bilməz
         if (currency == Enums.Currency.AZN) {
-            throw new BadRequestException("Cannot update pricing rule for base currency (AZN)");
+            throw new BadRequestException("error.pricing.base-currency-update");
         }
 
         PricingRule rule = pricingRuleRepository.findByTargetCurrency(currency).
@@ -80,7 +80,7 @@ public class PricingRuleService {
         if (request.getMultiplier() != null) {
             // Validation: multiplier minimum 1.0
             if (request.getMultiplier().compareTo(BigDecimal.ONE) < 0) {
-                throw new BadRequestException("Multiplier must be at least 1.0");
+                throw new BadRequestException("error.pricing.multiplier-min");
             }
             rule.setMultiplier(request.getMultiplier());
         }
@@ -112,7 +112,7 @@ public class PricingRuleService {
         log.info("Deleting pricing rule for currency: {}", currency);
 
         if (currency == Enums.Currency.AZN) {
-            throw new BadRequestException("AZN is base currency and has no pricing rule to delete");
+            throw new BadRequestException("error.pricing.base-currency-delete");
         }
 
         PricingRule rule = pricingRuleRepository.findByTargetCurrency(currency)

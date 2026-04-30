@@ -1,7 +1,14 @@
 package com.aiatelye.leather.error.Exception;
 
+import lombok.Getter;
+
+@Getter
 public class BaseCurrencyUpdateException extends RuntimeException {
-    public BaseCurrencyUpdateException(String message) {
-        super(message);
+    private final Object[] args;
+
+    public BaseCurrencyUpdateException(String messageKey, Object... args) {
+        super(messageKey);
+        this.args = args;
     }
+
 }

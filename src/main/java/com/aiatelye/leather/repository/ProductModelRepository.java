@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @Repository
 public interface ProductModelRepository extends JpaRepository<ProductModel,Long> ,
         JpaSpecificationExecutor<ProductModel> {
-
+    boolean existsByModelnameIgnoreCase(String modelname);
     boolean existsBymodelnameIgnoreCaseAndIsActiveTrue(String modelname);
     boolean existsBymodelnameIgnoreCaseAndIdNotAndIsActiveTrue(String modelName, Long id);
 
