@@ -35,10 +35,17 @@ public class ProductCatalogCacheRepository {
     ///İlkin səhifəni yaddaşa yaz
 
     public void cacheInitialPage(ProductCatalogResponse response, Enums.Currency currency) {
+        // YENI: Yazmadan əvvəl yoxla
+        if (response == null ||
+                response.getContent() == null ||
+                response.getContent().isEmpty()) {
+            log.warn("Attempted to cache EMPTY initial page for {}, skipping", currency);
+            return;
+        }
+
         try {
             String key = INITIAL_PAGE_PREFIX + currency.name();
             String json = objectMapper.writeValueAsString(response);
-
             redisTemplate_ProductCatalogCache.opsForValue().set(key, json, ttlMinutes, TimeUnit.MINUTES);
             log.info("Initial page cached for {}: {} products", currency, response.getContent().size());
         } catch (Exception e) {
@@ -51,16 +58,32 @@ public class ProductCatalogCacheRepository {
             String key = INITIAL_PAGE_PREFIX + currency.name();
             String json = redisTemplate_ProductCatalogCache.opsForValue().get(key);
 
-            if (json != null) {
-                log.info("Initial page cache hit for {}", currency);
+            if (json != null && !json.trim().isEmpty()) {
                 ProductCatalogResponse response = objectMapper.readValue(json, ProductCatalogResponse.class);
-                return Optional.of(response);
+
+                if (response != null &&
+                        response.getContent() != null &&
+                        !response.getContent().isEmpty() &&
+                        response.getPageNumber() == 0) {
+
+                    log.info("Initial page cache hit for {}", currency);
+                    return Optional.of(response);
+                }
+
+                // YENI: Bozuk cache-i sil
+                log.warn("Invalid cache found for {}, deleting...", currency);
+                redisTemplate_ProductCatalogCache.delete(key);
             }
         } catch (Exception e) {
             log.error("Failed to read initial page cache for {}", currency, e);
         }
+
         return Optional.empty();
+
     }
+
+
+
     /// ProductDetail yaz
     public void cacheProductDetailByKey(String key, String json) {
         try {

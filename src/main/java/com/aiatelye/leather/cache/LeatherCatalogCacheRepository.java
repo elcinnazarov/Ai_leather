@@ -57,7 +57,17 @@ public class LeatherCatalogCacheRepository {
         try {
             String key = LEATHER_LIST_PREFIX + filterHash(filterKey) + ":" + page;
             String json = leatherCatalog_redisTemplate.opsForValue().get(key);
-            if (json != null) {
+
+            // ✅ YENI: JSON var amma boş content varsa, cache miss say
+            if (json != null && !json.trim().isEmpty()) {
+                // Quick check: content array boşdurmu?
+                if (json.contains("\"content\":[]") || json.contains("\"content\": []")) {
+                    log.warn("Cache found but EMPTY content for key: {}", key);
+                    // Boş cache-i sil ki, gələcəkdə yenidən yaranmasın
+                    leatherCatalog_redisTemplate.delete(key);
+                    return Optional.empty();
+                }
+
                 log.info("Leather list cache hit: {}", key);
                 return Optional.of(json);
             }

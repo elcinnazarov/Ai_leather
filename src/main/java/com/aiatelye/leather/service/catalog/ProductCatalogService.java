@@ -67,7 +67,6 @@ public class ProductCatalogService {
     private ProductCatalogResponse fetchCatalogFromDb(ProductFilterRequest filter, Enums.Currency currency) {
         Pageable pageable = createPageable(filter);
 
-        // Repository xətasına uyğun olaraq Page<ProductModel> qəbul edirik
         Page<ProductModel> productPage = productModelRepository.findAll(
                 ProductModelSpecification.withFilter(filter),
                 pageable
@@ -110,7 +109,17 @@ public class ProductCatalogService {
 
     private ProductCatalogResponse fetchAndCacheInitialPage(ProductFilterRequest filter, Enums.Currency currency) {
         ProductCatalogResponse response = fetchCatalogFromDb(filter, currency);
-        productCatalogCacheRepository.cacheInitialPage(response, currency);
+
+        // 🔴 BUG: Həmişə cache yazır, hətta boş olanda da!
+        // productCatalogCacheRepository.cacheInitialPage(response, currency);
+
+        // 🟢 FIX: Yalnız dolu olanda cache et
+        if (response.getContent() != null && !response.getContent().isEmpty()) {
+            productCatalogCacheRepository.cacheInitialPage(response, currency);
+        } else {
+            log.warn("Initial page EMPTY for {}, skipping cache", currency);
+        }
+
         return response;
     }
 

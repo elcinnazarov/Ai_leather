@@ -81,6 +81,7 @@ public class AdminLeathersController {
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
+
     @DeleteMapping("/{leathersId}")
     public ResponseEntity<ApiResponse<Void>> deleteLeather(@PathVariable Long leathersId) {
         leatherService.deleteleather(leathersId);
