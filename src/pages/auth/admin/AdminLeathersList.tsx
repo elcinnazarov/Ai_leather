@@ -1,40 +1,60 @@
 import React, { useEffect, useState } from 'react';
 import { adminLeatherService } from '../../../services/adminLeatherService';
-import { LeatherResponseAdmin, LeatherFilter, AvailabilityStatus, GradeType } from '../../../types/adminLeather';
+import { LeatherResponseAdmin, LeatherFilter } from '../../../types/adminLeather';
 import { Search, Plus, Edit2, Trash2, Loader2, Filter } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export default function AdminLeathersList() {
-  const [leathers, setLeathers] = useState<LeatherResponseAdmin[]>([]); // Boş massiv default qalır
+  const [leathers, setLeathers] = useState<LeatherResponseAdmin[]>([]);
   const [loading, setLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(0);
   
-  // Filtrlər və Paginasiya üçün State (Backend-ə tam uyğun)
   const [filter, setFilter] = useState<LeatherFilter>({
     page: 0,
     size: 10,
-    leathername: undefined, // Boş string yerinə undefined istifadə edirik ki, ilk açılışda filter tətbiq olunmasın
+    leathername: undefined, 
     availabilityStatus: undefined,
     gradeType: undefined,
   });
 
   const navigate = useNavigate();
 
-  // API-dən məlumatları çəkmək
   const fetchLeathers = async () => {
     setLoading(true);
     try {
-    const apiResponse = await adminLeatherService.getLeathers(filter);
+      const apiResponse = await adminLeatherService.getLeathers(filter);
       
-      // apiResponse = { success, message, data: { content, totalPages } }
-      const pageData = apiResponse.data;
+      // 🚀 1. BULLETPROOF DATA EXTRACTION (Matryoshka Həlli)
+      // Datanın hansı qatda gizləndiyini avtomatik tapırıq
+      let rawContent = [];
+      let total = 0;
 
-      if (pageData && Array.isArray(pageData.content)) {
-        setLeathers(pageData.content);
-        setTotalPages(pageData.totalPages || 0);
-      } else {
-        setLeathers([]);
+      const res = apiResponse as any;
+      if (res?.data?.data?.content) {
+        // Vəziyyət A: Axios raw response
+        rawContent = res.data.data.content;
+        total = res.data.data.totalPages;
+      } else if (res?.data?.content) {
+        // Vəziyyət B: Spring Boot ApiResponse
+        rawContent = res.data.content;
+        total = res.data.totalPages;
+      } else if (res?.content) {
+        // Vəziyyət C: Birbaşa Page obyekti
+        rawContent = res.content;
+        total = res.totalPages;
       }
+
+      // 🚀 2. BÖYÜK/KİÇİK HƏRF (CASE) SİNXRONİZASİYASI
+      // Backend-dən gələn adları Frontend-in DTO-suna uyğunlaşdırırıq
+      const normalizedData = rawContent.map((item: any) => ({
+        ...item,
+        leatherName: item.leathername || item.leatherName || "Adsız Dəri", 
+        textureImageUrl: item.imageUrl || item.textureImageUrl
+      }));
+
+      setLeathers(normalizedData);
+      setTotalPages(total || 0);
+
     } catch (error) {
       console.error("Xəta:", error);
       setLeathers([]);
@@ -43,22 +63,18 @@ export default function AdminLeathersList() {
     }
   };
 
-  // Filtr dəyişəndə (və ya səhifə dəyişəndə) API-ni çağır
   useEffect(() => {
-    // Axtarış üçün Debounce (İstifadəçi hər hərf yazanda serveri yormamaq üçün 0.5 saniyə gözləyir)
     const delayDebounceFn = setTimeout(() => {
       fetchLeathers();
     }, 500);
-
     return () => clearTimeout(delayDebounceFn);
   }, [filter]);
 
-  // Input dəyişikliklərini idarə edən funksiya
   const handleFilterChange = (key: keyof LeatherFilter, value: any) => {
     setFilter((prev: LeatherFilter) => ({
       ...prev,
       [key]: value === "" ? undefined : value,
-      page: 0 // Yeni axtarış edəndə həmişə 1-ci səhifəyə qayıt
+      page: 0
     }));
   };
 
@@ -83,7 +99,6 @@ export default function AdminLeathersList() {
           <p className="text-gray-500 text-xs uppercase tracking-widest mt-2">Mövcud materialların idarəedilməsi</p>
         </div>
         
-        {/* Mərhələ 3-də yaradacağımız Form səhifəsinə yönləndirir */}
         <button 
           onClick={() => navigate('/admin/leathers/new')}
           className="bg-[#111] text-white px-6 py-3 rounded-md text-xs font-bold uppercase tracking-widest hover:bg-black transition-colors flex items-center gap-2 shadow-sm"
@@ -92,10 +107,8 @@ export default function AdminLeathersList() {
         </button>
       </div>
 
-      {/* Filtrləmə Paneli (Quiet Luxury dizayn) */}
+      {/* Filtrləmə Paneli */}
       <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8 flex flex-col md:flex-row gap-6 items-end">
-        
-        {/* Axtarış Inputu */}
         <div className="w-full md:w-1/3 relative">
           <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 block">Dəri Adı</label>
           <div className="relative">
@@ -105,18 +118,17 @@ export default function AdminLeathersList() {
               placeholder="Axtarış..."
               value={filter.leathername || ''}
               onChange={(e) => handleFilterChange('leathername', e.target.value)}
-              className="w-full bg-transparent border-0 border-b border-gray-300 pl-8 pr-4 py-2 text-sm focus:ring-0 focus:border-[#111] transition-colors"
+              className="w-full bg-transparent border-0 border-b border-gray-300 pl-8 pr-4 py-2 text-sm focus:ring-0 focus:border-[#111] transition-colors outline-none"
             />
           </div>
         </div>
 
-        {/* Status Filteri */}
         <div className="w-full md:w-1/4">
           <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 block">Status</label>
           <select 
             value={filter.availabilityStatus || ''}
             onChange={(e) => handleFilterChange('availabilityStatus', e.target.value)}
-            className="w-full bg-transparent border-0 border-b border-gray-300 py-2 text-sm focus:ring-0 focus:border-[#111] transition-colors cursor-pointer"
+            className="w-full bg-transparent border-0 border-b border-gray-300 py-2 text-sm focus:ring-0 focus:border-[#111] transition-colors cursor-pointer outline-none"
           >
             <option value="">Bütün Statuslar</option>
             <option value="ACTIVE">Aktiv</option>
@@ -126,13 +138,12 @@ export default function AdminLeathersList() {
           </select>
         </div>
 
-        {/* Növ (Grade) Filteri */}
         <div className="w-full md:w-1/4">
           <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 block">Keyfiyyət (Grade)</label>
           <select 
             value={filter.gradeType || ''}
             onChange={(e) => handleFilterChange('gradeType', e.target.value)}
-            className="w-full bg-transparent border-0 border-b border-gray-300 py-2 text-sm focus:ring-0 focus:border-[#111] transition-colors cursor-pointer"
+            className="w-full bg-transparent border-0 border-b border-gray-300 py-2 text-sm focus:ring-0 focus:border-[#111] transition-colors cursor-pointer outline-none"
           >
             <option value="">Bütün Növlər</option>
             <option value="PREMIUM">Premium</option>
@@ -148,7 +159,7 @@ export default function AdminLeathersList() {
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-x-auto">
         {loading ? (
           <div className="flex justify-center items-center h-64">
-            <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
+            <Loader2 className="w-8 h-8 animate-spin text-[#111]" />
           </div>
         ) : leathers.length === 0 ? (
           <div className="text-center py-20">
@@ -170,19 +181,19 @@ export default function AdminLeathersList() {
               {leathers.map((leather) => (
                 <tr key={leather.id} className="group hover:bg-[#FAF9F6] transition-colors">
                   
-                  {/* Şəkil və Ad (Dairəvi Şəkil - Circular Swatches) */}
                   <td className="px-6 py-4 border-b border-gray-50">
                     <div className="flex items-center gap-4">
                       <div className="w-12 h-12 rounded-full overflow-hidden border border-gray-200 p-0.5">
+                        {/* 🚀 Artıq (as any) yazmağa ehtiyac qalmır, normalization prosesi bunu təmizlədi */}
                         <img 
-                          src={leather.imageUrl || (leather as any).textureImageUrl || 'https://via.placeholder.com/150'} 
-                          alt={leather.leathername || (leather as any).leatherName} 
+                          src={leather.imageUrl || 'https://via.placeholder.com/150'} 
+                          alt={leather.leathername} 
                           className="w-full h-full rounded-full object-cover"
                         />
                       </div>
                       <div>
                         <p className="font-bold text-[#111] text-sm">
-                          {leather.leathername || (leather as any).leatherName}
+                          {leather.leathername}
                         </p>
                         <p className="text-[10px] text-gray-500 uppercase tracking-widest">{leather.color}</p>
                       </div>
@@ -190,12 +201,12 @@ export default function AdminLeathersList() {
                   </td>
 
                   <td className="px-6 py-4 border-b border-gray-50 text-sm text-gray-600">
-                    {leather.origin}
+                    {leather.origin || "-"}
                   </td>
 
                   <td className="px-6 py-4 border-b border-gray-50">
                     <span className="px-3 py-1 bg-gray-100 rounded-full text-[10px] font-bold uppercase tracking-widest text-gray-700">
-                      {leather.gradeName || leather.gradeType}
+                      {leather.gradeType || "STANDARD"}
                     </span>
                   </td>
 
@@ -210,14 +221,12 @@ export default function AdminLeathersList() {
                           leather.availabilityStatus === 'DRAFT' ? 'bg-gray-400' : 
                           leather.availabilityStatus === 'OUT_OF_STOCK' ? 'bg-red-500' : 'bg-orange-500'}
                       `}></span>
-                      {leather.availabilityStatus}
+                      {leather.availabilityStatus || "DRAFT"}
                     </span>
                   </td>
 
-                  {/* İdarəetmə Düymələri */}
                   <td className="px-6 py-4 border-b border-gray-50 text-right">
                     <div className="flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                      {/* Mərhələ 3-ə hazırlıq: Edit səhifəsinə yönləndirmə */}
                       <button 
                         onClick={() => navigate(`/admin/leathers/edit/${leather.id}`)}
                         className="p-2 text-gray-400 hover:text-[#111] transition-colors"
