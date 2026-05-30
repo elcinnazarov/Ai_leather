@@ -1,0 +1,172 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "search": "Search",
+    "view_details": "View Details",
+    "back": "Go Back",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "continue": "Continue",
+    "save": "Save",
+    "currency": "Currency"
+  },
+  "nav": {
+    "home": "Home",
+    "collections": "Products",
+    "materials": "Leathers",
+    "about": "About Us",
+    "blog": "Blog",
+    "profile": "Profile",
+    "my_account": "My Account",
+    "logout": "Logout"
+  },
+  "catalog": {
+    "title": "Products",
+    "filters": {
+      "title": "Filters",
+      "price": "Price Range",
+      "sort_by": "Sort By",
+      "newest": "Newest Arrivals",
+      "price_low_high": "Price: Low to High",
+      "price_high_low": "Price: High to Low"
+    },
+    "empty": "No items found matching your criteria."
+  },
+  "products": {
+    "details": "Product Details",
+    "color": "Color",
+    "size": "Dimensions",
+    "availability": {
+      "in_stock": "In Stock",
+      "out_of_stock": "Out of Stock",
+      "made_to_order": "Made to Order"
+    },
+    "features": "Distinctive Features"
+  },
+  "leather": {
+    "grade": {
+      "full_grain": "Full Grain Leather",
+      "top_grain": "Top Grain Leather",
+      "genuine": "Genuine Leather",
+      "suede": "Premium Suede"
+    },
+    "finish": {
+      "matte": "Matte Finish",
+      "glossy": "Glossy Finish",
+      "pebbled": "Pebbled Texture"
+    },
+    "thickness": "Leather Thickness",
+    "care": "Care Instructions"
+  },
+  "cart": {
+    "title": "Your Cart",
+    "empty": "Your cart is currently empty.",
+    "add_to_cart": "Add to Cart",
+    "shipping_note": "Complimentary global shipping. Handcrafted upon commission.",
+    "checkout": "Proceed to Checkout",
+    "subtotal": "Subtotal",
+    "total": "Total Amount",
+    "taxes_calculated": "Taxes and shipping calculated at checkout",
+    "remove": "Remove"
+  },
+  "orders": {
+    "title": "Personal Archive",
+    "my_acquisitions": "My Acquisitions",
+    "no_orders": "No Past Acquisitions",
+    "explore_msg": "Your bespoke journey awaits.",
+    "explore_btn": "Explore Products",
+    "number": "Order Number",
+    "date": "Date",
+    "view_dossier": "View Dossier",
+    "other_items_one": "+ {{count}} other item",
+    "other_items_other": "+ {{count}} other items",
+    "status": {
+      "PENDING": "Pending Validation",
+      "PROCESSING": "Atelier Processing",
+      "SHIPPED": "In Transit",
+      "DELIVERED": "Delivered",
+      "CANCELLED": "Cancelled"
+    }
+  },
+  "about": {
+    "title": "Our Heritage",
+    "subtitle": "Transforming craft into distinction since 2021.",
+    "origins": "Born in 2021 as a visual narrative of pure craftsmanship, E1000 Leather has evolved into a sanctuary of bespoke artisanship and uncompromising quality.",
+    "philosophy": "Every piece is sculpted from the most exceptional full-grain hides, tailored intimately to the vision of our clients. To be the finest is not merely our ambition; it is the very ethos of our atelier.",
+    "customer": "True luxury lies in absolute reverence for the individual. You are beautifully distinct, and our life's work is to translate that individuality into timeless art.",
+    "quote": "The choice of the distinct.",
+    "vision": "Rooted in the heart of Baku, our atelier is now carrying this local heritage of fine artisanship onto the global stage."
+  },
+  "catalog": {
+    "search": "Search the archive...",
+    "all": "All Products",
+    "wallets": "Wallets",
+    "belts": "Belts",
+    "accessories": "Accessories"
+  },
+  "brand": {
+    "name": "E1000 Leather Baku atelier",
+    "slogan": "BRAND LEATHER HANDMADE",
+    "location": "Baku, Azerbaijan"
+  },
+  "navigation": {
+    "shop": "The Shop",
+    "allCollections": "All Products",
+    "bespokeOrders": "Bespoke Orders",
+    "theArchive": "The Archive",
+    "careGuide": "Care Guide"
+  },
+  "atelier": {
+    "title": "Atelier",
+    "ourStory": "Our Story",
+    "theArtisans": "The Artisans",
+    "sustainability": "Sustainability",
+    "contact": "Contact"
+  },
+  "newsletter": {
+    "title": "Newsletter",
+    "description": "Join the archive for exclusive releases and artisanal insights.",
+    "subscribe": "Subscribe",
+    "placeholder": "Your email address"
+  },
+  "grades": {
+    "title": "Material Standards",
+    "description": "Our commitment to craftsmanship begins with the hide. Explore the rigorous grading system that defines every piece we create, from the raw texture of Heritage to the refined finish of our Studio selections.",
+    "hierarchy": "The hierarchy of our raw materials.",
+    "quote": "\"Every hide possesses a fundamental truth. Our grading system does not judge quality—it classifies character. We orchestrate the relationship between raw nature and the final artifact.\"",
+    "grade_prefix": "Grade",
+    "standard_selection": "Standard Selection",
+    "refined_selection": "Refined Selection",
+    "certified_grade_a": "Certified Grade A",
+    "explore_grade": "Explore Grade",
+    "process_title": "The Tanning Process",
+    "process_desc": "We utilize vegetable tanning—a traditional 40-day process using natural bark extracts. This artisanal method respects the material and the environment.",
+    "ethics_title": "Ethics & Sourcing",
+    "ethics_desc": "Every hide is a byproduct of the local food industry, sourced exclusively from certified ethical farms within a 200-mile radius of our atelier.",
+    "care_title": "Material Care",
+    "care_desc": "Leather is a living material. We recommend treating our Grade I and II pieces with our organic beeswax balm every six months to maintain hydration."
+  },
+  "checkout": {
+    "title": "Delivery Details",
+    "secure": "Secure Checkout",
+    "country": "Country",
+    "city": "City",
+    "postalCode": "Postal Code (Optional)",
+    "phone": "Contact Number",
+    "address": "Full Address",
+    "notes": "Concierge Notes (Optional)",
+    "submit": "Complete Order",
+    "submitting": "Processing...",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping (Estimated)",
+    "total": "Final Settlement",
+    "qty": "Qty",
+    "validation": {
+      "required_address": "Delivery address is obligatory for dispatch.",
+      "required_phone": "Contact number is necessary for concierge coordination.",
+      "invalid_phone": "Please provide a valid contact format.",
+      "required_city": "City is required to estimate accurate shipping logistics.",
+      "postal_code_invalid": "Postal code must be left blank for Azerbaijan, and is mandatory for other countries."
+    }
+  }
+}

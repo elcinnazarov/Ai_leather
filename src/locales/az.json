@@ -1,0 +1,172 @@
+{
+  "common": {
+    "loading": "Yüklənir...",
+    "search": "Axtar",
+    "view_details": "Detallara Bax",
+    "back": "Geri Qayıt",
+    "confirm": "Təsdiqlə",
+    "cancel": "İmtina Et",
+    "continue": "Davam Et",
+    "save": "Yadda Saxla",
+    "currency": "Valyuta"
+  },
+  "nav": {
+    "home": "Ana Səhifə",
+    "collections": "Məhsullar",
+    "materials": "Dərilər",
+    "about": "Haqqımızda",
+    "blog": "Bloq",
+    "profile": "Profil",
+    "my_account": "Hesabım",
+    "logout": "Çıxış"
+  },
+  "catalog": {
+    "title": "Kolleksiyalar",
+    "filters": {
+      "title": "Filtrlər",
+      "price": "Qiymət Aralığı",
+      "sort_by": "Sıralama",
+      "newest": "Ən Yenilər",
+      "price_low_high": "Qiymət: Ucuzdan Bahaya",
+      "price_high_low": "Qiymət: Bahadan Ucuza"
+    },
+    "empty": "Kriteriyalarınıza uyğun məhsul tapılmadı."
+  },
+  "products": {
+    "details": "Məhsul Detalları",
+    "color": "Rəng",
+    "size": "Ölçülər",
+    "availability": {
+      "in_stock": "Stokda Var",
+      "out_of_stock": "Bitib",
+      "made_to_order": "Sifarişlə Hazırlanır"
+    },
+    "features": "Xüsusiyyətlər"
+  },
+  "leather": {
+    "grade": {
+      "full_grain": "Full-Grain Dəri (Tam Səth)",
+      "top_grain": "Top-Grain Dəri (Üst Səth)",
+      "genuine": "Təbii Dəri",
+      "suede": "Premium Zamşa"
+    },
+    "finish": {
+      "matte": "Mat Səth",
+      "glossy": "Parlaq Səth",
+      "pebbled": "Qabarıq Tekstura"
+    },
+    "thickness": "Dəri Qalınlığı",
+    "care": "Qulluq Təlimatı"
+  },
+  "cart": {
+    "title": "Səbətiniz",
+    "empty": "Səbətiniz hazırda boşdur.",
+    "add_to_cart": "Səbətə Əlavə Et",
+    "shipping_note": "Dünya üzrə pulsuz çatdırılma. Sifarişlə əl işi olaraq hazırlanır.",
+    "checkout": "Sifarişi Rəsmiləşdir",
+    "subtotal": "Ara Cəm",
+    "total": "Ümumi Məbləğ",
+    "taxes_calculated": "Vergi və çatdırılma rəsmiləşdirmə zamanı hesablanacaq",
+    "remove": "Sil"
+  },
+  "orders": {
+    "title": "Şəxsi Arxiv",
+    "my_acquisitions": "Sifarişlərim",
+    "no_orders": "Keçmiş Sifariş Tapılmadı",
+    "explore_msg": "Sizin xüsusi səyahətiniz burada başlayır.",
+    "explore_btn": "Kolleksiyaları Kəşf Et",
+    "number": "Sifariş Nömrəsi",
+    "date": "Tarix",
+    "view_dossier": "Dosyeyə Bax",
+    "other_items_one": "+ daha {{count}} məhsul",
+    "other_items_other": "+ daha {{count}} məhsul",
+    "status": {
+      "PENDING": "Təsdiq Gözləyir",
+      "PROCESSING": "Atelyedə Hazırlanır",
+      "SHIPPED": "Yoldadır",
+      "DELIVERED": "Çatdırılıb",
+      "CANCELLED": "Ləğv Edilib"
+    }
+  },
+  "about": {
+    "title": "Bizim İrsimiz",
+    "subtitle": "2021-ci ildən bəri sənətkarlığı fərqliliyə çeviririk.",
+    "origins": "2021-ci ildə xalis sənətkarlığın vizual hekayəsi olaraq doğulan E1000 Leather, bu gün xüsusi dərzişliyin və güzəştsiz keyfiyyətin sığınacağına çevrilmişdir.",
+    "philosophy": "Hər bir əsərimiz ən nadir və keyfiyyətli təbii dərilərdən yonulur, müştərilərimizin baxış bucağına uyğun olaraq fərdiləşdirilir. Ən mükəmməl olmaq sadəcə bir məqsəd deyil, atelyemizin dərin fəlsəfəsidir.",
+    "customer": "Əsl lüks fərdiyyətə olan mütləq ehtiramda tapılır. Siz incəliklə fərqlisiniz və bizim ən böyük işimiz həmin fərqliliyi zamansız bir sənətə çevirməkdir.",
+    "quote": "Fərqli olanların seçimi.",
+    "vision": "Kökünü Bakının ürəyindən alan atelyemiz, indi bu yerli nəfis sənətkarlıq irsini qlobal səhnəyə daşıyır."
+  },
+  "catalog": {
+    "search": "Arxivdə axtar...",
+    "all": "Bütün Kolleksiyalar",
+    "wallets": "Pul kisələri",
+    "belts": "Kəmərlər",
+    "accessories": "Aksesuarlar"
+  },
+  "brand": {
+    "name": "E1000 Leather Baku Atelier",
+    "slogan": "BRAND LEATHER HANDMADE",
+    "location": "Bakı, Azərbaycan"
+  },
+  "navigation": {
+    "shop": "Butik",
+    "allCollections": "Bütün Kolleksiyalar",
+    "bespokeOrders": "Xüsusi Sifarişlər",
+    "theArchive": "Arxiv",
+    "careGuide": "Baxım Bələdçisi"
+  },
+  "atelier": {
+    "title": "Atelye",
+    "ourStory": "Hekayəmiz",
+    "theArtisans": "Sənətkarlarımız",
+    "sustainability": "Davamlılıq",
+    "contact": "Əlaqə"
+  },
+  "newsletter": {
+    "title": "Xəbər Bülleteni",
+    "description": "Eksklüziv kolleksiyalar və atelye yenilikləri üçün arxivimizə qoşulun.",
+    "subscribe": "Abunə Ol",
+    "placeholder": "Elektron poçt ünvanınız"
+  },
+  "grades": {
+    "title": "Material Standartları",
+    "description": "Sənətkarlığımıza bağlılığımız dərindən başlayır. Heritage-in təbii teksturasından tutmuş Studio seçimlərimizin nəfis səthinə qədər yaratdığımız hər bir məhsulu fərqləndirən ciddi qiymətləndirmə sistemini kəşf edin.",
+    "hierarchy": "Xammal iyerarxiyamız.",
+    "quote": "\"Hər bir dəri təməl bir həqiqətə sahibdir. Bizim qiymətləndirmə sistemimiz keyfiyyəti mühakimə etmir—xarakterini təsnif edir. Biz təbii materialla yekun sənət əsəri arasındakı əlaqəni yaradırıq.\"",
+    "grade_prefix": "Dərəcə",
+    "standard_selection": "Standart Seçim",
+    "refined_selection": "Zərif Seçim",
+    "certified_grade_a": "A Dərəcə Sertifikatlı",
+    "explore_grade": "Dərəcəni Kəşf Et",
+    "process_title": "Aşılanma Prosesi",
+    "process_desc": "Biz təbii qabıq ekstraktlarından istifadə edərək ənənəvi 40 günlük aşılanma prosesindən istifadə edirik. Bu sənətkar üsul materiala və ətraf mühitə hörmətlə yanaşır.",
+    "ethics_title": "Etika və Qaynaq",
+    "ethics_desc": "Hər bir dəri yerli qida sənayesinin əlavə məhsuludur və yalnız atelyemizin 200 mil radiusunda yerləşən sertifikatlı etik təsərrüfatlardan alınır.",
+    "care_title": "Material Baxımı",
+    "care_desc": "Dəri canlı materialdır. Biz nəm saxlamaq üçün hər altı aydan bir Dərəcə I və II məhsullarımızı orqanik arı mumu balzamı ilə işləməyi tövsiyə edirik."
+  },
+  "checkout": {
+    "title": "Çatdırılma Məlumatları",
+    "secure": "Təhlükəsiz Ödəniş",
+    "country": "Ölkə",
+    "city": "Şəhər",
+    "postalCode": "Poçt İndeksi (Ehtiyac varsa)",
+    "phone": "Əlaqə Nömrəsi",
+    "address": "Tam Ünvan",
+    "notes": "Əlavə Qeydlər (Könüllü)",
+    "submit": "Sifarişi Təsdiqlə",
+    "submitting": "Hesablanır...",
+    "subtotal": "Ara Cəm",
+    "shipping": "Çatdırılma (Təxmini)",
+    "total": "Yekun Məbləğ",
+    "qty": "Say",
+    "validation": {
+      "required_address": "Çatdırılma üçün tam ünvan qeyd edilməlidir.",
+      "required_phone": "Kuryerlə əlaqə üçün telefon nömrəsi mütləqdir.",
+      "invalid_phone": "Zəhmət olmasa düzgün formatda nömrə daxil edin (məs. +994..)",
+      "required_city": "Çatdırılmanı dəqiq hesablamaq üçün şəhər daxil edilməlidir.",
+      "postal_code_invalid": "Azərbaycan üçün poçt indeksi boş qalmalıdır, digər ölkələr üçün mütləqdir."
+    }
+  }
+}
