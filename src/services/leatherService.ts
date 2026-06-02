@@ -1,98 +1,46 @@
 import { api } from "../lib/api";
-import {
-  LeatherResponse,
-  CreateLeatherRequest,
-  UpdateLeatherRequest,
-  ApiResponse,
-  AvailabilityStatus,
-  PageResponse
-} from "../types";
-import {
-  LeatherListResponse,
-  LeatherDetailResponse,
-  LeatherByGradeResponse,
-  LeatherFilterRequest
+import { 
+  LeatherFilterRequest, LeatherListResponse, PageResponse, 
+  LeatherDetailResponse, AdminLeatherResponse, AvailabilityStatus,
+  LeatherByGradeResponse, GradeListResponse, LeatherGradeDetailResponse
 } from "../types/leather";
 
-const API_BASE_URL = "/admin/leathers";
+const ADMIN_URL = "/admin/leathers";
+const SHOP_URL = "/leathers";
+const GRADE_URL = "/leatherGrade";
 
 export const leatherService = {
-  // GET all leathers (Assuming a standard list endpoint exists, though not explicitly in the snippet)
-  getAllLeathers: async (): Promise<LeatherResponse[]> => {
-    const response = await api.get<ApiResponse<LeatherResponse[]>>(API_BASE_URL);
-    return response.data.data;
+  // ==========================================
+  // ADMIN ENDPOINTS (Sənin kodların - toxunulmayıb)
+  // ==========================================
+  getAllLeathers: async (): Promise<AdminLeatherResponse[]> => {
+    const response = await api.get(ADMIN_URL);
+    return response?.data?.data || response?.data || [];
   },
-
-  createLeather: async (
-    data: CreateLeatherRequest,
-    image: File
-  ): Promise<LeatherResponse> => {
+  createLeather: async (data: any, image: File): Promise<AdminLeatherResponse> => {
     const formData = new FormData();
-    // Wrap JSON data in a Blob with application/json type
-    formData.append(
-      "data",
-      new Blob([JSON.stringify(data)], { type: "application/json" })
-    );
+    formData.append("data", new Blob([JSON.stringify(data)], { type: "application/json" }));
     formData.append("image", image);
-
-    const response = await api.post<ApiResponse<LeatherResponse>>(API_BASE_URL, formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
-    return response.data.data;
+    const response = await api.post(ADMIN_URL, formData, { headers: { "Content-Type": "multipart/form-data" } });
+    return response?.data?.data || response?.data;
   },
-
-  deleteLeatherImage: async (leatherId: number): Promise<void> => {
-    await api.delete(`${API_BASE_URL}/${leatherId}/image`);
-  },
-
-  updateLeatherImage: async (
-    id: number,
-    image: File
-  ): Promise<LeatherResponse> => {
+  updateLeatherImage: async (id: number, image: File): Promise<AdminLeatherResponse> => {
     const formData = new FormData();
     formData.append("image", image);
-
-    const response = await api.put<ApiResponse<LeatherResponse>>(
-      `${API_BASE_URL}/${id}/image`,
-      formData,
-      {
-        headers: { "Content-Type": "multipart/form-data" },
-      }
-    );
-    return response.data.data;
+    const response = await api.put(`${ADMIN_URL}/${id}/image`, formData, { headers: { "Content-Type": "multipart/form-data" } });
+    return response?.data?.data || response?.data;
   },
-
-  updateLeather: async (
-    leatherId: number,
-    data: UpdateLeatherRequest
-  ): Promise<LeatherResponse> => {
-    const response = await api.put<ApiResponse<LeatherResponse>>(
-      `${API_BASE_URL}/${leatherId}`,
-      data
-    );
-    return response.data.data;
+  updateLeatherStatus: async (leatherId: number, status: AvailabilityStatus): Promise<AdminLeatherResponse> => {
+    const response = await api.put(`${ADMIN_URL}/${leatherId}/status`, null, { params: { status } });
+    return response?.data?.data || response?.data;
   },
-
-  updateLeatherStatus: async (
-    leatherId: number,
-    status: AvailabilityStatus
-  ): Promise<LeatherResponse> => {
-    const response = await api.put<ApiResponse<LeatherResponse>>(
-      `${API_BASE_URL}/${leatherId}/status`,
-      null,
-      {
-        params: { status },
-      }
-    );
-    return response.data.data;
-  },
-
   deleteLeather: async (leatherId: number): Promise<void> => {
-    await api.delete(`${API_BASE_URL}/${leatherId}`);
+    await api.delete(`${ADMIN_URL}/${leatherId}`);
   },
 
-  // --- SHOP ENDPOINTS ---
-
+  // ==========================================
+  // SHOP (MÜŞTƏRİ) ENDPOINTS
+  // ==========================================
   getShopLeathers: async (filter: LeatherFilterRequest = {}): Promise<PageResponse<LeatherListResponse>> => {
     const params = new URLSearchParams();
     if (filter.color) params.append("color", filter.color);
@@ -101,19 +49,30 @@ export const leatherService = {
     if (filter.page !== undefined) params.append("page", filter.page.toString());
     if (filter.size !== undefined) params.append("size", filter.size.toString());
 
-    const response = await api.get<ApiResponse<PageResponse<LeatherListResponse>>>("/leathers", { params });
-    return response.data.data;
+    const response = await api.get(SHOP_URL, { params });
+    return response?.data?.data || response?.data || { content: [] };
   },
 
   getShopLeatherDetail: async (id: number): Promise<LeatherDetailResponse> => {
-    const response = await api.get<ApiResponse<LeatherDetailResponse>>(`/leathers/${id}`);
-    return response.data.data;
+    const response = await api.get(`${SHOP_URL}/${id}`);
+    return response?.data?.data || response?.data;
   },
 
   getShopLeathersByGrade: async (gradeType: string, page: number = 0, size: number = 20): Promise<PageResponse<LeatherByGradeResponse>> => {
-    const response = await api.get<ApiResponse<PageResponse<LeatherByGradeResponse>>>(`/leathers/by-grade/${gradeType}`, {
-      params: { page, size }
-    });
-    return response.data.data;
+    const response = await api.get(`${SHOP_URL}/by-grade/${gradeType}`, { params: { page, size } });
+    return response?.data?.data || response?.data || { content: [] };
+  },
+
+  // ==========================================
+  // SHOP LEATHER GRADE ENDPOINTS (Yeni əlavə olundu)
+  // ==========================================
+  getAllGrades: async (): Promise<GradeListResponse[]> => {
+    const response = await api.get(GRADE_URL);
+    return response?.data?.data || response?.data || [];
+  },
+
+  getGradeDetail: async (id: number): Promise<LeatherGradeDetailResponse> => {
+    const response = await api.get(`${GRADE_URL}/${id}`);
+    return response?.data?.data || response?.data;
   }
 };

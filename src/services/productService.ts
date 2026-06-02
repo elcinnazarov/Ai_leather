@@ -32,6 +32,30 @@ export const productService = {
     return response.data.data;
   },
 
+
+  // 🌍 FRONTEND SHOP KATALOQ ÜÇÜN
+  getProductsSlice: async (filter: ProductFilterRequest): Promise<ProductCatalogResponse> => {
+    // Diqqət: "SHOP_API_BASE_URL" əgər '/products' isə o şəkildə qalır.
+    // Əgər '/api/products' dursa, ona uyğun yaz. 
+    // Sənin kodunda "/products" olduğu görünürdü, lakin backend loglarında "/api/products" idi.
+    // Biz api.ts interceptor-un "/api" əlavə etdiyini nəzərə alaraq belə yazırıq:
+    const response = await api.get('/products', { 
+      params: {
+        modelType: filter.modelType || undefined,
+        search: filter.search || undefined,
+        page: filter.page || 0,
+        size: filter.size || 12
+      } 
+    });
+    
+    // ApiResponse qabığını soyuruq
+    if (response?.data?.data) return response.data.data;
+    if (response?.data) return response.data;
+    
+    // Qəza sığortası
+    return { content: [], pageNumber: 0, pageSize: 12, hasNext: false, hasPrevious: false };
+  },
+  
   createProductModel: async (
     data: CreateProductModelRequest,
     images: File[]

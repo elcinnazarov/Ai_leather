@@ -43,17 +43,19 @@ export const adminLeatherService = {
   },
 
   // 3. Mövcud dərini yenilə (Yalnız məlumatlar)
-  updateLeather: async (id: number, request: UpdateLeatherRequest): Promise<LeatherResponse> => {
-    const response = await api.put<ApiResponse<LeatherResponse>>(`/admin/leathers/${id}`, request);
-    return (response as any).data;
+ updateLeather: async (id: number, data: any) => {
+    const response = await api.put(`/admin/leathers/${id}`, data);
+    if (response?.data?.data) return response.data.data;
+    return response?.data;
   },
 
-  // 4. Statusu yenilə (@RequestParam status)
-  updateLeatherStatus: async (id: number, status: AvailabilityStatus): Promise<LeatherResponse> => {
-    const response = await api.put<ApiResponse<LeatherResponse>>(`/admin/leathers/${id}/status`, null, {
+  // 2. STATUSU YENİLƏYƏN METOD (PUT /api/admin/leathers/{id}/status)
+  updateStatus: async (id: number, status: string) => {
+    const response = await api.put(`/admin/leathers/${id}/status`, null, {
       params: { status }
     });
-    return (response as any).data;
+    if (response?.data?.data) return response.data.data;
+    return response?.data;
   },
 
   // 5. Şəkli yenilə (Multipart)

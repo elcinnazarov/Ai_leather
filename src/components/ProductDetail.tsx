@@ -11,6 +11,7 @@ import { useCartStore } from "../store/useCartStore";
 import { useCurrencyStore } from "../store/useCurrencyStore";
 import { useAITranslation } from "../hooks/useAITranslation";
 import { motion, AnimatePresence } from "framer-motion";
+import { getCurrencySymbol } from '../lib/currencyMapper';
 
 // --- DƏRİ QUTUSU (THUMBNAIL) KOMPONENTİ ---
 function LeatherOption({ leather, isActive, onClick }: { leather: P_AvailableLeatherResponse, isActive: boolean, onClick: () => void }) {
@@ -46,13 +47,17 @@ export default function ProductDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { addItem, setIsCartOpen } = useCartStore();
-  const { symbol } = useCurrencyStore();
   
   const [product, setProduct] = useState<ProductDetailResponse | null>(null);
   const [leathers, setLeathers] = useState<P_AvailableLeatherResponse[]>([]);
   const [selectedMaterial, setSelectedMaterial] = useState<P_AvailableLeatherResponse | null>(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+
+  // Aktiv Şəkil və Toxunma (Swipe) State-ləri
+  const [activeImage, setActiveImage] = useState<string>("");
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
+  const [touchEndX, setTouchEndX] = useState<number | null>(null);
 
   // API ÇAĞIRIŞLARI
   useEffect(() => {
@@ -68,6 +73,10 @@ export default function ProductDetail() {
         setProduct(prodData);
         setLeathers(leathersData || []);
         
+        if (prodData) {
+          setActiveImage(prodData.primaryImageUrl || 'https://via.placeholder.com/800x1000');
+        }
+        
         if (leathersData && leathersData.length > 0) {
           setSelectedMaterial(leathersData[0]);
         }
@@ -79,6 +88,38 @@ export default function ProductDetail() {
     };
     fetchData();
   }, [id]);
+
+  // SWIPE (Sürüşdürmə) MƏNTİQİ
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchEndX(null); // Yeni swipe başlayanda əvvəlki sonluğu təmizlə
+    setTouchStartX(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEndX(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStartX || !touchEndX || !product?.images) return;
+    
+    const distance = touchStartX - touchEndX;
+    const minSwipeDistance = 50; // Sürüşdürmənin qeydə alınması üçün minimum px
+    const currentIndex = product.images.findIndex(img => img.imageUrl === activeImage);
+    
+    if (currentIndex === -1) return;
+
+    if (Math.abs(distance) > minSwipeDistance) {
+      if (distance > 0) {
+        // Sola sürüşdürmə -> Növbəti şəkil
+        const nextIndex = currentIndex < product.images.length - 1 ? currentIndex + 1 : 0;
+        setActiveImage(product.images[nextIndex].imageUrl);
+      } else {
+        // Sağa sürüşdürmə -> Əvvəlki şəkil
+        const prevIndex = currentIndex > 0 ? currentIndex - 1 : product.images.length - 1;
+        setActiveImage(product.images[prevIndex].imageUrl);
+      }
+    }
+  };
 
   // QRUPLAŞDIRMA VƏ QİYMƏT
   const groupedLeathers = useMemo(() => {
@@ -99,10 +140,21 @@ export default function ProductDetail() {
     return activePriceObj ? activePriceObj.amount : 0;
   }, [product, selectedMaterial]);
 
-  // TƏRCÜMƏLƏR
+  const displaySymbol = useMemo(() => {
+    if (!product || !product.currentCurrency) return "₼";
+    return getCurrencySymbol(product.currentCurrency);
+  }, [product]);
+
+  // 🌍 TƏRCÜMƏLƏR (Dinamik və Statik)
   const dynamicModelName = useAITranslation(product?.modelName || "");
   const dynamicDescription = useAITranslation(product?.description || "");
   const selectedMaterialName = useAITranslation(selectedMaterial?.name || "");
+  
+  // UI Elementlərinin Tərcüməsi
+  const tAddToCart = useAITranslation("Səbətə Əlavə Et");
+  const tGoBack = useAITranslation("Geri Qayıt");
+  const tCollection = useAITranslation("Kolleksiyası");
+  const tMaterial = useAITranslation("Material");
 
   const handleMaterialClick = (leather: P_AvailableLeatherResponse) => {
     setSelectedMaterial(leather);
@@ -163,7 +215,7 @@ export default function ProductDetail() {
                 {selectedMaterialName}
               </h3>
               <span className="font-sans text-[10px] md:text-xs uppercase tracking-[0.3em] text-gray-500 mt-2 text-center">
-                Material: {selectedMaterial.gradeType.replace('_', ' ')}
+                {tMaterial}: {selectedMaterial.gradeType.replace('_', ' ')}
               </span>
             </motion.div>
           </motion.div>
@@ -176,29 +228,72 @@ export default function ProductDetail() {
           onClick={() => navigate("/")}
           className="flex items-center gap-2 text-gray-500 hover:text-black font-sans text-xs uppercase font-bold tracking-widest transition-colors mb-6 lg:mb-8"
         >
-          <ArrowLeft className="w-4 h-4" /> Geri Qayıt
+          <ArrowLeft className="w-4 h-4" /> {tGoBack}
         </button>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-20">
           
-          {/* SOL TƏRƏF: ANA ŞƏKİL */}
-          <div className="lg:col-span-7">
-            {/* 🛠️ DÜZƏLİŞ BURADADIR: aspect-[4/5] veririk, absolute/inset-0 silirik!
-                Şəkil artıq səhifədə real yer tutur və altındakı elementləri itələyir. */}
-            <div className="lg:sticky top-28 bg-[#f5f5f5] rounded-3xl overflow-hidden aspect-[4/5] shadow-sm w-full">
+          {/* SOL TƏRƏF: ANA ŞƏKİL VƏ QALEREYA */}
+          <div className="lg:col-span-7 flex flex-col gap-4">
+            
+            {/* Böyük Şəkil (Mobil üçün Swipe + Nöqtələr (Pagination) Əlavə Edildi) */}
+            <div 
+              className="lg:sticky top-28 bg-[#f5f5f5] rounded-3xl overflow-hidden aspect-[4/5] shadow-sm w-full relative group cursor-grab active:cursor-grabbing"
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+            >
               <img 
-                src={product.primaryImageUrl || 'https://via.placeholder.com/800x1000'} 
+                src={activeImage} 
                 alt={dynamicModelName} 
-                className="w-full h-full object-cover" 
+                className="w-full h-full object-cover transition-opacity duration-300" 
                 referrerPolicy="no-referrer" 
+                draggable="false" // Şəklin default sürüklənməsinin qarşısını alır
               />
+
+              {/* 📱 MOBİL ÜÇÜN NÖQTƏLƏR (PAGINATION) */}
+              {product.images && product.images.length > 1 && (
+                <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2 lg:hidden">
+                  {product.images.map((img) => (
+                    <div 
+                      key={img.id} 
+                      className={cn(
+                        "h-1.5 rounded-full transition-all duration-300",
+                        activeImage === img.imageUrl ? "bg-[#111] w-4" : "bg-gray-400/50 w-1.5"
+                      )}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
+
+            {/* Desktop üçün Alt Kiçik Şəkillər (Galereya) */}
+            {product.images && product.images.length > 1 && (
+              <div className="hidden lg:flex gap-3 overflow-x-auto pb-2 pt-1 scrollbar-hide">
+                {product.images.map((img) => (
+                  <button
+                    key={img.id}
+                    onClick={() => setActiveImage(img.imageUrl)}
+                    className={cn(
+                      "w-20 h-24 border-2 rounded-xl overflow-hidden flex-shrink-0 transition-all duration-200",
+                      activeImage === img.imageUrl ? "border-black scale-105 shadow-sm" : "border-gray-200 opacity-70 hover:opacity-100"
+                    )}
+                  >
+                    <img 
+                      src={img.imageUrl} 
+                      alt={`${dynamicModelName} - ${img.imageOrder}`} 
+                      className="w-full h-full object-cover"
+                      referrerPolicy="no-referrer"
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* SAĞ TƏRƏF (Mobildə şəklin ALTI): DETALLAR */}
           <div className="lg:col-span-5 flex flex-col justify-start lg:justify-center pt-6 lg:pt-0">
             
-            {/* BAŞLIQ VƏ QİYMƏT (Həm mobil, həm desktop üçün eyni yerdədir) */}
             <div className="mb-6 lg:mb-8">
               <span className="block font-sans text-[10px] tracking-[0.3em] uppercase text-gray-500 mb-2 lg:mb-3">
                 E1000 {product.modelType} Series
@@ -207,7 +302,7 @@ export default function ProductDetail() {
                 {dynamicModelName}
               </h1>
               <div className="text-2xl md:text-3xl font-sans font-medium text-[#111] transition-all duration-300">
-                {symbol} {currentPrice.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                {displaySymbol} {currentPrice.toLocaleString(undefined, { minimumFractionDigits: 2 })}
               </div>
             </div>
 
@@ -221,7 +316,7 @@ export default function ProductDetail() {
                 {Object.entries(groupedLeathers).map(([grade, leatherList]) => (
                   <div key={grade} className="space-y-4">
                     <h4 className="font-sans text-[11px] font-bold uppercase tracking-[0.2em] text-[#111]">
-                      {grade.replace('_', ' ')} Kolleksiyası
+                      {grade.replace('_', ' ')} {tCollection}
                     </h4>
                     <div className="flex overflow-x-auto gap-4 pb-4 scrollbar-hide snap-x w-full" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                       {leatherList.map((leather) => (
@@ -238,6 +333,7 @@ export default function ProductDetail() {
               </div>
             )}
 
+            {/* SƏBƏTƏ ƏLAVƏ ET DÜYMƏSİ (Tərcümə olundu) */}
             <button 
               onClick={() => {
                 addItem({
@@ -251,7 +347,7 @@ export default function ProductDetail() {
               }}
               className="w-full flex items-center justify-center gap-3 bg-[#111] text-white px-8 py-5 rounded-2xl font-sans text-xs font-bold uppercase tracking-[0.2em] hover:bg-black transition-all active:scale-95 shadow-xl shadow-black/10 mt-auto lg:mt-0"
             >
-              <ShoppingBag className="w-5 h-5" /> Səbətə Əlavə Et
+              <ShoppingBag className="w-5 h-5" /> {tAddToCart || "Səbətə Əlavə Et"}
             </button>
             
           </div>

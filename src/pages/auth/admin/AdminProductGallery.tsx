@@ -12,53 +12,52 @@ export default function AdminProductGallery() {
   const [loading, setLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(0);
 
+  // ARTIQ "as any" YOXDUR! Çünki interfeysi DTO-ya uyğunlaşdırdıq
   const [filter, setFilter] = useState<ProductModelFilter>({
     page: 0,
     size: 12, 
     modelname: undefined,
     availabilityStatus: undefined,
     modelType: undefined,
-  } as any);
+  });
 
   const navigate = useNavigate();
 
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const apiResponse = await adminProductService.getProducts(filter);
+      // Zəncir 1: Service bizə təmiz PageResponse qaytarır
+      const pageData = await adminProductService.getProducts(filter);
       
-      // 🚀 1. BULLETPROOF DATA EXTRACTION
-      let rawContent = [];
-      let total = 0;
+      console.log("COMPONENT LAYER: Service-dən gələn təmiz data:", pageData);
 
-      const res = apiResponse as any;
-      if (res?.data?.data?.content) {
-        rawContent = res.data.data.content;
-        total = res.data.data.totalPages;
-      } else if (res?.content) {
-        rawContent = res.content;
-        total = res.totalPages;
+      if (!pageData || !pageData.content) {
+         setProducts([]);
+         setTotalPages(0);
+         return;
       }
 
-      // 🚀 2. Normalizasiya - Artıq "modelName" yazmağa ehtiyac yoxdur! 
-      // Çünki Type-ı "modelname" olaraq düzəltdik.
-      const normalizedData = rawContent.map((item: any) => ({
+      // Backend-dən gələn adın düzgünlüyünü sığortalayırıq
+      const normalizedData = pageData.content.map((item: any) => ({
         ...item,
-        modelname: item.modelname || 'Adsız Model', 
+        modelname: item.modelname || item.modelName || 'Adsız Model', 
         primaryImageUrl: item.primaryImageUrl || item.imageUrl || null
       }));
 
-      setProducts(normalizedData);
-      setTotalPages(total || 0);
+      setProducts(normalizedData as AdminProductModelResponse[]);
+      setTotalPages(pageData.totalPages || 0);
 
     } catch (error) {
       console.error("Məhsullar yüklənərkən xəta:", error);
-      toast.error("Məhsulları yükləmək mümkün olmadı");
+      toast.error("Məhsulları yükləmək mümkün olmadı.");
       setProducts([]);
     } finally {
       setLoading(false);
     }
   };
+
+  // TS XƏTASI YOXDUR: Çünki filterin içindəkiləri destructure edirik
+  const { page, modelname, availabilityStatus, modelType } = filter;
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
@@ -66,10 +65,11 @@ export default function AdminProductGallery() {
     }, 500);
 
     return () => clearTimeout(delayDebounceFn);
-  }, [filter]);
+  // Yalnız lazımi filter dəyərlərini izləyirik
+  }, [page, modelname, availabilityStatus, modelType]);
 
-  const handleFilterChange = (key: string, value: any) => {
-    setFilter((prev: any) => ({
+  const handleFilterChange = (key: keyof ProductModelFilter, value: any) => {
+    setFilter((prev) => ({
       ...prev,
       [key]: value === "" ? undefined : value,
       page: 0 
@@ -79,6 +79,7 @@ export default function AdminProductGallery() {
   return (
     <div className="min-h-screen bg-[#FAF9F6] p-8 md:p-12 font-sans">
       
+      {/* Üst Başlıq */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
         <div>
           <h1 className="text-3xl font-serif font-bold text-[#111] tracking-wide">Məhsul Qalereyası</h1>
@@ -93,6 +94,7 @@ export default function AdminProductGallery() {
         </button>
       </div>
 
+      {/* Filtrlər */}
       <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8 flex flex-col md:flex-row gap-6 items-end">
         <div className="w-full md:w-1/3 relative">
           <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 block">Model Adı</label>
@@ -101,7 +103,7 @@ export default function AdminProductGallery() {
             <input 
               type="text" 
               placeholder="Axtarış..."
-              value={(filter as any).modelname || ''}
+              value={filter.modelname || ''}
               onChange={(e) => handleFilterChange('modelname', e.target.value)}
               className="w-full bg-transparent border-0 border-b border-gray-300 pl-8 pr-4 py-2 text-sm focus:ring-0 focus:border-[#111] transition-colors outline-none"
             />
@@ -111,7 +113,7 @@ export default function AdminProductGallery() {
         <div className="w-full md:w-1/4">
           <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 block">Kategoriya</label>
           <select 
-            value={(filter as any).modelType || ''}
+            value={filter.modelType || ''}
             onChange={(e) => handleFilterChange('modelType', e.target.value)}
             className="w-full bg-transparent border-0 border-b border-gray-300 py-2 text-sm focus:ring-0 focus:border-[#111] transition-colors cursor-pointer outline-none"
           >
@@ -126,7 +128,7 @@ export default function AdminProductGallery() {
         <div className="w-full md:w-1/4">
           <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 block">Status</label>
           <select 
-            value={(filter as any).availabilityStatus || ''}
+            value={filter.availabilityStatus || ''}
             onChange={(e) => handleFilterChange('availabilityStatus', e.target.value)}
             className="w-full bg-transparent border-0 border-b border-gray-300 py-2 text-sm focus:ring-0 focus:border-[#111] transition-colors cursor-pointer outline-none"
           >
@@ -138,6 +140,7 @@ export default function AdminProductGallery() {
         </div>
       </div>
 
+      {/* Məhsullar Grid-i */}
       {loading ? (
         <div className="flex justify-center items-center h-64">
           <Loader2 className="w-8 h-8 animate-spin text-[#111]" />
@@ -160,7 +163,7 @@ export default function AdminProductGallery() {
                   {product.primaryImageUrl ? (
                     <img 
                       src={product.primaryImageUrl} 
-                      alt={product.modelname} // 🚀 Artıq heç bir xəta verməyəcək!
+                      alt={product.modelname} 
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out"
                     />
                   ) : (
@@ -189,7 +192,6 @@ export default function AdminProductGallery() {
 
                 <div className="mt-4 px-1">
                   <h3 className="text-[#111] font-bold text-sm truncate">{product.modelname}</h3> 
-                  {/* 🚀 Artıq məhsulun adı ekrana problemsiz çıxacaq! */}
                   <div className="flex justify-between items-center mt-1.5">
                     <p className="text-gray-500 text-[10px] uppercase tracking-widest">{product.modelType || 'BİLİNMİR'}</p>
                     <p className="text-gray-400 text-[10px]">{product.dimensions || ''}</p>

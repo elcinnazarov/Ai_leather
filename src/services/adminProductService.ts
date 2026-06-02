@@ -1,4 +1,5 @@
 import { api } from '../lib/api';
+
 import {
   AdminProductModelResponse, ProductModelResponse, CreateProductModelRequest, UpdateProductModelRequest,
   ProductModelFilter, PageResponse, AvailabilityStatus, ApiResponse,
@@ -10,28 +11,49 @@ import {
 export const adminProductService = {
   
   // ==========================================
+  // 1. PRODUCT (BASE INFO)// ==========================================
   // 1. PRODUCT (BASE INFO)
   // ==========================================
-  getProducts: async (filter: ProductModelFilter): Promise<PageResponse<AdminProductModelResponse>> => {
-    const response = await api.get<ApiResponse<PageResponse<AdminProductModelResponse>>>('/admin/products', { params: filter });
-    return response.data.data;
-  },
+  getProducts: async (filter: ProductModelFilter) => {
+    // 1. API-yə zəng edirik (DİQQƏT: '/api' sözünü sildik, çünki Axios onsuz da əlavə edir!)
+    const response = await api.get('/admin/products', { params: filter });
+    
+    // 2. KONSOLDA İZLƏYİRİK
+    console.log("SERVICE LAYER: Axios-dan gələn xam response:", response);
 
-  getProductById: async (id: number): Promise<AdminProductModelResponse> => {
-    const response = await api.get<ApiResponse<AdminProductModelResponse>>(`/admin/products/${id}`);
-    return response.data.data;
-  },
+    // 3. MATRYOSHKA HƏLLİ
+    if (response?.data?.data?.content) return response.data.data;
+    if (response?.data?.content) return response.data;
+    if (response?.data) return response.data;
 
+    // Əgər heç nə tapılmasa, ən azından frontend çökməsin deyə boş PageResponse qaytarırıq:
+    return { content: [], totalPages: 0, totalElements: 0 };
+  },
+  getProductById: async (id: number) => {
+    // DİQQƏT: '/api' sözü yoxdur, çünki Axios onsuz da əlavə edir
+    const response = await api.get(`/admin/products/${id}`);
+    
+    console.log("SERVICE LAYER (Single Product):", response);
+
+    // Məlumatın təmiz çıxarılması
+    if (response?.data?.data) return response.data.data;
+    if (response?.data) return response.data;
+    
+    return null;
+  },
   createProduct: async (request: CreateProductModelRequest, images: File[]): Promise<ProductModelResponse> => {
     const formData = new FormData();
     formData.append('data', new Blob([JSON.stringify(request)], { type: 'application/json' }));
-    // Backend @RequestPart("image") List<MultipartFile> image kimi tələb edir
-    images.forEach(img => formData.append('image', img));
+    images.forEach(img => formData.append('image', img)); // Backend @RequestPart("image") gözləyir
 
-    const response = await api.post<ApiResponse<ProductModelResponse>>('/admin/products', formData, {
+    const response = await api.post('/admin/products', formData, {
       headers: { 'Content-Type': 'multipart/form-data' }
     });
-    return response.data.data;
+
+    // MATRYOSHKA HƏLLİ: Əgər interceptor açıbsa birbaşa data-nı qaytar, açmayıbsa içindəkini
+    if (response?.data?.data) return response.data.data;
+    if (response?.data) return response.data;
+    return response as any;
   },
 
   updateProduct: async (id: number, request: UpdateProductModelRequest): Promise<ProductModelResponse> => {
@@ -39,9 +61,16 @@ export const adminProductService = {
     return response.data.data;
   },
 
-  updateProductStatus: async (id: number, status: AvailabilityStatus): Promise<ProductModelResponse> => {
-    const response = await api.put<ApiResponse<ProductModelResponse>>(`/admin/products/${id}/status`, null, { params: { status } });
-    return response.data.data;
+ updateProductStatus: async (productId: number, status: AvailabilityStatus) => {
+    // URL-in sonuna ?status=XXX əlavə edir
+    const response = await api.put(`/admin/products/${productId}/status`, null, {
+      params: { status } 
+    });
+    
+    // Matryoshka Data Çıxarılması
+    if (response?.data?.data) return response.data.data;
+    if (response?.data) return response.data;
+    return response;
   },
 
   deleteProduct: async (id: number): Promise<void> => {

@@ -4,13 +4,17 @@ import { adminLeatherService } from '../../../services/adminLeatherService';
 import { AvailabilityStatus, GradeType, CreateLeatherRequest, UpdateLeatherRequest } from '../../../types/adminLeather';
 import { Loader2, ArrowLeft, Upload, Save, ImageIcon } from 'lucide-react';
 import toast from 'react-hot-toast';
+
 export default function AdminLeatherForm() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const isEditMode = Boolean(id); // Əgər URL-də ID varsa, deməli Redaktə rejimidir
+  const isEditMode = Boolean(id); 
 
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(isEditMode);
+  
+  // Zəncir məntiqi üçün dərinin orijinal (ilkin) statusunu yadda saxlayırıq
+  const [originalStatus, setOriginalStatus] = useState<AvailabilityStatus>('ACTIVE');
 
   interface LeatherFormData {
     leatherName: string;
@@ -44,7 +48,6 @@ export default function AdminLeatherForm() {
     };
   }, [previewUrl]);
 
-  // Əgər Redaktə rejimidirsə, köhnə məlumatları gətir
   useEffect(() => {
     if (isEditMode && id) {
       fetchLeatherDetails(Number(id));
@@ -55,7 +58,6 @@ export default function AdminLeatherForm() {
     try {
       const response = await adminLeatherService.getLeatherById(leatherId);
       
-      // 🚀 1. MATRYOSHKA HƏLLİ (Data qatını düzgün tapmaq)
       let data = response as any;
       if (data?.data?.data) {
         data = data.data.data;
@@ -63,7 +65,6 @@ export default function AdminLeatherForm() {
         data = data.data;
       }
 
-      // 🚀 2. CASE-SENSITIVITY HƏLLİ
       setFormData({
         leatherName: data.leathername || data.leatherName || '', 
         color: data.color || '',
@@ -74,6 +75,8 @@ export default function AdminLeatherForm() {
         gradeId: data.gradeId || 1
       });
 
+      // Backend-dən gələn ilkin statusu kənara qoyuruq ki, yoxlaya bilək
+      setOriginalStatus(data.availabilityStatus || 'ACTIVE');
       setPreviewUrl(data.imageUrl || data.textureImageUrl || null);
     } catch (error) {
       console.error("Dəri məlumatı tapılmadı:", error);
@@ -98,6 +101,7 @@ export default function AdminLeatherForm() {
     }
   };
 
+  // 🚀 ZƏNCİRVARİ SUBMİT MƏNTİQİ (Backendin xəta atmasının qarşısını alır)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -108,35 +112,44 @@ export default function AdminLeatherForm() {
 
     setLoading(true);
     try {
-      // Backend-ə göndəriləcək Request Obyekti (Backend "leatherName" və ya "leathername" qəbul edə bilər deyə hər ikisini sığortalayırıq)
       const requestData: any = {
         ...formData,
         leathername: formData.leatherName, 
       };
 
       if (isEditMode) {
-        // REDAKTƏ ETMƏK
+        // 1. ZƏNCİR: ƏGƏR DƏRİ PASSİVDİRSƏ (Arxiv, Draft, Out of Stock), ƏVVƏLCƏ AKTİVLƏŞDİR
+        if (originalStatus !== 'ACTIVE') {
+           toast.loading("Dəri sistemdə aktivləşdirilir...", { id: 'save-toast' });
+           await adminLeatherService.updateStatus(Number(id), 'ACTIVE');
+        }
+
+        // 2. ZƏNCİR: ARTIQ AKTİVDİR, MƏLUMATLARI RAHAT YENİLƏ
+        toast.loading("Məlumatlar yenilənir...", { id: 'save-toast' });
         await adminLeatherService.updateLeather(Number(id), requestData as UpdateLeatherRequest);
-        // Əgər yeni şəkil yüklənibsə, onu da update et (Servisdə metod varsa)
-        // if (imageFile) await adminLeatherService.updateLeatherImage(Number(id), imageFile);
-        toast.success("Dəri uğurla yeniləndi!");
+
+        // 3. ZƏNCİR: ƏGƏR İSTİFADƏÇİ FORMU DOLDURANDA STATUSU DƏYİŞİBSƏ (məsələn, aktiv edib sonra arxiv seçibsə), YENİ STATUSU VUR
+        if (formData.availabilityStatus !== 'ACTIVE') {
+           await adminLeatherService.updateStatus(Number(id), formData.availabilityStatus);
+        }
+
+        toast.success("Dəri uğurla yeniləndi!", { id: 'save-toast' });
       } else {
         // YENİ YARATMAQ (Image mütləqdir)
+        toast.loading("Yeni dəri yaradılır...", { id: 'save-toast' });
         await adminLeatherService.createLeather(requestData as CreateLeatherRequest, imageFile as File);
-        toast.success("Yeni lüks dəri uğurla yaradıldı!");
+        toast.success("Yeni lüks dəri uğurla yaradıldı!", { id: 'save-toast' });
       }
       
-      // İş bitdikdən sonra siyahıya qayıt
       navigate('/admin/leathers');
     } catch (error) {
       console.error("Yadda saxlayarkən xəta:", error);
-      toast.error("Əməliyyat uğursuz oldu. Zəhmət olmasa yenidən yoxlayın.");
+      toast.error("Əməliyyat uğursuz oldu. Zəhmət olmasa yenidən yoxlayın.", { id: 'save-toast' });
     } finally {
       setLoading(false);
     }
   };
 
-  // Əgər məlumatlar hələ yüklənirsə, loader göstər (Ağ ekranı əngəlləyir)
   if (initialLoading) {
     return (
       <div className="min-h-screen bg-[#FAF9F6] flex items-center justify-center">
@@ -148,7 +161,6 @@ export default function AdminLeatherForm() {
   return (
     <div className="min-h-screen bg-[#FAF9F6] p-8 md:p-12 font-sans">
       
-      {/* Üst Başlıq */}
       <div className="max-w-4xl mx-auto flex items-center justify-between mb-10">
         <div>
           <button 
@@ -188,7 +200,6 @@ export default function AdminLeatherForm() {
                 </div>
               )}
 
-              {/* Hover Overlay */}
               <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                 <Upload className="w-6 h-6 text-white" />
               </div>
@@ -209,7 +220,6 @@ export default function AdminLeatherForm() {
           <form className="space-y-6">
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Dəri Adı */}
               <div>
                 <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 block">Dəri Adı</label>
                 <input 
@@ -223,7 +233,6 @@ export default function AdminLeatherForm() {
                 />
               </div>
 
-              {/* Rəng */}
               <div>
                 <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 block">Rəng</label>
                 <input 
@@ -237,7 +246,6 @@ export default function AdminLeatherForm() {
                 />
               </div>
 
-              {/* Mənşə */}
               <div>
                 <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 block">Mənşə (Origin)</label>
                 <input 
@@ -250,7 +258,6 @@ export default function AdminLeatherForm() {
                 />
               </div>
 
-              {/* Status */}
               <div>
                 <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 block">Status</label>
                 <select 
@@ -266,7 +273,6 @@ export default function AdminLeatherForm() {
                 </select>
               </div>
 
-              {/* Keyfiyyət */}
               <div className="md:col-span-2">
                 <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 block">Keyfiyyət Səviyyəsi (Grade)</label>
                 <select 
@@ -275,15 +281,12 @@ export default function AdminLeatherForm() {
                   onChange={handleInputChange}
                   className="w-full bg-transparent border-0 border-b border-gray-300 py-2 text-sm focus:ring-0 focus:border-[#111] transition-colors cursor-pointer outline-none"
                 >
-                  <option value="PREMIUM">Premium</option>
-                  <option value="A">Grade A</option>
-                  <option value="B">Grade B</option>
-                  <option value="C">Grade C</option>
-                  <option value="STANDARD">Standard</option>
+                  <option value="PREMIUM">PREMIUM</option>
+                  <option value="EXOTIC">EXOTIC</option>
+                  <option value="STANDARD">STANDARD</option>
                 </select>
               </div>
 
-              {/* Təsvir */}
               <div className="md:col-span-2">
                 <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 block">Geniş Təsvir</label>
                 <textarea 

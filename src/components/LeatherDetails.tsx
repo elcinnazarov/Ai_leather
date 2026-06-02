@@ -1,181 +1,149 @@
-import React from "react";
-import { Edit, Trash2, Upload, RefreshCw, ChevronLeft } from "lucide-react";
-import { LeatherResponse, AvailabilityStatus } from "../types";
-import { cn } from "../lib/utils";
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { leatherService } from "../services/leatherService";
+import { LeatherDetailResponse } from "../types/leather";
+import { useAITranslation } from "../hooks/useAITranslation";
+import { useTranslation } from "react-i18next";
+import { ChevronLeft } from "lucide-react";
 
-interface LeatherDetailsProps {
-  leather: LeatherResponse;
-  onEdit: () => void;
-  onDelete: () => void;
-  onBack: () => void;
-  onUpdateImage: (file: File) => void;
-}
+export default function LeatherDetails() {
+  // Əgər sənin URL strukturun App.tsx-də <Route path="/materials/:id" .../> dursa, 
+  // URL-dən gələn parametrin adının 'id' olduğuna əmin ol.
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const { t } = useTranslation();
+  
+  const [leather, setLeather] = useState<LeatherDetailResponse | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
-export default function LeatherDetails({
-  leather,
-  onEdit,
-  onDelete,
-  onBack,
-  onUpdateImage,
-}: LeatherDetailsProps) {
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      onUpdateImage(file);
+  // Ağıllı Tərcümə (Biznes məntiqin qorunur)
+  const dynName = useAITranslation(leather?.name || "");
+  const dynOrigin = useAITranslation(leather?.origin || "");
+  const dynDesc = useAITranslation(leather?.description || "");
+
+  useEffect(() => {
+    if (id) {
+      leatherService.getShopLeatherDetail(Number(id))
+        .then(data => {
+          if(data) {
+            setLeather(data);
+          } else {
+            setError(true);
+          }
+        })
+        .catch(err => {
+          console.error("Material detalları çəkilə bilmədi:", err);
+          setError(true);
+        })
+        .finally(() => setLoading(false));
+    } else {
+      setError(true);
+      setLoading(false);
     }
-  };
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-white">
+        <div className="w-4 h-4 bg-black animate-pulse"></div>
+      </div>
+    );
+  }
+
+  // Əgər API məlumat tapmasa qəza (crash) olmasın deyə istifadəçiyə səliqəli səhv göstəririk
+  if (error || !leather) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen bg-white">
+        <p className="font-serif text-2xl text-black mb-4">Material tapılmadı.</p>
+        <button onClick={() => navigate(-1)} className="text-[10px] uppercase font-bold tracking-widest border-b border-black">
+          Geri Qayıt
+        </button>
+      </div>
+    );
+  }
 
   return (
-    <div className="max-w-7xl mx-auto pb-32">
-      {/* Header Section */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
-        <div className="space-y-2">
-          <button
-            onClick={onBack}
-            className="flex items-center gap-2 text-[#777587] hover:text-[#3525cd] transition-colors text-xs font-bold uppercase tracking-widest mb-2"
-          >
-            <ChevronLeft className="w-4 h-4" />
-            Material Catalog / Details
-          </button>
-          <h3 className="text-4xl font-['Manrope'] font-extrabold text-[#111c2d] tracking-tight">
-            {leather.leatherName}
-          </h3>
-        </div>
-        <div className="flex gap-3">
-          <button
-            onClick={onEdit}
-            className="bg-[#dee8ff] text-[#111c2d] px-6 py-3 rounded-xl font-bold hover:bg-[#d8e3fb] transition-all active:scale-95 duration-150 flex items-center gap-2 shadow-sm"
-          >
-            <Edit className="w-5 h-5" />
-            Edit Details
-          </button>
-          <button
-            onClick={onDelete}
-            className="bg-[#ffdad6] text-[#93000a] px-6 py-3 rounded-xl font-bold hover:opacity-90 transition-all active:scale-95 duration-150 flex items-center gap-2 shadow-sm"
-          >
-            <Trash2 className="w-5 h-5" />
-            Delete
-          </button>
-        </div>
-      </div>
+    <div className="bg-white text-black font-sans min-h-screen pt-32 pb-40">
+      <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
+        
+        {/* Navigasiya */}
+        <button 
+          onClick={() => navigate(-1)}
+          className="flex items-center gap-2 text-gray-400 hover:text-black transition-colors text-[10px] font-bold uppercase tracking-[0.3em] mb-12"
+        >
+          <ChevronLeft className="w-4 h-4" /> {t("common.back", "Back to Catalog")}
+        </button>
 
-      {/* Asymmetric Content Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Left Side: Large Hero Image */}
-        <div className="lg:col-span-8 group relative rounded-3xl overflow-hidden bg-[#f0f3ff] shadow-[0_48px_48px_-24px_rgba(17,28,45,0.04)]">
-          <img
-            className="w-full aspect-[4/3] object-cover transition-transform duration-700 group-hover:scale-105"
-            src={leather.textureImageUrl || "https://picsum.photos/seed/leather/800/600"}
-            alt={leather.leatherName}
-          />
-          {/* Action Overlays */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#263143]/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-8 gap-4">
-            <div className="relative">
-              <button className="bg-white text-[#111c2d] px-4 py-2 rounded-full flex items-center gap-2 font-bold text-sm shadow-xl hover:bg-[#3525cd] hover:text-white transition-colors">
-                <Upload className="w-4 h-4" />
-                Update Image
-              </button>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="absolute inset-0 opacity-0 cursor-pointer"
-              />
-            </div>
-            <button
-              onClick={onDelete}
-              className="bg-[#ba1a1a] text-white h-10 w-10 rounded-full flex items-center justify-center shadow-xl hover:bg-red-700 transition-colors"
-            >
-              <Trash2 className="w-5 h-5" />
-            </button>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 mb-32">
+          {/* Sol: Tekstura Şəkli - Grayscale filtr silindi! */}
+          <div className="aspect-[4/5] bg-gray-100 overflow-hidden relative">
+            <img 
+              src={leather.textureUrl || "https://images.unsplash.com/photo-1606105961732-6332674f4ee6?auto=format&fit=crop&q=80"} 
+              alt={dynName} 
+              className="w-full h-full object-cover"
+            />
+            {leather.grade?.name && (
+              <div className="absolute bottom-6 left-6 bg-white px-4 py-2 shadow-sm">
+                 <span className="font-sans text-[10px] uppercase font-bold tracking-[0.3em]">{leather.grade.name}</span>
+              </div>
+            )}
           </div>
-        </div>
 
-        {/* Right Side: Detailed Specs */}
-        <div className="lg:col-span-4 space-y-6">
-          {/* Spec Card 1: Core Info */}
-          <section className="bg-white p-8 rounded-3xl shadow-[0_4px_24px_rgba(17,28,45,0.04)] border border-[#c7c4d8]/15">
-            <h4 className="text-[10px] uppercase font-bold tracking-widest text-[#777587] mb-6">
-              Specifications
-            </h4>
-            <div className="space-y-6">
-              <div>
-                <label className="block text-xs font-bold text-[#777587] uppercase tracking-wider mb-1">
-                  Leather Name
-                </label>
-                <p className="text-xl font-['Manrope'] font-bold text-[#111c2d]">
-                  {leather.leatherName}
+          {/* Sağ: Detallar */}
+          <div className="flex flex-col justify-center">
+            <span className="text-[10px] uppercase font-bold tracking-[0.4em] text-gray-400 mb-6 block">
+              {t("catalog.origin", "Origin")}: {dynOrigin}
+            </span>
+            <h1 className="text-5xl lg:text-7xl font-serif text-black mb-8 leading-[0.95] tracking-tighter" style={{ fontFamily: "Noto Serif, serif" }}>
+              {dynName}
+            </h1>
+            
+            <p className="text-gray-600 leading-relaxed font-serif text-lg italic mb-12" style={{ fontFamily: "Noto Serif, serif" }}>
+              {dynDesc}
+            </p>
+
+            {/* Dərəcə Məlumatı (Backend DTO: GradeInfo). Əgər gəlməzsə çökməsin deyə (?.name) şərti qoyulub */}
+            {leather.grade && (
+              <div className="border-t border-gray-200 pt-8 mt-auto">
+                <h4 className="font-sans text-[10px] uppercase font-bold tracking-[0.3em] text-black mb-4">
+                  {t("catalog.grade_info", "Grade Specifications")}
+                </h4>
+                <p className="text-sm text-gray-500 max-w-md leading-relaxed">
+                  {leather.grade.description}
                 </p>
               </div>
-              <div className="flex justify-between items-start">
-                <div>
-                  <label className="block text-xs font-bold text-[#777587] uppercase tracking-wider mb-1">
-                    Color
-                  </label>
-                  <div className="flex items-center gap-2">
-                    <div
-                      className="w-4 h-4 rounded-full border border-[#c7c4d8]/30"
-                      style={{ backgroundColor: leather.color }}
-                    ></div>
-                    <span className="font-medium">{leather.color}</span>
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-[#777587] uppercase tracking-wider mb-1 text-right">
-                    Origin
-                  </label>
-                  <span className="font-medium text-right block">{leather.origin}</span>
-                </div>
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-[#777587] uppercase tracking-wider mb-1">
-                  Grade Type
-                </label>
-                <p className="font-medium">{leather.gradeType.replace(/_/g, " ")}</p>
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-[#777587] uppercase tracking-wider mb-2">
-                  Availability Status
-                </label>
-                <span
-                  className={cn(
-                    "inline-block px-4 py-1.5 rounded-full text-sm font-bold tracking-tight",
-                    leather.availabilityStatus === AvailabilityStatus.ARCHIVED
-                      ? "bg-[#ffdbcc] text-[#7e3000]"
-                      : leather.availabilityStatus === AvailabilityStatus.OUT_OF_STOCK
-                      ? "bg-[#ffdad6] text-[#93000a]"
-                      : "bg-[#e2dfff] text-[#3323cc]"
-                  )}
-                >
-                  {leather.availabilityStatus.replace(/_/g, " ")}
-                </span>
-              </div>
-            </div>
-          </section>
-
-          {/* Update CTA Section */}
-          <section className="bg-[#3525cd] bg-gradient-to-br from-[#3525cd] to-[#4f46e5] p-8 rounded-3xl shadow-xl text-white">
-            <h4 className="font-['Manrope'] font-bold text-xl mb-2">Inventory Sync</h4>
-            <p className="text-white/80 text-sm mb-6 leading-relaxed">
-              Update material records across all ateliers. This action will broadcast the current
-              specs to production.
-            </p>
-            <button className="w-full bg-white text-[#3525cd] py-4 rounded-xl font-['Manrope'] font-bold tracking-tight hover:bg-[#f9f9ff] active:scale-95 transition-all shadow-lg flex items-center justify-center gap-2">
-              <RefreshCw className="w-5 h-5" />
-              Execute Global Update
-            </button>
-          </section>
-
-          {/* Quick Actions / Meta */}
-          <div className="flex items-center justify-between px-4 py-2 opacity-60">
-            <span className="text-[10px] uppercase font-bold tracking-tighter">
-              SKU: LTHR-{leather.id.toString().padStart(4, "0")}
-            </span>
-            <span className="text-[10px] uppercase font-bold tracking-tighter">
-              UPDATED: OCT 24, 2023
-            </span>
+            )}
           </div>
         </div>
+
+        {/* Bu dəridən istifadə edilən məhsullar (Backend DTO: usedInProducts) */}
+        {leather.usedInProducts && leather.usedInProducts.length > 0 && (
+          <section className="border-t border-gray-200 pt-24">
+            <h3 className="text-3xl font-serif text-black mb-12 text-center" style={{ fontFamily: "Noto Serif, serif" }}>
+              {t("catalog.crafted_with", "Crafted with this Material")}
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {leather.usedInProducts.map(product => (
+                <div 
+                  key={product.id} 
+                  onClick={() => navigate(`/product/${product.id}`)}
+                  className="group cursor-pointer text-center"
+                >
+                  <div className="aspect-[4/5] bg-gray-50 overflow-hidden mb-6">
+                    <img 
+                      src={product.primaryImageUrl} 
+                      alt={product.name} 
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                  </div>
+                  <h5 className="font-serif text-xl text-black">{product.name}</h5>
+                  <span className="text-[10px] uppercase text-gray-400 tracking-[0.2em]">{product.modelType}</span>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     </div>
   );

@@ -5,6 +5,20 @@ export type AvailabilityStatus = 'ACTIVE' | 'DRAFT' | 'ARCHIVED' | 'OUT_OF_STOCK
 export type ProductCategory = 'BAG' | 'BELT' | 'WALLET' | 'ACCESSORY';
 export type Currency = 'AZN' | 'USD' | 'EUR';
 
+
+export const getAvailableTransitions = (currentStatus: AvailabilityStatus): AvailabilityStatus[] => {
+  switch (currentStatus) {
+    case 'DRAFT':
+    case 'OUT_OF_STOCK':
+      return ['ACTIVE', 'ARCHIVED'];
+    case 'ACTIVE':
+      return ['OUT_OF_STOCK', 'ARCHIVED'];
+    case 'ARCHIVED':
+      return ['DRAFT', 'ACTIVE'];
+    default:
+      return [];
+  }
+};
 export interface ApiResponse<T> {
   success: boolean;
   message: string;
@@ -22,9 +36,18 @@ export interface PageResponse<T> {
 }
 
 export interface ProductModelFilter {
-  // Sizin Backend filter sahələriniz bura əlavə oluna bilər (məsələn, search, status və s.)
+  // Spring Pageable parametrləri
   page?: number;
   size?: number;
+  
+  // Java DTO-su ilə eyni olanlar:
+  id?: number;
+  modelname?: string; // DİQQƏT: kiçik n ilə!
+  modelType?: string;
+  availabilityStatus?: string;
+  isActive?: boolean;
+  from?: string; // LocalDate y-M-d formatında
+  to?: string;
 }
 
 // ==========================================

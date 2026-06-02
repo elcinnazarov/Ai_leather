@@ -1,18 +1,22 @@
 import { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence } from "framer-motion"; // "motion/react" yerinə framer-motion olmalıdır
 import { ChevronDown } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useLanguageStore } from "../store/useLanguageStore"; // 🛠️ Zustand Store əlavə edildi
 import { cn } from "../lib/utils";
 
 type SupportedLanguage = 'az' | 'en';
 
 export default function LanguageSwitcher() {
   const { i18n } = useTranslation();
+  // 🛠️ Zustand-dan dili və dəyişdirmə funksiyasını çəkirik
+  const { language: storeLang, setLanguage } = useLanguageStore(); 
+  
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  // i18n-dən aktiv dili alırıq. 'en-US' kimi gələ bilər, ona görə ilk 2 hərfi götürürük
-  const currentLanguage = (i18n.language || 'en').substring(0, 2) as SupportedLanguage;
+  // i18n və ya storeLang-dən aktiv dili alırıq
+  const currentLanguage = (storeLang || i18n.language || 'en').substring(0, 2) as SupportedLanguage;
 
   // Kənara vuranda menunun bağlanması üçün
   useEffect(() => {
@@ -31,7 +35,9 @@ export default function LanguageSwitcher() {
   ];
 
   const changeLanguage = (code: SupportedLanguage) => {
-    i18n.changeLanguage(code);
+    // 🛠️ 100% SİNXRONİZASİYA: Həm i18n-i, həm də Zustand-ı eyni anda yeniləyirik!
+    i18n.changeLanguage(code); 
+    setLanguage(code); 
     setIsOpen(false);
   };
 

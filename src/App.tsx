@@ -117,6 +117,10 @@ function AppRoutes() {
   // --- Leather Biznes Loqikası ---
   const handleCreateLeather = async (formData: any, image: File) => {
     try {
+      if (!image) {
+        toast.error("Şəkil mütləqdir!");
+        return;
+      }
       await adminLeatherService.createLeather(formData, image);
       toast.success("Yeni lüks dəri uğurla əlavə edildi");
       await fetchLeathers();

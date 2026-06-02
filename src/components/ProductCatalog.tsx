@@ -2,12 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { productService } from "../services/productService";
 import { ProductSummary, ProductCategory, ProductFilterRequest } from "../types/product";
-import { useLanguageStore } from '../store/useLanguageStore'; // Doğru faylı import edirik
+import { useLanguageStore } from '../store/useLanguageStore'; 
 import { Search, Plus, Loader2 } from "lucide-react";
 import { cn } from "../lib/utils";
 
 export default function ProductCatalog() {
-  // 🛠️ DÜZƏLİŞ: 'language' dəyərini çəkib bu fayl üçün 'lang' kimi adlandırırıq
   const { language: lang } = useLanguageStore(); 
   
   const [products, setProducts] = useState<ProductSummary[]>([]);
@@ -40,21 +39,34 @@ export default function ProductCatalog() {
       noPrice: "Price unavailable",
       discoverMore: "DISCOVER MORE"
     }
-  }[lang as 'az' | 'en']; // TypeScript Zəmanəti
+  }[lang as 'az' | 'en']; 
 
+  // Backend Enum-larına uyğun Kateqoriyalar (ACCESSORY əlavə edildi)
   const categories = {
     az: [
       { id: null, label: "BÜTÜN MƏHSULLAR" },
       { id: "WALLET", label: "CÜZDANLAR" },
       { id: "BAG", label: "ÇANTALAR" },
-      { id: "BELT", label: "KƏMƏRLƏR" }
+      { id: "BELT", label: "KƏMƏRLƏR" },
+      { id: "ACCESSORY", label: "AKSESUARLAR" }
     ],
     en: [
       { id: null, label: "ALL PRODUCTS" },
       { id: "WALLET", label: "WALLETS" },
       { id: "BAG", label: "BAGS" },
-      { id: "BELT", label: "BELTS" }
+      { id: "BELT", label: "BELTS" },
+      { id: "ACCESSORY", label: "ACCESSORIES" }
     ]
+  };
+
+  // 🛠️ YENİ HƏLL: Backend-dən gələn ENUM-u (BAG) UI üçün tərcümə edirik (Çanta)
+  const translateModelType = (type: string | undefined) => {
+    if (!type) return "";
+    const dict: Record<string, Record<string, string>> = {
+      az: { BAG: "Çanta", BELT: "Kəmər", WALLET: "Cüzdan", ACCESSORY: "Aksesuar" },
+      en: { BAG: "Bag", BELT: "Belt", WALLET: "Wallet", ACCESSORY: "Accessory" }
+    };
+    return dict[lang as 'az' | 'en']?.[type] || type;
   };
 
   // API Sorğusu
@@ -91,11 +103,8 @@ export default function ProductCatalog() {
     }
   }, [filter.page]);
 
-  const handleCategoryChange = (cat: ProductCategory | null) => {
-    const formatPrice = (price: number | null | undefined, currency: string | null | undefined) => {
+  const formatPrice = (price: number | null | undefined, currency: string | null | undefined) => {
     if (price == null) return t.noPrice;
-    
-    // Əgər backend nədənsə valyuta göndərməzsə, ehtiyat (fallback) olaraq AZN götürürük
     const safeCurrency = currency || 'AZN'; 
 
     return new Intl.NumberFormat(lang === 'az' ? 'az-AZ' : 'en-US', {
@@ -105,6 +114,8 @@ export default function ProductCatalog() {
       maximumFractionDigits: 2,
     }).format(price);
   };
+
+  const handleCategoryChange = (cat: ProductCategory | null) => {
     setFilter(prev => ({ ...prev, modelType: cat, page: 0 }));
   };
 
@@ -193,12 +204,13 @@ export default function ProductCatalog() {
                     <h3 className="font-sans text-[11px] font-bold uppercase tracking-[0.15em] text-[#111] mb-1">
                       {product.modelName}
                     </h3>
+                    {/* 🛠️ HƏLL: Enum-u kartın üzərində də tərcümə edirik! */}
                     <p className="font-sans text-[10px] text-gray-500 uppercase tracking-widest">
-                      {product.modelType}
+                      {translateModelType(product.modelType)}
                     </p>
                   </div>
                   <span className="font-sans text-[12px] font-medium text-[#111]">
-                    {product.basePrice != null ? `${product.basePrice.toLocaleString(undefined, { minimumFractionDigits: 2 })} ${product.currency || 'USD'}` : t.noPrice}
+                    {formatPrice(product.basePrice, product.currency)}
                   </span>
                 </div>
               </div>

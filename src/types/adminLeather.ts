@@ -1,5 +1,5 @@
 export type AvailabilityStatus = 'ACTIVE' | 'DRAFT' | 'ARCHIVED' | 'OUT_OF_STOCK';
-export type GradeType = 'A' | 'B' | 'C' | 'PREMIUM' | 'STANDARD'; // Öz bazandakı grade-lərə uyğunlaşdıra bilərsən
+export type GradeType = 'EXOTIC'| 'PREMIUM' | 'STANDARD'; // Öz bazandakı grade-lərə uyğunlaşdıra bilərsən
 
 // Generics (Əgər başqa faylda varsa, oradan da import edə bilərsən)
 export interface ApiResponse<T> {

@@ -1,22 +1,29 @@
+
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-
-export type SupportedLanguage = 'az' | 'en';
+import i18n from '../i18n'; // Sənin i18n konfiqurasiya faylının yolu
 
 interface LanguageState {
-  language: SupportedLanguage;
-  setLanguage: (language: SupportedLanguage) => void;
+  language: 'az' | 'en';
+  setLanguage: (lang: 'az' | 'en') => void;
 }
 
-// Zustand istifadə edərək seçilmiş dili həm State-də, həm də localStorage-da saxlayırıq.
 export const useLanguageStore = create<LanguageState>()(
   persist(
     (set) => ({
-      language: 'az', // Default olaraq Azərbaycan dili
-      setLanguage: (language) => set({ language }),
+      // İlkin vəziyyət i18n-in cari dili olsun (və ya default az)
+      language: (i18n.language as 'az' | 'en') || 'az',
+      
+      setLanguage: (lang) => {
+        // 1. i18next kitabxanasında dili dəyiş (Bu, tərcümə xətalarını 100% bağlayır)
+        i18n.changeLanguage(lang); 
+        
+        // 2. Zustand state-ni yenilə (Sənin UI komponentlərin bununla render olunur)
+        set({ language: lang });
+      },
     }),
     {
-      name: 'language-storage', // localStorage-da yaddaşda saxlanılacaq key adı
+      name: 'language-storage', // Səhifə yenilənəndə dil yadda qalması üçün
     }
   )
 );
