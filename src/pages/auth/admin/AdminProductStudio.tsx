@@ -185,7 +185,7 @@ export default function AdminProductStudio() {
           <button onClick={() => navigate('/admin/products')} className="text-gray-400 hover:text-[#111] transition-colors">
             <ArrowLeft className="w-5 h-5" />
           </button>
-          <h1 className="text-lg font-serif font-bold text-[#111]">{product.modelname || product.modelName}</h1>
+          <h1 className="text-lg font-serif font-bold text-[#111]">{product.modelname || product.modelname}</h1>
         </div>
         <div className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">
           ID: {product.id} • {product.modelType}

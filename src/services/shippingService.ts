@@ -1,6 +1,5 @@
 import { api } from "../lib/api";
 import {
-  ApiResponse,
   PageResponse,
   AdminShippingLocationResponse,
   CreateShippingLocationRequest,
@@ -9,40 +8,49 @@ import {
 
 const API_BASE_URL = "/admin/shipping-locations";
 
+const extractData = (res: any) => {
+  if (!res) return null;
+  if (res.success !== undefined && res.data !== undefined) return res.data;
+  if (res.data?.success !== undefined && res.data?.data !== undefined) return res.data.data;
+  if (res.content !== undefined || res.id !== undefined) return res;
+  return res.data || res;
+};
+
 export const shippingService = {
-  // GET /admin/shipping-locations
+  
+  // GET /api/admin/shipping-locations
   getAllLocations: async (page: number = 0, size: number = 20): Promise<PageResponse<AdminShippingLocationResponse>> => {
-    const response = await api.get<ApiResponse<PageResponse<AdminShippingLocationResponse>>>(API_BASE_URL, {
+    const response: any = await api.get(API_BASE_URL, {
       params: { page, size },
     });
-    return response.data.data;
+    return extractData(response) || { content: [], totalPages: 0, totalElements: 0, pageNumber: 0, pageSize: size, last: true };
   },
 
-  // GET /admin/shipping-locations/{id}
+  // GET /api/admin/shipping-locations/{id}
   getLocationById: async (id: number): Promise<AdminShippingLocationResponse> => {
-    const response = await api.get<ApiResponse<AdminShippingLocationResponse>>(`${API_BASE_URL}/${id}`);
-    return response.data.data;
+    const response: any = await api.get(`${API_BASE_URL}/${id}`);
+    return extractData(response);
   },
 
-  // POST /admin/shipping-locations
+  // POST /api/admin/shipping-locations
   createLocation: async (request: CreateShippingLocationRequest): Promise<AdminShippingLocationResponse> => {
-    const response = await api.post<ApiResponse<AdminShippingLocationResponse>>(API_BASE_URL, request);
-    return response.data.data;
+    const response: any = await api.post(API_BASE_URL, request);
+    return extractData(response);
   },
 
-  // PUT /admin/shipping-locations/{id}
+  // PUT /api/admin/shipping-locations/{id}
   updateLocation: async (id: number, request: UpdateShippingLocationRequest): Promise<AdminShippingLocationResponse> => {
-    const response = await api.put<ApiResponse<AdminShippingLocationResponse>>(`${API_BASE_URL}/${id}`, request);
-    return response.data.data;
+    const response: any = await api.put(`${API_BASE_URL}/${id}`, request);
+    return extractData(response);
   },
 
-  // PATCH /admin/shipping-locations/{id}/status
+  // PATCH /api/admin/shipping-locations/{id}/status
   toggleLocationStatus: async (id: number): Promise<AdminShippingLocationResponse> => {
-    const response = await api.patch<ApiResponse<AdminShippingLocationResponse>>(`${API_BASE_URL}/${id}/status`);
-    return response.data.data;
+    const response: any = await api.patch(`${API_BASE_URL}/${id}/status`);
+    return extractData(response);
   },
 
-  // DELETE /admin/shipping-locations/{id}
+  // DELETE /api/admin/shipping-locations/{id}
   deleteLocation: async (id: number): Promise<void> => {
     await api.delete(`${API_BASE_URL}/${id}`);
   },

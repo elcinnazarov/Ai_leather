@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { useAITranslation } from "../hooks/useAITranslation";
 import { useTranslation } from "react-i18next";
 
-function LeatherCatalogItem({ leather, index, onClick }: { leather: LeatherListResponse, index: number, onClick: (id: number) => void }) {
+function LeatherCatalogItem({ leather, index, onClick }: { leather: LeatherListResponse, index: number, onClick: (id: number, imgUrl?: string) => void }) {
   const dynName = useAITranslation(leather.name);
   const dynOrigin = useAITranslation(leather.origin);
 
@@ -16,10 +16,9 @@ function LeatherCatalogItem({ leather, index, onClick }: { leather: LeatherListR
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay: index * 0.1, duration: 0.8 }}
-      onClick={() => onClick(leather.id)}
+      onClick={() => onClick(leather.id, leather.imageUrl)}
       className="group cursor-pointer flex flex-col"
     >
-      {/* Massive Swatch Image - Grayscale filtr silindi! */}
       <div className="aspect-[4/3] bg-gray-100 overflow-hidden mb-8 relative">
         <img 
           alt={dynName} 
@@ -27,7 +26,6 @@ function LeatherCatalogItem({ leather, index, onClick }: { leather: LeatherListR
           src={leather.imageUrl || `https://images.unsplash.com/photo-1606105961732-6332674f4ee6?auto=format&fit=crop&q=80&w=1200`}
           referrerPolicy="no-referrer"
         />
-        {/* Number indicator */}
         <div className="absolute top-6 left-6 flex items-center justify-center bg-white px-4 py-2">
           <span className="font-serif text-lg text-black" style={{ fontFamily: "Noto Serif, serif" }}>
             No. 0{index + 1}
@@ -57,19 +55,23 @@ function LeatherCatalogItem({ leather, index, onClick }: { leather: LeatherListR
   );
 }
 
+// 🟢 DÜZƏLİŞ: State üçün "ALL" tipini də qəbul edən yeni type yaradırıq
+type FilterType = GradeType | "ALL";
+
 export default function LeatherCatalog() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [leathers, setLeathers] = useState<LeatherListResponse[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Default filter
-  const [activeGrade, setActiveGrade] = useState<GradeType>("STANDARD");
+  // 🟢 DÜZƏLİŞ: Default filter olaraq "ALL" (Bütün) təyin edirik
+  const [activeGrade, setActiveGrade] = useState<FilterType>("ALL");
 
   useEffect(() => {
     const fetchLeathers = async () => {
       try {
         setLoading(true);
+        // Backend zatən heç bir grade növü göndərilməyəndə hamısını qaytarır
         const response = await leatherService.getShopLeathers({ size: 50 });
         setLeathers(response.content || []);
       } catch (error) {
@@ -81,7 +83,10 @@ export default function LeatherCatalog() {
     fetchLeathers();
   }, []);
 
-  const filteredLeathers = leathers.filter(l => l.gradeType === activeGrade);
+  // 🟢 DÜZƏLİŞ: Əgər "ALL" seçilibsə filterləmə, hamısını göstər. Əks halda seçilən dərəcəyə görə filterlə.
+  const filteredLeathers = activeGrade === "ALL" 
+    ? leathers 
+    : leathers.filter(l => l.gradeType === activeGrade);
 
   if (loading) {
     return (
@@ -114,15 +119,15 @@ export default function LeatherCatalog() {
           </div>
         </section>
 
-        {/* Grade Selector Toggle */}
-        <div className="flex border-b border-gray-200 mb-20 w-fit">
-          {(["STANDARD", "PREMIUM", "EXOTIC"] as GradeType[]).map((grade) => (
+        {/* 🟢 DÜZƏLİŞ: Seçimlər panelinə "ALL" düyməsini də əlavə etdik */}
+        <div className="flex border-b border-gray-200 mb-20 w-fit overflow-x-auto">
+          {(["ALL", "STANDARD", "PREMIUM", "EXOTIC"] as FilterType[]).map((grade) => (
              <button 
                key={grade}
                onClick={() => setActiveGrade(grade)}
-               className={`pb-4 px-8 font-sans font-black text-[10px] uppercase tracking-[0.3em] transition-all border-b-2 ${activeGrade === grade ? "border-black text-black" : "border-transparent text-gray-400 hover:text-black"}`}
+               className={`pb-4 px-8 font-sans font-black text-[10px] uppercase tracking-[0.3em] transition-all border-b-2 whitespace-nowrap ${activeGrade === grade ? "border-black text-black" : "border-transparent text-gray-400 hover:text-black"}`}
              >
-               {grade}
+               {grade === "ALL" ? "ALL MATERIALS" : grade}
              </button>
           ))}
         </div>
@@ -134,7 +139,7 @@ export default function LeatherCatalog() {
               key={leather.id}
               leather={leather}
               index={index}
-              onClick={(id: number) => navigate(`/leathers/${id}`)}
+              onClick={(id: number, imgUrl?: string) => navigate(`/materials/${id}`, { state: { catalogImage: imgUrl } })}
             />
           ))}
           {filteredLeathers.length === 0 && (
@@ -144,7 +149,7 @@ export default function LeatherCatalog() {
           )}
         </div>
 
-        {/* Technical Specs */}
+        {/* Technical Specs - Toxunulmadı */}
         <section className="mt-40 bg-black text-white px-10 py-32 lg:p-40">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
             <div className="space-y-16">
@@ -170,7 +175,6 @@ export default function LeatherCatalog() {
             </div>
             
             <div className="h-full min-h-[60vh] relative">
-              {/* Buradakı şəklin Grayscale filtrini sənə görə qoruyuram, əgər istəməsən "grayscale contrast-125" silə bilərsən */}
               <img 
                 alt="Craftsmanship Process" 
                 className="absolute inset-0 w-full h-full object-cover filter grayscale contrast-125" 

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { leatherService } from "../services/leatherService";
 import { LeatherDetailResponse } from "../types/leather";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence } from "framer-motion"; // motion/react əvəzinə
 import { ArrowLeft } from "lucide-react";
 import { useAITranslation } from "../hooks/useAITranslation";
 
@@ -14,6 +14,9 @@ function TranslatedText({ text, className }: { text: string; className?: string 
 export default function LeatherProfile() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
+  const catalogImage = location.state?.catalogImage;
+
   const [leather, setLeather] = useState<LeatherDetailResponse | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -80,9 +83,10 @@ export default function LeatherProfile() {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 1.2, ease: "easeOut" }}
-                src={leather.textureUrl || `https://images.unsplash.com/photo-1606105961732-6332674f4ee6?auto=format&fit=crop&q=80&w=1600`}
+                src={leather.textureUrl || catalogImage || `https://images.unsplash.com/photo-1606105961732-6332674f4ee6?auto=format&fit=crop&q=80&w=1600`}
                 alt={`${leather.name} texture`} 
-                className="absolute inset-0 w-full h-full object-cover filter grayscale contrast-125" 
+         
+                className="absolute inset-0 w-full h-full object-cover" 
                 referrerPolicy="no-referrer" 
               />
             </AnimatePresence>
@@ -109,7 +113,10 @@ export default function LeatherProfile() {
               </div>
               <div className="flex justify-between items-baseline py-4 border-b border-gray-100">
                 <span className="text-gray-500 font-sans tracking-widest uppercase text-[10px]">Grade</span>
-                <span className="text-black font-sans font-black text-sm uppercase tracking-[0.2em]">{leather.grade.name.replace('_', ' ')}</span>
+                {/* DÜZƏLİŞ: Backend-dən grade boş gələrsə çökməsin deyə təhlükəsizlik əlavə edildi */}
+                <span className="text-black font-sans font-black text-sm uppercase tracking-[0.2em]">
+                  {leather.grade?.name ? leather.grade.name.replace('_', ' ') : ''}
+                </span>
               </div>
               <div className="flex justify-between items-baseline py-4 border-b border-gray-100">
                 <span className="text-gray-500 font-sans tracking-widest uppercase text-[10px]">Finish</span>

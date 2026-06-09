@@ -22,17 +22,16 @@ export default function AdminLeatherForm() {
     origin: string;
     description: string;
     availabilityStatus: AvailabilityStatus;
-    gradeType: GradeType;
-    gradeId: number;
+    gradeType: GradeType; // UI-da ENUM göstərmək üçün
+    gradeId: number;      // DB və DTO-ya (Entity JoinColumn) ID göndərmək üçün
   }
 
-  // Form State
   const [formData, setFormData] = useState<LeatherFormData>({
     leatherName: '',
     color: '',
     origin: '',
     description: '',
-    availabilityStatus: 'ACTIVE',
+    availabilityStatus: 'DRAFT', // Entity default dəyərinizə əsasən DRAFT etdim
     gradeType: 'STANDARD',
     gradeId: 1
   });
@@ -65,19 +64,29 @@ export default function AdminLeatherForm() {
         data = data.data;
       }
 
+      // Backend API-dən gələn ENUM (LeatherResponse-dakı gradeType)
+      const bEndGradeType = (data.gradeType as GradeType) || 'STANDARD';
+      
+      // Həmin ENUM-a uyğun API-yə (UpdateLeatherRequest) gedəcək DB ID-sini hesablayırıq
+      let mappedGradeId = 1;
+      if (bEndGradeType === 'PREMIUM') mappedGradeId = 2;
+      if (bEndGradeType === 'EXOTIC') mappedGradeId = 3;
+
       setFormData({
-        leatherName: data.leathername || data.leatherName || '', 
+        // DTO-nuz leatherName gözləyir, Entity-niz leathername verir. Hər ikisini ehtiyatlı yoxlayırıq
+        leatherName: data.leatherName || data.leathername || '', 
         color: data.color || '',
         origin: data.origin || '',
         description: data.description || '',
-        availabilityStatus: data.availabilityStatus || 'ACTIVE',
-        gradeType: (data.gradeType as GradeType) || 'STANDARD',
-        gradeId: data.gradeId || 1
+        availabilityStatus: data.availabilityStatus || 'DRAFT',
+        gradeType: bEndGradeType, // Form üçün
+        gradeId: mappedGradeId    // Backend Payload üçün
       });
 
-      // Backend-dən gələn ilkin statusu kənara qoyuruq ki, yoxlaya bilək
       setOriginalStatus(data.availabilityStatus || 'ACTIVE');
-      setPreviewUrl(data.imageUrl || data.textureImageUrl || null);
+      
+      // Sizin DTO-da textureImageUrl-dir, ancaq entity-də imageUrl. 
+      setPreviewUrl(data.textureImageUrl || data.imageUrl || null);
     } catch (error) {
       console.error("Dəri məlumatı tapılmadı:", error);
       toast.error("Məlumatı yükləmək mümkün olmadı");
@@ -89,7 +98,24 @@ export default function AdminLeatherForm() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData((prev: LeatherFormData) => ({ ...prev, [name]: value }));
+    
+    // Əgər istifadəçi dropdown-dan dərəcə (ENUM) dəyişirsə
+    if (name === 'gradeType') {
+      let numericId = 1;
+      if (value === 'PREMIUM') numericId = 2;
+      if (value === 'EXOTIC') numericId = 3;
+
+      setFormData((prev: LeatherFormData) => ({
+        ...prev,
+        gradeType: value as GradeType, // UI yenilənir (ENUM)
+        gradeId: numericId             // Arxa planda Backend DTO üçün ID yenilənir
+      }));
+    } else {
+      setFormData((prev: LeatherFormData) => ({ 
+        ...prev, 
+        [name]: value 
+      }));
+    }
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -101,7 +127,6 @@ export default function AdminLeatherForm() {
     }
   };
 
-  // 🚀 ZƏNCİRVARİ SUBMİT MƏNTİQİ (Backendin xəta atmasının qarşısını alır)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -112,32 +137,35 @@ export default function AdminLeatherForm() {
 
     setLoading(true);
     try {
-      const requestData: any = {
-        ...formData,
-        leathername: formData.leatherName, 
+      // 100% Sizin UpdateLeatherRequest / CreateLeatherRequest DTO-ya uyğun paket
+      // Əsla status və ya ENUM getmir, ancaq gradeId gedir!
+      const requestData = {
+        leatherName: formData.leatherName,
+        origin: formData.origin,
+        description: formData.description,
+        gradeId: formData.gradeId, // JoinColumn-un tələb etdiyi RƏQƏM
+        color: formData.color
       };
 
       if (isEditMode) {
-        // 1. ZƏNCİR: ƏGƏR DƏRİ PASSİVDİRSƏ (Arxiv, Draft, Out of Stock), ƏVVƏLCƏ AKTİVLƏŞDİR
+        // ZƏNCİRVARİ UPDATE (Biznes məntiqi tam qorunur)
         if (originalStatus !== 'ACTIVE') {
            toast.loading("Dəri sistemdə aktivləşdirilir...", { id: 'save-toast' });
            await adminLeatherService.updateStatus(Number(id), 'ACTIVE');
         }
 
-        // 2. ZƏNCİR: ARTIQ AKTİVDİR, MƏLUMATLARI RAHAT YENİLƏ
         toast.loading("Məlumatlar yenilənir...", { id: 'save-toast' });
-        await adminLeatherService.updateLeather(Number(id), requestData as UpdateLeatherRequest);
+        await adminLeatherService.updateLeather(Number(id), requestData as unknown as UpdateLeatherRequest);
 
-        // 3. ZƏNCİR: ƏGƏR İSTİFADƏÇİ FORMU DOLDURANDA STATUSU DƏYİŞİBSƏ (məsələn, aktiv edib sonra arxiv seçibsə), YENİ STATUSU VUR
         if (formData.availabilityStatus !== 'ACTIVE') {
            await adminLeatherService.updateStatus(Number(id), formData.availabilityStatus);
         }
 
         toast.success("Dəri uğurla yeniləndi!", { id: 'save-toast' });
       } else {
-        // YENİ YARATMAQ (Image mütləqdir)
+        // CREATE 
         toast.loading("Yeni dəri yaradılır...", { id: 'save-toast' });
-        await adminLeatherService.createLeather(requestData as CreateLeatherRequest, imageFile as File);
+        await adminLeatherService.createLeather(requestData as unknown as CreateLeatherRequest, imageFile as File);
         toast.success("Yeni lüks dəri uğurla yaradıldı!", { id: 'save-toast' });
       }
       
@@ -186,7 +214,6 @@ export default function AdminLeatherForm() {
 
       <div className="max-w-4xl mx-auto flex flex-col md:flex-row gap-8">
         
-        {/* Sol Tərəf - Şəkil Yükləmə */}
         <div className="w-full md:w-1/3">
           <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-center text-center">
             <div className="w-full aspect-square bg-[#FAF9F6] rounded-lg border-2 border-dashed border-gray-200 flex flex-col items-center justify-center relative overflow-hidden mb-4 group cursor-pointer">
@@ -215,9 +242,8 @@ export default function AdminLeatherForm() {
           </div>
         </div>
 
-        {/* Sağ Tərəf - Məlumat Forması */}
         <div className="w-full md:w-2/3 bg-white p-8 rounded-xl shadow-sm border border-gray-100">
-          <form className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
@@ -255,6 +281,7 @@ export default function AdminLeatherForm() {
                   onChange={handleInputChange}
                   placeholder="Məs: İtaliya"
                   className="w-full bg-transparent border-0 border-b border-gray-300 py-2 text-sm focus:ring-0 focus:border-[#111] transition-colors outline-none"
+                  required
                 />
               </div>
 
@@ -276,14 +303,14 @@ export default function AdminLeatherForm() {
               <div className="md:col-span-2">
                 <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 block">Keyfiyyət Səviyyəsi (Grade)</label>
                 <select 
-                  name="gradeType"
+                  name="gradeType" // DÜZƏLİŞ: UI-da ENUM oxuyur
                   value={formData.gradeType}
                   onChange={handleInputChange}
                   className="w-full bg-transparent border-0 border-b border-gray-300 py-2 text-sm focus:ring-0 focus:border-[#111] transition-colors cursor-pointer outline-none"
                 >
+                  <option value="STANDARD">STANDARD</option>
                   <option value="PREMIUM">PREMIUM</option>
                   <option value="EXOTIC">EXOTIC</option>
-                  <option value="STANDARD">STANDARD</option>
                 </select>
               </div>
 
@@ -296,6 +323,7 @@ export default function AdminLeatherForm() {
                   rows={4}
                   placeholder="Dərinin strukturu, kəsimi və istifadə yerləri barədə..."
                   className="w-full bg-transparent border-0 border-b border-gray-300 py-2 text-sm focus:ring-0 focus:border-[#111] transition-colors outline-none resize-none"
+                  required
                 ></textarea>
               </div>
             </div>

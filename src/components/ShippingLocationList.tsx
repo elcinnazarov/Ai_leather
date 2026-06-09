@@ -1,259 +1,215 @@
-import React, { useState, useEffect } from "react";
-import { 
-  Truck, 
-  Plus, 
-  Search, 
-  MapPin, 
-  Clock, 
-  DollarSign, 
-  Edit2, 
-  Trash2, 
-  Power
-} from "lucide-react";
-import { AdminShippingLocationResponse, PageResponse } from "../types";
-import { shippingService } from "../services/shippingService";
-import { cn } from "../lib/utils";
-import { toast } from "react-hot-toast";
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { shippingService } from '../services/shippingService'; 
+import { AdminShippingLocationResponse } from '../types'; 
+import { Loader2, Plus, Edit, Trash2, Power, Globe, MapPin, AlertCircle } from 'lucide-react';
+import toast from 'react-hot-toast';
 
-interface ShippingLocationListProps {
-  onCreate: () => void;
-  onEdit: (location: AdminShippingLocationResponse) => void;
-}
-
-export default function ShippingLocationList({ onCreate, onEdit }: ShippingLocationListProps) {
-  const [data, setData] = useState<PageResponse<AdminShippingLocationResponse> | null>(null);
+export default function ShippingLocationList() {
+  const navigate = useNavigate();
+  const [locations, setLocations] = useState<AdminShippingLocationResponse[]>([]);
   const [loading, setLoading] = useState(true);
+  
   const [page, setPage] = useState(0);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [size] = useState(20);
+  const [totalPages, setTotalPages] = useState(0);
 
-  useEffect(() => {
-    fetchLocations();
-  }, [page]);
-
-  const fetchLocations = async () => {
+  const fetchLocations = async (currentPage: number) => {
     try {
       setLoading(true);
-      const response = await shippingService.getAllLocations(page, 20);
-      setData(response);
+      const data = await shippingService.getAllLocations(currentPage, size);
+      
+      setLocations(data?.content || []);
+      setTotalPages(data?.totalPages || 0);
     } catch (error) {
-      console.error("Failed to fetch shipping locations:", error);
-      toast.error("Failed to load shipping locations");
+      console.error("Göndərmə bölgələri yüklənərkən xəta:", error);
+      toast.error("Məlumatları yükləmək mümkün olmadı");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleToggleStatus = async (id: number) => {
+  useEffect(() => {
+    fetchLocations(page);
+  }, [page]);
+
+  const handleToggleStatus = async (id: number, currentStatus: boolean) => {
+    const loadingToast = toast.loading("Status yenilənir...");
     try {
       await shippingService.toggleLocationStatus(id);
-      toast.success("Status updated");
-      fetchLocations();
+      
+      setLocations(prev => 
+        prev.map(loc => loc.id === id ? { ...loc, isActive: !currentStatus } : loc)
+      );
+      toast.success("Status uğurla dəyişdirildi", { id: loadingToast });
     } catch (error) {
-      toast.error("Failed to update status");
+      console.error("Status dəyişmə xətası:", error);
+      toast.error("Statusu dəyişmək mümkün olmadı", { id: loadingToast });
     }
   };
 
   const handleDelete = async (id: number) => {
-    if (!window.confirm("Are you sure you want to delete this shipping location?")) return;
+    if (!window.confirm("Bu bölgəni silmək istədiyinizə əminsiniz? Bu əməliyyat geri qaytarıla bilməz.")) {
+      return;
+    }
+
+    const loadingToast = toast.loading("Silinir...");
     try {
       await shippingService.deleteLocation(id);
-      toast.success("Location deleted");
-      fetchLocations();
+      
+      setLocations(prev => prev.filter(loc => loc.id !== id));
+      toast.success("Bölgə uğurla silindi", { id: loadingToast });
+      
+      if (locations.length === 1 && page > 0) {
+        setPage(prev => prev - 1);
+      }
     } catch (error) {
-      toast.error("Failed to delete location");
+      console.error("Silmə xətası:", error);
+      toast.error("Bölgəni silmək mümkün olmadı", { id: loadingToast });
     }
   };
 
-  const filteredContent = data?.content.filter(loc => 
-    loc.country.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    loc.cityName?.toLowerCase().includes(searchTerm.toLowerCase())
-  ) || [];
+  if (loading && page === 0) {
+    return (
+      <div className="min-h-screen bg-[#FAF9F6] flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-[#111]" />
+      </div>
+    );
+  }
 
   return (
-    <div className="max-w-7xl mx-auto pb-32">
-      <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
-        <div className="space-y-2">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-12 h-12 bg-[#f0f3ff] rounded-2xl flex items-center justify-center text-[#3525cd] shadow-sm">
-              <Truck className="w-6 h-6" />
-            </div>
-            <h3 className="text-4xl font-['Manrope'] font-extrabold text-[#111c2d] tracking-tight">
-              Shipping Hub
-            </h3>
+    <div className="min-h-screen bg-[#FAF9F6] p-8 md:p-12 font-sans">
+      <div className="max-w-7xl mx-auto">
+        
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-4">
+          <div>
+            <h1 className="text-3xl font-serif font-bold text-[#111] tracking-wide mb-2">
+              Çatdırılma Bölgələri
+            </h1>
+            <p className="text-xs text-gray-500 uppercase tracking-widest font-bold">
+              Ölkə, şəhər və çatdırılma qiymətlərinin idarəsi
+            </p>
           </div>
-          <p className="text-[#777587] font-medium max-w-lg">
-            Manage global shipping destinations, delivery estimates, and logistics costs.
-          </p>
-        </div>
-        <button
-          onClick={onCreate}
-          className="bg-[#3525cd] text-white px-8 py-4 rounded-2xl font-['Manrope'] font-bold hover:bg-[#2a1da3] transition-all active:scale-95 shadow-[0_20px_40px_-12px_rgba(53,37,205,0.3)] flex items-center gap-2"
-        >
-          <Plus className="w-5 h-5" />
-          Add Destination
-        </button>
-      </div>
-
-      {/* Search & Stats */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
-        <div className="lg:col-span-8 relative">
-          <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-[#777587] w-5 h-5" />
-          <input
-            type="text"
-            placeholder="Search by country or city..."
-            className="w-full pl-14 pr-6 py-4 bg-white border border-[#c7c4d8]/20 rounded-3xl focus:ring-4 focus:ring-[#3525cd]/5 font-medium shadow-sm"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-        <div className="lg:col-span-4 flex items-center justify-end gap-4">
-          <div className="bg-white px-6 py-4 rounded-3xl border border-[#c7c4d8]/20 shadow-sm flex items-center gap-3">
-            <div className="w-2 h-2 rounded-full bg-[#1a8e3d] animate-pulse" />
-            <span className="text-xs font-bold text-[#111c2d] uppercase tracking-widest">
-              {data?.totalElements || 0} Routes Defined
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* Locations Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {loading ? (
-          Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="bg-white h-64 rounded-[2.5rem] border border-[#c7c4d8]/10 animate-pulse" />
-          ))
-        ) : filteredContent.map((location) => (
-          <div 
-            key={location.id}
-            className={cn(
-              "group bg-white rounded-[2.5rem] p-8 border border-[#c7c4d8]/15 shadow-sm hover:shadow-xl hover:border-[#3525cd]/20 transition-all duration-500 relative overflow-hidden",
-              !location.isActive && "opacity-75 grayscale-[0.5]"
-            )}
+          
+          <button 
+            onClick={() => navigate('/admin/shipping/new')}
+            className="bg-[#111] text-white px-6 py-3 rounded-md text-xs font-bold uppercase tracking-widest hover:bg-black transition-colors flex items-center justify-center gap-2 shadow-sm"
           >
-            {/* Status Indicator */}
-            <div className={cn(
-              "absolute top-0 right-0 w-32 h-32 -mr-16 -mt-16 rounded-full opacity-5 transition-transform group-hover:scale-110",
-              location.isActive ? "bg-[#1a8e3d]" : "bg-[#ba1a1a]"
-            )} />
-
-            <div className="flex justify-between items-start mb-6">
-              <div className="space-y-1">
-                <div className="flex items-center gap-2 text-[#3525cd]">
-                  <MapPin className="w-4 h-4" />
-                  <span className="text-[10px] font-black uppercase tracking-[0.2em]">{location.country}</span>
-                </div>
-                <h4 className="text-2xl font-['Manrope'] font-extrabold text-[#111c2d]">{location.cityName || "All Cities"}</h4>
-              </div>
-              <div className="flex gap-1">
-                <button 
-                  onClick={() => onEdit(location)}
-                  className="p-2 text-[#777587] hover:text-[#3525cd] hover:bg-[#f0f3ff] rounded-xl transition-all"
-                >
-                  <Edit2 className="w-4 h-4" />
-                </button>
-                <button 
-                  onClick={() => handleToggleStatus(location.id)}
-                  className={cn(
-                    "p-2 rounded-xl transition-all",
-                    location.isActive ? "text-[#1a8e3d] hover:bg-[#e2f9e9]" : "text-[#ba1a1a] hover:bg-[#fff0f0]"
-                  )}
-                >
-                  <Power className="w-4 h-4" />
-                </button>
-                <button 
-                  onClick={() => handleDelete(location.id)}
-                  className="p-2 text-[#777587] hover:text-[#ba1a1a] hover:bg-[#fff0f0] rounded-xl transition-all"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4 mb-8">
-              <div className="bg-[#f9f9ff] p-4 rounded-2xl border border-transparent group-hover:border-[#3525cd]/10 transition-all">
-                <div className="flex items-center gap-1.5 text-[#777587] mb-1">
-                  <DollarSign className="w-3 h-3" />
-                  <span className="text-[9px] font-bold uppercase tracking-widest">Shipping Fee</span>
-                </div>
-                <p className="text-lg font-['Manrope'] font-extrabold text-[#3525cd]">
-                  {location.fee.toLocaleString()} {location.currency}
-                </p>
-              </div>
-              <div className="bg-[#f9f9ff] p-4 rounded-2xl border border-transparent group-hover:border-[#3525cd]/10 transition-all">
-                <div className="flex items-center gap-1.5 text-[#777587] mb-1">
-                  <Clock className="w-3 h-3" />
-                  <span className="text-[9px] font-bold uppercase tracking-widest">Free Threshold</span>
-                </div>
-                <p className="text-lg font-['Manrope'] font-extrabold text-[#111c2d]">
-                  {location.freeThreshold ? `${location.freeThreshold.toLocaleString()} ${location.currency}` : "N/A"}
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between pt-4 border-t border-[#c7c4d8]/10">
-              <span className={cn(
-                "px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest",
-                location.isActive ? "bg-[#e2f9e9] text-[#1a8e3d]" : "bg-[#fff0f0] text-[#ba1a1a]"
-              )}>
-                {location.isActive ? "Operational" : "Suspended"}
-              </span>
-              <span className="text-[9px] font-bold text-[#777587] uppercase tracking-tighter">
-                ID: LOC-{location.id.toString().padStart(3, '0')}
-              </span>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Pagination */}
-      {data && data.totalPages > 1 && (
-        <div className="mt-12 flex items-center justify-center gap-4">
-          <button
-            disabled={page === 0}
-            onClick={() => setPage(p => p - 1)}
-            className="px-6 py-3 bg-white border border-[#c7c4d8]/20 rounded-2xl text-sm font-bold text-[#777587] hover:text-[#3525cd] disabled:opacity-50 transition-all"
-          >
-            Previous
+            <Plus className="w-4 h-4" />
+            Yeni Bölgə Əlavə Et
           </button>
-          <div className="flex gap-2">
-            {Array.from({ length: data.totalPages }).map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setPage(i)}
-                className={cn(
-                  "w-10 h-10 rounded-xl text-sm font-bold transition-all",
-                  page === i ? "bg-[#3525cd] text-white" : "bg-white text-[#777587] hover:bg-[#f0f3ff]"
+        </div>
+
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-gray-50 border-b border-gray-100">
+                  <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Bölgə (Ölkə/Şəhər)</th>
+                  <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Qiymət</th>
+                  <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Pulsuz Limit</th>
+                  <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-widest text-center">Poçt Kodu Tələbi</th>
+                  <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-widest text-center">Status</th>
+                  <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-widest text-right">Əməliyyatlar</th>
+                </tr>
+              </thead>
+              <tbody>
+                {locations.length === 0 ? (
+                  <tr>
+                    <td colSpan={6} className="py-12 text-center text-gray-400 font-sans text-sm">
+                      <AlertCircle className="w-8 h-8 mx-auto mb-3 opacity-50" />
+                      Heç bir çatdırılma bölgəsi tapılmadı.
+                    </td>
+                  </tr>
+                ) : (
+                  locations.map((loc) => (
+                    <tr key={loc.id} className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors">
+                      <td className="py-4 px-6">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-full bg-[#FAF9F6] border border-gray-200 flex items-center justify-center">
+                            {loc.cityName ? <MapPin className="w-4 h-4 text-gray-600" /> : <Globe className="w-4 h-4 text-gray-600" />}
+                          </div>
+                          <div>
+                            <p className="font-bold text-[#111] text-sm">{loc.country}</p>
+                            <p className="text-xs text-gray-500 mt-0.5">{loc.cityName || 'Bütün Şəhərlər'}</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="py-4 px-6">
+                        <span className="font-bold text-sm text-[#111]">{loc.fee} {loc.currency}</span>
+                      </td>
+                      <td className="py-4 px-6">
+                        {loc.freeThreshold ? (
+                          <span className="text-sm text-green-600 font-medium">≥ {loc.freeThreshold} {loc.currency}</span>
+                        ) : (
+                          <span className="text-xs text-gray-400">—</span>
+                        )}
+                      </td>
+                      <td className="py-4 px-6 text-center">
+                        <span className={`text-[10px] font-bold uppercase px-3 py-1 rounded-full ${loc.requiresPostalCode ? 'bg-blue-50 text-blue-600' : 'bg-gray-100 text-gray-500'}`}>
+                          {loc.requiresPostalCode ? 'Bəli' : 'Xeyr'}
+                        </span>
+                      </td>
+                      <td className="py-4 px-6 text-center">
+                        <button 
+                          onClick={() => handleToggleStatus(loc.id, loc.isActive)}
+                          className={`flex items-center gap-1.5 mx-auto text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full transition-colors ${
+                            loc.isActive ? 'bg-green-50 text-green-600 hover:bg-green-100' : 'bg-red-50 text-red-600 hover:bg-red-100'
+                          }`}
+                        >
+                          <Power className="w-3 h-3" />
+                          {loc.isActive ? 'Aktiv' : 'Passiv'}
+                        </button>
+                      </td>
+                      <td className="py-4 px-6">
+                        <div className="flex items-center justify-end gap-3">
+                          <button 
+                            onClick={() => navigate(`/admin/shipping/${loc.id}/edit`)}
+                            className="p-2 text-gray-400 hover:text-blue-600 transition-colors"
+                            title="Redaktə Et"
+                          >
+                            <Edit className="w-4 h-4" />
+                          </button>
+                          <button 
+                            onClick={() => handleDelete(loc.id)}
+                            className="p-2 text-gray-400 hover:text-red-600 transition-colors"
+                            title="Sil"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
                 )}
-              >
-                {i + 1}
-              </button>
-            ))}
+              </tbody>
+            </table>
           </div>
-          <button
-            disabled={page + 1 === data.totalPages}
-            onClick={() => setPage(p => p + 1)}
-            className="px-6 py-3 bg-white border border-[#c7c4d8]/20 rounded-2xl text-sm font-bold text-[#777587] hover:text-[#3525cd] disabled:opacity-50 transition-all"
-          >
-            Next
-          </button>
         </div>
-      )}
 
-      {filteredContent.length === 0 && !loading && (
-        <div className="text-center py-32 bg-white rounded-[3rem] border border-[#c7c4d8]/15 shadow-sm">
-          <div className="w-20 h-20 bg-[#f0f3ff] rounded-full flex items-center justify-center text-[#3525cd] mx-auto mb-6">
-            <Truck className="w-10 h-10" />
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center gap-4 mt-8">
+            <button 
+              onClick={() => setPage(p => Math.max(0, p - 1))}
+              disabled={page === 0}
+              className="text-[10px] font-bold uppercase tracking-widest text-gray-500 disabled:opacity-30 hover:text-black transition-colors"
+            >
+              Əvvəlki
+            </button>
+            <span className="text-xs font-bold text-[#111]">
+              Səhifə {page + 1} / {totalPages}
+            </span>
+            <button 
+              onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
+              disabled={page === totalPages - 1}
+              className="text-[10px] font-bold uppercase tracking-widest text-gray-500 disabled:opacity-30 hover:text-black transition-colors"
+            >
+              Növbəti
+            </button>
           </div>
-          <h4 className="text-2xl font-['Manrope'] font-bold text-[#111c2d] mb-2">No destinations found</h4>
-          <p className="text-[#777587] mb-8">Start by adding your first shipping location.</p>
-          <button
-            onClick={onCreate}
-            className="bg-[#3525cd] text-white px-8 py-3 rounded-xl font-bold hover:bg-[#2a1da3] transition-all"
-          >
-            Add Destination
-          </button>
-        </div>
-      )}
+        )}
+
+      </div>
     </div>
   );
 }

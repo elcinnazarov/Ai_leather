@@ -114,6 +114,10 @@ function AppRoutes() {
     }
   };
 
+  useEffect(() => {
+    fetchPricingRules();
+  }, []);
+
   // --- Leather Biznes Loqikası ---
   const handleCreateLeather = async (formData: any, image: File) => {
     try {
@@ -182,6 +186,9 @@ function AppRoutes() {
       toast.error("Yenilənmə zamanı xəta");
     }
   };
+
+  const PricingRuleFormComponent = PricingRuleForm as React.ComponentType<any>;
+  const ShippingLocationFormComponent = ShippingLocationForm as React.ComponentType<any>;
 
   return (
     <Routes>
@@ -252,7 +259,7 @@ function AppRoutes() {
           <Route path="shipping" element={
             <ShippingLocationList 
               onCreate={() => navigate("/admin/shipping/new")} 
-              onEdit={(loc) => { setSelectedShippingLocation(loc); navigate("/admin/shipping/edit"); }} 
+              onEdit={(loc) => { setSelectedShippingLocation(loc); navigate(`/admin/shipping/${loc.id}/edit`); }} 
             />
           } />
           
@@ -263,7 +270,7 @@ function AppRoutes() {
             />
           } />
           
-          <Route path="shipping/edit" element={
+          <Route path="shipping/:id/edit" element={
             <ShippingLocationForm 
               location={selectedShippingLocation || undefined} 
               onSubmit={async (d) => { await handleUpdateShippingLocation(d as UpdateShippingLocationRequest); navigate("/admin/shipping"); }} 
