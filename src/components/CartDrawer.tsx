@@ -1,224 +1,315 @@
-import React, { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
-import { X, Minus, Plus, Trash2, AlertCircle } from "lucide-react";
-import { useCartStore } from "../store/useCartStore";
-import { useCurrencyStore } from "../store/useCurrencyStore";
-import { cartService } from "../services/cartService";
-import { CartPreviewResponse } from "../types/cart";
-import { Currency } from "../types";
-import { useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import { useAITranslation } from "../hooks/useAITranslation";
-
-function CartItem({ item, updateQuantity, removeItem, symbol }: any) {
-  const dynModelName = useAITranslation(item.productModelName);
-  const dynLeatherName = useAITranslation(item.leatherName);
-  const { t } = useTranslation();
-
-  return (
-    <motion.div 
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="flex gap-8 group"
-    >
-      {/* Image */}
-      <div className="w-24 h-32 bg-[#eeeeee] rounded-lg overflow-hidden flex-shrink-0">
-        <img 
-          src={item.finalImageUrl || "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&q=80&w=400"} 
-          alt={dynModelName} 
-          className="w-full h-full object-cover"
-          referrerPolicy="no-referrer"
-        />
-      </div>
-
-      {/* Details */}
-      <div className="flex flex-col justify-between flex-1 py-1">
-        <div>
-          <h3 className="font-sans text-[11px] uppercase tracking-[0.15em] text-[#271310] mb-1">
-            {dynModelName}
-          </h3>
-          <p className="font-serif text-sm text-[#6f5a52] italic">
-            {dynLeatherName}
-          </p>
-          {item.itemErrorMessage && (
-            <p className="font-sans text-[10px] text-red-500/80 mt-2 flex items-center gap-1">
-              <AlertCircle className="w-3 h-3" />
-              {item.itemErrorMessage}
-            </p>
-          )}
-        </div>
-
-        <div className="flex items-end justify-between mt-4">
-          {/* Quantity Controls */}
-          <div className="flex items-center gap-4 bg-[#eeeeee] px-3 py-1.5 rounded-full">
-            <button 
-              onClick={() => updateQuantity(item.productModelId, item.leatherId, item.quantity - 1)}
-              className="text-[#6f5a52] hover:text-[#271310] transition-colors"
-            >
-              <Minus className="w-3 h-3" />
-            </button>
-            <span className="font-sans text-xs font-bold text-[#271310] w-4 text-center">
-              {item.quantity}
-            </span>
-            <button 
-              onClick={() => updateQuantity(item.productModelId, item.leatherId, item.quantity + 1)}
-              className="text-[#6f5a52] hover:text-[#271310] transition-colors"
-            >
-              <Plus className="w-3 h-3" />
-            </button>
-          </div>
-
-          <div className="flex flex-col items-end gap-1">
-            <span className="font-sans text-xs font-bold text-[#271310]">
-              {symbol} {item.totalPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-            </span>
-            {item.priceChanged && (
-              <span className="font-sans text-[9px] uppercase tracking-widest text-red-500/80">
-                Price Updated
-              </span>
-            )}
-            <button 
-              onClick={() => removeItem(item.productModelId, item.leatherId)}
-              className="text-[#6f5a52] hover:text-[#ba1a1a] transition-colors opacity-0 group-hover:opacity-100 mt-1"
-            >
-              <Trash2 className="w-3 h-3" />
-            </button>
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  );
-}
+// src/components/CartDrawer.tsx
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { useCartStore } from '../store/useCartStore';
+import { useCurrencyStore } from '../store/useCurrencyStore';
+import { cartService } from '../services/cartService';
+import { CartPreviewResponse } from '../types/cart';
+import { X, Trash2, ShoppingBag, AlertTriangle, Loader2, Minus, Plus, ArrowRight } from 'lucide-react';
+import toast from 'react-hot-toast';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function CartDrawer() {
-  const { cartItems, isCartOpen, setIsCartOpen, updateQuantity, removeItem } = useCartStore();
-  const { symbol } = useCurrencyStore();
   const { t } = useTranslation();
-  const [previewData, setPreviewData] = useState<CartPreviewResponse | null>(null);
-  const [loading, setLoading] = useState(false);
+  const { items, isOpen, setIsOpen, removeItem, updateQuantity, updateSeenPrice } = useCartStore();
+  
+  const { currency: storeCurrency } = useCurrencyStore();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchPreview = async () => {
-      if (cartItems.length === 0) {
-        setPreviewData(null);
-        return;
-      }
-      
-      try {
-        setLoading(true);
-        const response = await cartService.previewCart({
-          items: cartItems.map(item => ({
-            productModelId: item.productModelId,
-            leatherId: item.leatherId,
-            quantity: item.quantity,
-            seenPrice: item.seenPrice,
-            customRenderUrl: item.customRenderUrl
-          })),
-          currency: Currency.AZN // Defaulting to AZN for now
-        });
-        setPreviewData(response);
-      } catch (error) {
-        console.error("Failed to fetch cart preview:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const [previewData, setPreviewData] = useState<CartPreviewResponse | null>(null);
+  const [loading, setLoading] = useState(false);
 
-    if (isCartOpen) {
-      fetchPreview();
+  const itemsSignature = items.map(i => `${i.cartItemId}-${i.quantity}`).join('|');
+
+  const activeCartCurrency = (items.length > 0 && items[0].currency) ? items[0].currency : storeCurrency;
+
+  useEffect(() => {
+    if (isOpen && items.length > 0) {
+      validateCart();
     }
-  }, [cartItems, isCartOpen]);
+  }, [isOpen, activeCartCurrency, itemsSignature]);
+
+  const validateCart = async () => {
+    try {
+      setLoading(true);
+      const request = {
+        currency: activeCartCurrency,
+        items: items.map(i => ({
+          productModelId: i.productModelId,
+          leatherId: i.leatherId,
+          quantity: i.quantity,
+          seenPrice: i.seenPrice,
+          customRenderUrl: i.customRenderUrl || undefined
+        }))
+      };
+      
+      const response = await cartService.previewCart(request);
+      setPreviewData(response);
+
+      if (response?.items) {
+        response.items.forEach(backendItem => {
+          if (backendItem.priceChanged) {
+            const localId = `${backendItem.productModelId}-${backendItem.leatherId}`;
+            updateSeenPrice(localId, backendItem.currentUnitPrice);
+          }
+        });
+      }
+    } catch (error: any) {
+      console.error("Cart validation error:", error);
+      if (error.response?.status === 404) {
+        toast.error(t('cart.errors.endpointNotFound', 'Səbət xidməti müvəqqəti olaraq əlçatan deyil'));
+      } else {
+        toast.error(t('cart.errors.syncFailed', 'Səbət məlumatları yenilənərkən xəta baş verdi'));
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCheckout = () => {
+    if (!previewData?.valid) {
+      toast.error(t('cart.errors.resolveBeforeCheckout', 'Zəhmət olmasa səbətdəki xətaları düzəldin'));
+      return;
+    }
+    setIsOpen(false);
+    navigate('/checkout');
+  };
+
+  const displayCurrency = previewData?.currency || activeCartCurrency;
+
+  // 📱 DÜZƏLİŞ 1: Mobile Swipe Təkmilləşdirilməsi
+  // Artıq istifadəçi məhsullara baxmaq üçün aşağı-yuxarı sürüşdürəndə səbət qəfil bağlanmayacaq.
+  // Yalnız horizontal (sağa) xüsusi sürüşdürmə olduqda bağlanacaq.
+  const [touchStart, setTouchStart] = useState<{x: number, y: number} | null>(null);
+  
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStart({ x: e.targetTouches[0].clientX, y: e.targetTouches[0].clientY });
+  };
+  
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (!touchStart) return;
+    const deltaX = touchStart.x - e.changedTouches[0].clientX;
+    const deltaY = Math.abs(touchStart.y - e.changedTouches[0].clientY);
+    
+    // Əgər istifadəçi şaquli (aşağı-yuxarı) yox, üfüqi (sağa) ən azı 60px sürüşdürübsə bağla
+    if (deltaX < -60 && deltaY < 50) {
+      setIsOpen(false);
+    }
+    setTouchStart(null);
+  };
+
+  if (!isOpen) return null;
 
   return (
     <AnimatePresence>
-      {isCartOpen && (
+      {isOpen && (
         <>
-          {/* Backdrop */}
-          <motion.div
+          {/* ✅ DÜZƏLİŞ 2: Z-Index 100 edildi (Bütün naviqasiyalardan üstdə qalması üçün) */}
+          <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => setIsCartOpen(false)}
-            className="fixed inset-0 bg-[#1a1c1c]/20 backdrop-blur-sm z-[70]"
+            className="fixed inset-0 bg-black/60 z-[90] backdrop-blur-sm"
+            onClick={() => setIsOpen(false)}
           />
-
-          {/* Drawer */}
+          
           <motion.div
-            initial={{ x: "100%" }}
+            initial={{ x: '100%' }}
             animate={{ x: 0 }}
-            exit={{ x: "100%" }}
-            transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed top-0 right-0 h-full w-full max-w-md bg-[#f9f9f9] shadow-2xl z-[80] flex flex-col"
+            exit={{ x: '100%' }}
+            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+            // ✅ DÜZƏLİŞ 3: h-[100dvh] (Dynamic Viewport Height) iOS Safari / Chrome xətalarının qarşısını alır
+            className="fixed right-0 top-0 w-full sm:w-[420px] bg-[#FAF9F6] shadow-2xl z-[100] flex flex-col"
+            style={{ height: "100dvh" }} 
           >
-            {/* Header */}
-            <div className="px-10 pt-12 pb-8 flex items-center justify-between">
-              <h2 className="font-serif text-2xl text-[#271310] italic">{t("cart.title")}</h2>
+            {/* HEADER */}
+            <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-200 bg-white shrink-0">
+              <div className="flex items-center gap-3">
+                <ShoppingBag className="w-5 h-5 text-[#111]" />
+                <h2 className="text-lg sm:text-xl font-serif font-bold text-[#111] tracking-wide">
+                  {t('cart.title', 'Səbətiniz')}
+                </h2>
+                <span className="bg-[#111] text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                  {items.reduce((sum, i) => sum + i.quantity, 0)}
+                </span>
+              </div>
+              
+              {/* ✅ DÜZƏLİŞ 4: Düymənin basılma sahəsi böyüdüldü (p-3) və xüsusi stopPropagation əlavə edildi */}
               <button 
-                onClick={() => setIsCartOpen(false)}
-                className="p-2 hover:bg-[#e8e8e8] rounded-full transition-colors text-[#271310]"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsOpen(false);
+                }} 
+                className="p-3 text-gray-400 hover:text-black hover:bg-gray-100 rounded-full transition-all active:scale-90 touch-manipulation"
               >
-                <X className="w-5 h-5" />
+                <X className="w-6 h-6" />
               </button>
             </div>
 
-            {/* Cart Items */}
-            <div className="flex-1 overflow-y-auto px-10 py-4 space-y-12 hide-scrollbar">
-              {cartItems.length === 0 ? (
-                <div className="h-full flex flex-col items-center justify-center text-center opacity-50 space-y-4">
-                  <p className="font-serif text-xl text-[#271310]">{t("cart.empty")}</p>
+            {/* BODY (Məhsullar Siyahısı) */}
+            <div className="flex-1 overflow-y-auto p-4 sm:p-6 font-sans overscroll-contain">
+              
+              {previewData?.globalErrors && previewData.globalErrors.length > 0 && (
+                <div className="bg-red-50 p-4 rounded-xl mb-4 border border-red-100">
+                  {previewData.globalErrors.map((err, i) => (
+                    <p key={i} className="text-red-600 text-xs font-bold flex items-center gap-2">
+                      <AlertTriangle className="w-4 h-4 shrink-0" /> {err}
+                    </p>
+                  ))}
+                </div>
+              )}
+
+              {items.length === 0 ? (
+                <div className="h-full flex flex-col items-center justify-center text-gray-400 space-y-4">
+                  <ShoppingBag className="w-12 h-12 opacity-20" />
+                  <p className="text-sm font-medium tracking-widest uppercase">
+                    {t('cart.empty', 'Səbətiniz boşdur')}
+                  </p>
+                  <button 
+                    onClick={() => { setIsOpen(false); navigate('/'); }}
+                    className="mt-4 text-xs font-bold uppercase tracking-widest text-black border-b border-black pb-1"
+                  >
+                    {t('cart.continueShopping', 'Alış-verişə Davam Et')}
+                  </button>
                 </div>
               ) : (
-                previewData?.items.map((item, index) => (
-                  <CartItem 
-                    key={`${item.productModelId}-${item.leatherId}-${index}`} 
-                    item={item} 
-                    updateQuantity={updateQuantity} 
-                    removeItem={removeItem} 
-                    symbol={symbol} 
-                  />
-                ))
+                <div className="space-y-4">
+                  {items.map(localItem => {
+                    const backendItem = previewData?.items.find(
+                      b => b.productModelId === localItem.productModelId && b.leatherId === localItem.leatherId
+                    );
+
+                    const finalImage = backendItem?.finalImageUrl || localItem.image || localItem.customRenderUrl;
+                    const priceToShow = backendItem?.totalPrice || (localItem.seenPrice * localItem.quantity);
+                    const isError = backendItem && !backendItem.available;
+                    
+                    return (
+                      <div 
+                        key={localItem.cartItemId} 
+                        className={`flex gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl border transition-all ${
+                          isError ? 'bg-red-50/50 border-red-200' : 'bg-white border-gray-100 shadow-sm'
+                        }`}
+                      >
+                        {/* Şəkil */}
+                        <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gray-100 rounded-lg overflow-hidden shrink-0">
+                          {finalImage ? (
+                            <img src={finalImage} alt={localItem.productModelName} className="w-full h-full object-cover" />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center text-gray-300">
+                              <ShoppingBag className="w-5 h-5 sm:w-6 sm:h-6"/>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Məlumat */}
+                        <div className="flex-1 flex flex-col justify-between min-w-0">
+                          <div className="flex justify-between items-start gap-2">
+                            <div className="min-w-0">
+                              <h3 className="text-xs sm:text-sm font-bold text-[#111] leading-tight truncate">
+                                {localItem.productModelName}
+                              </h3>
+                              <p className="text-[10px] sm:text-xs text-gray-500 mt-0.5 uppercase tracking-wider">
+                                {localItem.leatherName}
+                              </p>
+                              {backendItem?.isCustomDesign && (
+                                <span className="inline-block px-1.5 py-0.5 bg-blue-50 text-blue-600 text-[9px] font-bold rounded mt-1">
+                                  AI DESIGN
+                                </span>
+                              )}
+                            </div>
+                            <button 
+                              onClick={() => removeItem(localItem.cartItemId)} 
+                              className="text-gray-300 hover:text-red-500 transition-colors p-2 shrink-0 touch-manipulation"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
+
+                          {isError && (
+                            <p className="text-[10px] font-bold text-red-500 flex items-center gap-1 mt-1">
+                              <AlertTriangle className="w-3 h-3" /> 
+                              {backendItem?.itemErrorMessage || t('cart.itemUnavailable', 'Məhsul mövcud deyil')}
+                            </p>
+                          )}
+                          
+                          {backendItem?.priceChanged && backendItem.available && (
+                            <p className="text-[10px] font-bold text-orange-500 mt-1">
+                              {t('cart.priceUpdated', 'Qiymət yeniləndi')}
+                            </p>
+                          )}
+
+                          {/* Say və Qiymət */}
+                          <div className="flex items-center justify-between mt-2">
+                            <div className="flex items-center border border-gray-200 rounded-lg bg-white">
+                              <button 
+                                onClick={() => updateQuantity(localItem.cartItemId, localItem.quantity - 1)} 
+                                className="p-2 sm:p-2 hover:bg-gray-50 disabled:opacity-50 active:scale-90 transition-all touch-manipulation" 
+                                disabled={localItem.quantity <= 1}
+                              >
+                                <Minus className="w-3 h-3 text-[#111]" />
+                              </button>
+                              <span className="w-6 sm:w-8 text-center text-xs font-bold text-[#111]">
+                                {localItem.quantity}
+                              </span>
+                              <button 
+                                onClick={() => updateQuantity(localItem.cartItemId, localItem.quantity + 1)} 
+                                className="p-2 sm:p-2 hover:bg-gray-50 active:scale-90 transition-all touch-manipulation"
+                              >
+                                <Plus className="w-3 h-3 text-[#111]" />
+                              </button>
+                            </div>
+                            
+                            <div className="text-right">
+                              {loading ? (
+                                <Loader2 className="w-4 h-4 animate-spin text-gray-300" />
+                              ) : (
+                                <span className="text-sm font-bold text-[#111]">
+                                  {priceToShow.toFixed(2)} {displayCurrency}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               )}
             </div>
 
-            {/* Footer / Checkout */}
-            {cartItems.length > 0 && (
-              <div className="p-10 bg-white border-t border-[#f3f3f3]">
-                
-                {/* Global Errors */}
-                {previewData?.globalErrors && previewData.globalErrors.length > 0 && (
-                  <div className="mb-6 space-y-2">
-                    {previewData.globalErrors.map((error, idx) => (
-                      <p key={idx} className="font-sans text-[10px] text-red-500/80 flex items-start gap-2">
-                        <AlertCircle className="w-3 h-3 flex-shrink-0 mt-0.5" />
-                        <span>{error}</span>
-                      </p>
-                    ))}
-                  </div>
-                )}
-
-                <div className="flex justify-between items-end mb-8">
-                  <span className="font-sans text-xs uppercase tracking-widest text-[#6f5a52]">{t("cart.total")}</span>
-                  <div className="text-right">
-                    {loading ? (
-                      <div className="h-6 w-24 bg-[#eeeeee] animate-pulse rounded"></div>
-                    ) : (
-                      <span className="font-serif text-2xl text-[#271310]">
-                        {symbol} {(previewData?.totalAmount || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                      </span>
-                    )}
-                  </div>
+            {/* FOOTER (ÖDƏNİŞ) */}
+            {items.length > 0 && (
+              <div className="p-4 sm:p-6 bg-white border-t border-gray-200 space-y-3 sm:space-y-4 shrink-0 pb-safe">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-gray-500 uppercase tracking-widest">
+                    {t('cart.total', 'Yekun')}
+                  </span>
+                  <span className="text-lg sm:text-xl font-serif font-bold text-[#111]">
+                    {loading ? "..." : `${previewData?.totalAmount?.toFixed(2) || '0.00'} ${displayCurrency}`}
+                  </span>
                 </div>
                 
                 <button 
-                  disabled={!previewData?.valid}
-                  onClick={() => {
-                    setIsCartOpen(false);
-                    navigate("/checkout");
-                  }}
-                  className="w-full bg-[#271310] text-white py-5 rounded-full font-sans font-black text-[10px] uppercase tracking-[0.3em] hover:bg-[#3e2723] transition-colors shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                  onClick={handleCheckout}
+                  disabled={loading || !previewData?.valid}
+                  className="w-full bg-[#111] text-white py-4 rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-black transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 group active:scale-[0.98] touch-manipulation"
                 >
-                  {t("cart.checkout")}
+                  {loading && <Loader2 className="w-4 h-4 animate-spin" />}
+                  {!loading && (
+                    <>
+                      {previewData?.valid ? (
+                        <>
+                          {t('cart.checkout', 'Ödənişə Keç')}
+                          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                        </>
+                      ) : (
+                        t('cart.resolveErrors', 'Xətaları Düzəldin')
+                      )}
+                    </>
+                  )}
                 </button>
               </div>
             )}

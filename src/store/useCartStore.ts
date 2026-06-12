@@ -1,60 +1,76 @@
+// src/store/useCartStore.ts
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { LocalCartItem } from '../types/cart';
 
-interface CartState {
-  cartItems: LocalCartItem[];
-  isCartOpen: boolean;
-  addItem: (item: LocalCartItem) => void;
-  removeItem: (productModelId: number, leatherId: number) => void;
-  updateQuantity: (productModelId: number, leatherId: number, quantity: number) => void;
-  clearCart: () => void;
-  setIsCartOpen: (isOpen: boolean) => void;
+export interface LocalCartItem {
+  cartItemId: string;
+  productModelId: number;
+  productModelName: string;
+  leatherId: number;
+  leatherName: string;
+  quantity: number;
+  seenPrice: number;
+  currency: string;
+  customRenderUrl?: string;
+  image?: string;
 }
 
-export const useCartStore = create<CartState>()(
+interface CartStore {
+  items: LocalCartItem[];
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;  // ✅ ShopLayout bunu gözləyir
+  addItem: (item: LocalCartItem) => void;
+  removeItem: (cartItemId: string) => void;
+  updateQuantity: (cartItemId: string, quantity: number) => void;
+  updateSeenPrice: (cartItemId: string, newPrice: number) => void;
+  clearCart: () => void;
+  getItemCount: () => number;  // ✅ Badge üçün
+}
+
+export const useCartStore = create<CartStore>()(
   persist(
-    (set) => ({
-      cartItems: [],
-      isCartOpen: false,
-
-      addItem: (newItem) => set((state) => {
-        const existingItemIndex = state.cartItems.findIndex(
-          (item) => item.productModelId === newItem.productModelId && item.leatherId === newItem.leatherId
-        );
-
-        if (existingItemIndex >= 0) {
-          // Update quantity if item already exists in the cart
-          const updatedItems = [...state.cartItems];
-          updatedItems[existingItemIndex].quantity += newItem.quantity;
-          return { cartItems: updatedItems, isCartOpen: true };
-        }
-
-        // Add new item and open cart
-        return { cartItems: [...state.cartItems, newItem], isCartOpen: true };
-      }),
-
-      removeItem: (productModelId, leatherId) => set((state) => ({
-        cartItems: state.cartItems.filter(
-          (item) => !(item.productModelId === productModelId && item.leatherId === leatherId)
-        )
-      })),
-
-      updateQuantity: (productModelId, leatherId, quantity) => set((state) => ({
-        cartItems: state.cartItems.map((item) => 
-          item.productModelId === productModelId && item.leatherId === leatherId
-            ? { ...item, quantity: Math.max(1, quantity) } // Ensure quantity is at least 1
-            : item
-        )
-      })),
-
-      clearCart: () => set({ cartItems: [] }),
+    (set, get) => ({
+      items: [],
+      isOpen: false,  // ✅ Default bağlı olmalıdır
+      setIsOpen: (isOpen) => set({ isOpen }),
       
-      setIsCartOpen: (isOpen) => set({ isCartOpen: isOpen }),
+      addItem: (item) => set((state) => {
+        const existing = state.items.find(i => i.cartItemId === item.cartItemId);
+        if (existing) {
+          return {
+            items: state.items.map(i => 
+              i.cartItemId === item.cartItemId 
+                ? { ...i, quantity: i.quantity + item.quantity } 
+                : i
+            ),
+            isOpen: true  // ✅ Əlavə edəndə səbəti aç
+          };
+        }
+        return { items: [...state.items, item], isOpen: true };
+      }),
+      
+      removeItem: (cartItemId) => set((state) => ({
+        items: state.items.filter(i => i.cartItemId !== cartItemId)
+      })),
+      
+      updateQuantity: (cartItemId, quantity) => set((state) => ({
+        items: state.items.map(i => 
+          i.cartItemId === cartItemId ? { ...i, quantity: Math.max(1, quantity) } : i
+        )
+      })),
+
+      updateSeenPrice: (cartItemId, newPrice) => set((state) => ({
+        items: state.items.map(i => 
+          i.cartItemId === cartItemId ? { ...i, seenPrice: newPrice } : i
+        )
+      })),
+
+      clearCart: () => set({ items: [] }),
+      
+      getItemCount: () => {
+        return get().items.reduce((sum, item) => sum + item.quantity, 0);
+      }
     }),
-    {
-      name: 'atelier-cart-storage', // The key used in localStorage
-      partialize: (state) => ({ cartItems: state.cartItems }), // Only persist cartItems, not isCartOpen
-    }
+    { name: 'atelier-cart-storage' }
   )
 );

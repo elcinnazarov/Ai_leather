@@ -1,13 +1,4 @@
 import { Currency } from "../types";
-
-export interface LocalCartItem {
-  productModelId: number;
-  leatherId: number;
-  quantity: number;
-  seenPrice: number;
-  customRenderUrl?: string;
-}
-
 export interface CartItemRequest {
   productModelId: number;
   leatherId: number;
@@ -18,7 +9,7 @@ export interface CartItemRequest {
 
 export interface CartPreviewRequest {
   items: CartItemRequest[];
-  currency: Currency | string;
+  currency: string;
 }
 
 export interface CartItemResponse {
@@ -34,13 +25,13 @@ export interface CartItemResponse {
   priceChanged: boolean;
   available: boolean;
   isCustomDesign: boolean;
-  itemErrorMessage?: string;
+  itemErrorMessage: string | null;
 }
 
 export interface CartPreviewResponse {
   valid: boolean;
   items: CartItemResponse[];
   totalAmount: number;
-  currency: Currency | string;
+  currency: string;
   globalErrors: string[];
 }

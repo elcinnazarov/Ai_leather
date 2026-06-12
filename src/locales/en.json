@@ -60,14 +60,16 @@
   },
   "cart": {
     "title": "Your Cart",
-    "empty": "Your cart is currently empty.",
-    "add_to_cart": "Add to Cart",
-    "shipping_note": "Complimentary global shipping. Handcrafted upon commission.",
-    "checkout": "Proceed to Checkout",
-    "subtotal": "Subtotal",
+    "empty": "Your cart is empty",
     "total": "Total Amount",
-    "taxes_calculated": "Taxes and shipping calculated at checkout",
-    "remove": "Remove"
+    "checkout": "Proceed to Checkout",
+    "resolveErrors": "Resolve Errors",
+    "itemUnavailable": "Item is unavailable",
+    "errors": {
+      "syncFailed": "Failed to synchronize cart data",
+      "endpointNotFound": "Cart service temporarily unavailable",
+      "resolveBeforeCheckout": "Please resolve cart errors before checkout"
+    }
   },
   "orders": {
     "title": "Personal Archive",

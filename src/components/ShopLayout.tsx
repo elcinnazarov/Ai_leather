@@ -23,12 +23,15 @@ export default function ShopLayout({ children, cartCount: propCartCount = 0 }: S
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   
-  const { cartItems, setIsCartOpen } = useCartStore();
+  // ✅ DÜZƏLİŞ: Yeni stateless cart strukturuna görə setIsOpen və getItemCount istifadə edirik
+  const { setIsOpen, getItemCount } = useCartStore();
   const { currency, region, initializeGeoCurrency } = useCurrencyStore();
   const { isAuthenticated, user, logout } = useAuthStore();
   const { t } = useTranslation();
 
-  const cartCount = cartItems.length > 0 ? cartItems.length : propCartCount;
+  // ✅ DÜZƏLİŞ: Səbət sayını yeni metodla alırıq
+  const currentItemCount = getItemCount();
+  const cartCount = currentItemCount > 0 ? currentItemCount : propCartCount;
 
   useEffect(() => {
     initializeGeoCurrency();
@@ -134,15 +137,15 @@ export default function ShopLayout({ children, cartCount: propCartCount = 0 }: S
             </Link>
           )}
 
-          {/* Mobile Profile Icon (only visible on mobile if logged in) */}
           {isAuthenticated && (
             <Link to="/profile/orders" className="md:hidden p-2 hover:bg-gray-100 rounded-full transition-colors text-black flex items-center justify-center">
               <User className="w-4 h-4" />
             </Link>
           )}
           
+          {/* ✅ DÜZƏLİŞ: setIsCartOpen(true) əvəzinə setIsOpen(true) yazıldı */}
           <button 
-            onClick={() => setIsCartOpen(true)}
+            onClick={() => setIsOpen(true)}
             className="relative p-2 hover:bg-gray-100 rounded-full transition-colors group text-black"
           >
             <ShoppingBag className="w-4 h-4 md:w-5 md:h-5" />
@@ -275,4 +278,4 @@ export default function ShopLayout({ children, cartCount: propCartCount = 0 }: S
       </footer>
     </div>
   );
-}
+};

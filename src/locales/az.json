@@ -58,17 +58,7 @@
     "thickness": "Dəri Qalınlığı",
     "care": "Qulluq Təlimatı"
   },
-  "cart": {
-    "title": "Səbətiniz",
-    "empty": "Səbətiniz hazırda boşdur.",
-    "add_to_cart": "Səbətə Əlavə Et",
-    "shipping_note": "Dünya üzrə pulsuz çatdırılma. Sifarişlə əl işi olaraq hazırlanır.",
-    "checkout": "Sifarişi Rəsmiləşdir",
-    "subtotal": "Ara Cəm",
-    "total": "Ümumi Məbləğ",
-    "taxes_calculated": "Vergi və çatdırılma rəsmiləşdirmə zamanı hesablanacaq",
-    "remove": "Sil"
-  },
+
   "orders": {
     "title": "Şəxsi Arxiv",
     "my_acquisitions": "Sifarişlərim",
@@ -169,4 +159,20 @@
       "postal_code_invalid": "Azərbaycan üçün poçt indeksi boş qalmalıdır, digər ölkələr üçün mütləqdir."
     }
   }
+,
+   "cart": {
+    "title": "Səbətiniz",
+    "empty": "Səbətiniz boşdur",
+    "total": "Yekun Məbləğ",
+    "checkout": "Ödənişə Keç",
+    "resolveErrors": "Xətaları Düzəldin",
+    "itemUnavailable": "Məhsul anbarda yoxdur",
+    "errors": {
+      "syncFailed": "Səbət məlumatları yenilənərkən xəta baş verdi",
+      "endpointNotFound": "Səbət xidməti müvəqqəti olaraq əlçatan deyil",
+      "resolveBeforeCheckout": "Zəhmət olmasa səbətdəki xətaları düzəldin"
+    }
+  }
+
+  
 }
