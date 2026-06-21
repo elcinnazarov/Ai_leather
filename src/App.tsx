@@ -256,26 +256,16 @@ function AppRoutes() {
             />
           } />
 
-          <Route path="shipping" element={
-            <ShippingLocationList 
-              onCreate={() => navigate("/admin/shipping/new")} 
-              onEdit={(loc) => { setSelectedShippingLocation(loc); navigate(`/admin/shipping/${loc.id}/edit`); }} 
-            />
+        <Route path="shipping" element={
+            <ShippingLocationList /> // Propları sildik ki xəta verməsin
           } />
           
           <Route path="shipping/new" element={
-            <ShippingLocationForm 
-              onSubmit={async (d) => { await handleCreateShippingLocation(d); navigate("/admin/shipping"); }} 
-              onCancel={() => navigate("/admin/shipping")} 
-            />
+            <ShippingLocationForm /> // Propları sildik
           } />
           
           <Route path="shipping/:id/edit" element={
-            <ShippingLocationForm 
-              location={selectedShippingLocation || undefined} 
-              onSubmit={async (d) => { await handleUpdateShippingLocation(d as UpdateShippingLocationRequest); navigate("/admin/shipping"); }} 
-              onCancel={() => navigate("/admin/shipping")} 
-            />
+            <ShippingLocationForm /> // Propları sildik
           } />
 
           <Route path="orders" element={

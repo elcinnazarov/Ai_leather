@@ -4,21 +4,16 @@ import {
   Trash2, 
   Edit2, 
   DollarSign, 
-  Calculator, 
-  ChevronRight, 
   AlertCircle,
   Save,
   X
 } from "lucide-react";
 import { 
   ProductModelResponse, 
-  ProductPriceResponse, 
-  AdminCalculatedPriceResponse,
-  Currency
+  ProductPriceResponse 
 } from "../types";
 import { productPriceService } from "../services/productPriceService";
 import ManualPriceManager from "./ManualPriceManager";
-import { cn } from "../lib/utils";
 import { toast } from "react-hot-toast";
 
 interface ProductPriceManagerProps {
@@ -27,7 +22,6 @@ interface ProductPriceManagerProps {
 
 export default function ProductPriceManager({ product }: ProductPriceManagerProps) {
   const [prices, setPrices] = useState<ProductPriceResponse[]>([]);
-  const [calculatedPrices, setCalculatedPrices] = useState<AdminCalculatedPriceResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAdding, setIsAdding] = useState(false);
   const [editingGradeId, setEditingGradeId] = useState<number | null>(null);
@@ -41,15 +35,11 @@ export default function ProductPriceManager({ product }: ProductPriceManagerProp
   const fetchPrices = async () => {
     try {
       setLoading(true);
-      const [pricesData, calcData] = await Promise.all([
-        productPriceService.getProductPrices(product.id),
-        productPriceService.getCalculatedPrices(product.id)
-      ]);
+      const pricesData = await productPriceService.getProductPrices(product.id);
       setPrices(pricesData.prices || []);
-      setCalculatedPrices(calcData);
     } catch (error) {
       console.error("Failed to fetch prices:", error);
-      toast.error("Failed to load pricing data");
+      toast.error("Qiymətlər yüklənərkən xəta baş verdi");
     } finally {
       setLoading(false);
     }
@@ -60,11 +50,11 @@ export default function ProductPriceManager({ product }: ProductPriceManagerProp
       await productPriceService.createProductPrices(product.id, {
         prices: [{ gradeId: newPrice.gradeId, price: newPrice.price }]
       });
-      toast.success("Price added");
+      toast.success("AZN Qiyməti əlavə edildi");
       setIsAdding(false);
       fetchPrices();
     } catch (error) {
-      toast.error("Failed to add price");
+      toast.error("Qiymət əlavə edilə bilmədi");
     }
   };
 
@@ -73,22 +63,22 @@ export default function ProductPriceManager({ product }: ProductPriceManagerProp
       await productPriceService.updateProductPrice(product.id, gradeId, {
         price: editPrice
       });
-      toast.success("Price updated");
+      toast.success("AZN Qiyməti yeniləndi");
       setEditingGradeId(null);
       fetchPrices();
     } catch (error) {
-      toast.error("Failed to update price");
+      toast.error("Qiymət yenilənə bilmədi");
     }
   };
 
   const handleDeletePrice = async (gradeId: number) => {
-    if (!window.confirm("Delete this price rule?")) return;
+    if (!window.confirm("Bu AZN qiymətini silmək istədiyinizə əminsiniz?")) return;
     try {
       await productPriceService.deleteProductPrice(product.id, gradeId);
-      toast.success("Price deleted");
+      toast.success("Qiymət silindi");
       fetchPrices();
     } catch (error) {
-      toast.error("Failed to delete price");
+      toast.error("Qiymət silinə bilmədi");
     }
   };
 
@@ -102,21 +92,24 @@ export default function ProductPriceManager({ product }: ProductPriceManagerProp
 
   return (
     <div className="space-y-8">
-      {/* Base Pricing Section */}
+      {/* 1. BAZA QİYMƏTİ BÖLMƏSİ (YALNIZ AZN) */}
       <section className="bg-white rounded-[2rem] p-8 border border-[#c7c4d8]/15 shadow-sm">
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-[#f0f3ff] rounded-xl flex items-center justify-center text-[#3525cd]">
               <DollarSign className="w-6 h-6" />
             </div>
-            <h4 className="text-xl font-['Manrope'] font-bold text-[#111c2d]">Base Pricing Rules (AZN)</h4>
+            <div>
+               <h4 className="text-xl font-['Manrope'] font-bold text-[#111c2d]">Baza Qiyməti (AZN)</h4>
+               <p className="text-xs font-medium text-[#777587]">Məhsulun daxili bazar üçün əsas qiymətini təyin edin.</p>
+            </div>
           </div>
           <button
             onClick={() => setIsAdding(true)}
-            className="flex items-center gap-2 text-sm font-bold text-[#3525cd] hover:text-[#2a1da3] transition-colors"
+            className="flex items-center gap-2 text-sm font-bold text-[#3525cd] hover:text-[#2a1da3] transition-colors bg-[#f0f3ff] px-4 py-2 rounded-xl"
           >
             <Plus className="w-4 h-4" />
-            Add Grade Price
+            AZN Qiyməti Əlavə Et
           </button>
         </div>
 
@@ -128,11 +121,11 @@ export default function ProductPriceManager({ product }: ProductPriceManagerProp
             >
               <div className="flex items-center gap-6">
                 <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm border border-[#c7c4d8]/10">
-                  <span className="text-xs font-black text-[#3525cd]">{price.gradeType}</span>
+                  <span className="text-xs font-black text-[#3525cd]">AZN</span>
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-[#111c2d]">{price.gradeType}</p>
-                  <p className="text-[10px] font-bold text-[#777587] uppercase tracking-widest">Base Grade</p>
+                  <p className="text-sm font-bold text-[#111c2d]">Grade ID: {price.gradeId}</p>
+                  <p className="text-[10px] font-bold text-[#777587] uppercase tracking-widest">{price.gradeType}</p>
                 </div>
               </div>
 
@@ -158,7 +151,7 @@ export default function ProductPriceManager({ product }: ProductPriceManagerProp
                       {price.priceAzn.toLocaleString()} AZN
                     </p>
                     <p className="text-[10px] font-bold text-[#777587] uppercase tracking-tighter">
-                      Last Updated: {new Date(price.updatedAt).toLocaleDateString()}
+                      Son yenilənmə: {new Date(price.updatedAt).toLocaleDateString()}
                     </p>
                   </div>
                 )}
@@ -197,7 +190,7 @@ export default function ProductPriceManager({ product }: ProductPriceManagerProp
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-bold text-[#777587] uppercase tracking-widest">Base Price (AZN)</label>
+                  <label className="text-[10px] font-bold text-[#777587] uppercase tracking-widest">AZN Məbləği</label>
                   <input
                     type="number"
                     value={newPrice.price}
@@ -211,13 +204,13 @@ export default function ProductPriceManager({ product }: ProductPriceManagerProp
                     onClick={handleAddPrice}
                     className="flex-1 bg-[#3525cd] text-white py-2 rounded-xl font-bold text-sm hover:bg-[#2a1da3] transition-all"
                   >
-                    Add Rule
+                    Yadda Saxla
                   </button>
                   <button
                     onClick={() => setIsAdding(false)}
                     className="px-4 py-2 bg-white border border-[#c7c4d8]/30 rounded-xl font-bold text-sm text-[#777587] hover:bg-gray-50"
                   >
-                    Cancel
+                    Ləğv et
                   </button>
                 </div>
               </div>
@@ -227,73 +220,15 @@ export default function ProductPriceManager({ product }: ProductPriceManagerProp
           {prices.length === 0 && !isAdding && (
             <div className="text-center py-12 border-2 border-dashed border-[#c7c4d8]/20 rounded-2xl">
               <AlertCircle className="w-8 h-8 text-[#c7c4d8] mx-auto mb-2" />
-              <p className="text-sm font-medium text-[#777587]">No pricing rules defined for this product.</p>
+              <p className="text-sm font-medium text-[#777587]">Bu məhsul üçün hələ AZN baza qiyməti təyin edilməyib.</p>
             </div>
           )}
         </div>
       </section>
 
-      {/* Calculated Prices Section */}
-      {calculatedPrices && (
-        <section className="bg-white rounded-[2rem] p-8 border border-[#c7c4d8]/15 shadow-sm">
-          <div className="flex items-center gap-3 mb-8">
-            <div className="w-10 h-10 bg-[#e2f9e9] rounded-xl flex items-center justify-center text-[#1a8e3d]">
-              <Calculator className="w-6 h-6" />
-            </div>
-            <div>
-              <h4 className="text-xl font-['Manrope'] font-bold text-[#111c2d]">Global Market Estimates</h4>
-              <p className="text-xs font-medium text-[#777587]">Auto-calculated based on exchange rates and markups.</p>
-            </div>
-          </div>
-
-          <div className="space-y-6">
-            {calculatedPrices.grades.map((gp) => (
-              <div key={gp.gradeId} className="border-b border-[#c7c4d8]/10 last:border-0 pb-6 last:pb-0">
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="text-sm font-black text-[#111c2d]">{gp.gradeType}</span>
-                  <ChevronRight className="w-4 h-4 text-[#c7c4d8]" />
-                  <span className="text-xs font-bold text-[#777587]">Base: {gp.azn.amount.toLocaleString()} AZN</span>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  {[
-                    { label: "AZN", data: gp.azn },
-                    { label: "USD", data: gp.usd },
-                    { label: "EUR", data: gp.eur }
-                  ].map((item) => (
-                    <div key={item.label} className="bg-[#f9f9ff] p-4 rounded-2xl border border-transparent hover:border-[#3525cd]/10 transition-all">
-                      <div className="flex justify-between items-start mb-1">
-                        <p className="text-[10px] font-bold text-[#777587] uppercase tracking-widest">{item.label}</p>
-                        <span className={cn(
-                          "text-[8px] font-black px-1.5 py-0.5 rounded-md uppercase",
-                          item.data.source === "MANUAL" ? "bg-[#fff0f0] text-[#ba1a1a]" : 
-                          item.data.source === "BASE" ? "bg-[#f0f3ff] text-[#3525cd]" : 
-                          "bg-[#e2f9e9] text-[#1a8e3d]"
-                        )}>
-                          {item.data.source}
-                        </span>
-                      </div>
-                      <p className="text-lg font-['Manrope'] font-extrabold text-[#111c2d]">
-                        {item.data.amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                      </p>
-                      {item.data.formula && (
-                        <p className="text-[9px] font-bold text-[#777587] mt-1 truncate">
-                          {item.data.formula}
-                        </p>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* Manual Overrides Section - Qlobal yeniləmə üçün onPriceChanged prop-u verildi! */}
-      <ManualPriceManager 
-        product={product} 
-        onPriceChanged={fetchPrices} 
-      />
+      {/* 2. XARİCİ VALYUTA BÖLMƏSİ (MANUAL PRICE MANAGER) */}
+      <ManualPriceManager product={product} />
+      
     </div>
   );
 }

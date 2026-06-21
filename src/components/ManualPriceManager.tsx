@@ -3,7 +3,6 @@ import {
   Plus, 
   Trash2, 
   Settings2, 
-  AlertCircle,
   Save,
   X,
   RefreshCw
@@ -18,19 +17,20 @@ import { toast } from "react-hot-toast";
 
 interface ManualPriceManagerProps {
   product: ProductModelResponse;
-  onPriceChanged?: () => void; // Qlobal yenilənmə üçün prop
 }
 
-export default function ManualPriceManager({ product, onPriceChanged }: ManualPriceManagerProps) {
+export default function ManualPriceManager({ product }: ManualPriceManagerProps) {
   const [manualPrices, setManualPrices] = useState<ManualPriceResponse[]>([]);
   const [loading, setLoading] = useState(true);
+  
   const [isAdding, setIsAdding] = useState(false);
-  const [editingPrice, setEditingPrice] = useState<ManualPriceResponse | null>(null);
   const [newManualPrice, setNewManualPrice] = useState({ 
     gradeId: 1, 
     currency: Currency.USD, 
     manualPrice: 0 
   });
+
+  const [editingPrice, setEditingPrice] = useState<ManualPriceResponse | null>(null);
 
   useEffect(() => {
     fetchManualPrices();
@@ -43,68 +43,67 @@ export default function ManualPriceManager({ product, onPriceChanged }: ManualPr
       setManualPrices(data.manualPrices || []);
     } catch (error) {
       console.error("Failed to fetch manual prices:", error);
-      toast.error("Failed to load manual pricing data");
+      toast.error("Xarici valyuta qiymətləri yüklənərkən xəta baş verdi");
     } finally {
       setLoading(false);
     }
   };
 
-  const notifyParent = () => {
-    if (onPriceChanged) {
-      onPriceChanged();
-    }
-  };
-
   const handleCreateManualPrice = async () => {
     try {
-      // TS xətasını 'as any' ilə bypass edirik, amma struktur Backend-in istədiyi kimidir (manualPrices)
       await manualPriceService.createManualPrices(product.id, {
-        manualPrices: [newManualPrice]
+        manualPrices: [
+          {
+            gradeId: newManualPrice.gradeId,
+            currency: newManualPrice.currency,
+            manualPrice: newManualPrice.manualPrice
+          }
+        ]
       } as any);
-      
-      toast.success("Manual price override created");
+
+      toast.success("Xarici valyuta qiyməti uğurla yaradıldı");
       setIsAdding(false);
-      setNewManualPrice({ gradeId: 1, currency: Currency.USD, manualPrice: 0 }); // Formu təmizlə
-      
+      setNewManualPrice({ gradeId: 1, currency: Currency.USD, manualPrice: 0 });
       fetchManualPrices();
-      notifyParent(); // Ana komponenti yenilə
     } catch (error) {
-      toast.error("Failed to create manual price");
+      toast.error("Qiymət yaradılarkən xəta baş verdi");
     }
   };
 
   const handleUpdateManualPrice = async () => {
     if (!editingPrice) return;
+    
     try {
       await manualPriceService.updateManualPrices(product.id, {
-        manualPrices: [{
-          gradeId: editingPrice.gradeId,
-          currency: editingPrice.currency,
-          manualPrice: editingPrice.manualPrice
-        }]
+        manualPrices: [
+          {
+            gradeId: editingPrice.gradeId,
+            currency: editingPrice.currency,
+            manualPrice: editingPrice.manualPrice
+          }
+        ]
       } as any);
-      
-      toast.success("Manual price updated");
+
+      toast.success("Qiymət uğurla yeniləndi");
       setEditingPrice(null);
       fetchManualPrices();
-      notifyParent();
     } catch (error) {
-      toast.error("Failed to update manual price");
+      toast.error("Qiymət yenilənərkən xəta baş verdi");
     }
   };
 
   const handleDeleteManualPrice = async (gradeId: number, currency: Currency) => {
-    if (!window.confirm("Remove this manual override?")) return;
+    if (!window.confirm(`Grade ID: ${gradeId} üçün ${currency} qiymətini silmək istədiyinizə əminsiniz?`)) return;
+    
     try {
       await manualPriceService.deleteManualPrices(product.id, {
         manualPrices: [{ gradeId, currency }]
       } as any);
-      
-      toast.success("Manual override removed");
+
+      toast.success("Qiymət silindi");
       fetchManualPrices();
-      notifyParent();
     } catch (error) {
-      toast.error("Failed to remove manual override");
+      toast.error("Silinmə zamanı xəta baş verdi");
     }
   };
 
@@ -118,16 +117,16 @@ export default function ManualPriceManager({ product, onPriceChanged }: ManualPr
             <Settings2 className="w-6 h-6" />
           </div>
           <div>
-            <h4 className="text-xl font-['Manrope'] font-bold text-[#111c2d]">Manual Price Overrides</h4>
-            <p className="text-xs font-medium text-[#777587]">Manually set specific prices to bypass global rules.</p>
+            <h4 className="text-xl font-['Manrope'] font-bold text-[#111c2d]">Xarici Valyuta (Manual Qiymətlər)</h4>
+            <p className="text-xs font-medium text-[#777587]">Xarici bazar üçün valyuta qiymətlərini (USD, EUR) əllə təyin edin.</p>
           </div>
         </div>
         <button
           onClick={() => setIsAdding(true)}
-          className="flex items-center gap-2 text-sm font-bold text-[#ba1a1a] hover:text-[#93000a] transition-colors"
+          className="flex items-center gap-2 text-sm font-bold text-[#ba1a1a] hover:text-[#93000a] transition-colors bg-[#fff0f0] px-4 py-2 rounded-xl"
         >
           <Plus className="w-4 h-4" />
-          Add Override
+          Yeni Valyuta Əlavə Et
         </button>
       </div>
 
@@ -143,7 +142,7 @@ export default function ManualPriceManager({ product, onPriceChanged }: ManualPr
               </div>
               <div>
                 <p className="text-sm font-bold text-[#111c2d]">Grade ID: {price.gradeId}</p>
-                <p className="text-[10px] font-bold text-[#777587] uppercase tracking-widest">Manual Override</p>
+                <p className="text-[10px] font-bold text-[#777587] uppercase tracking-widest">{price.gradeType || 'Manual Grade'}</p>
               </div>
             </div>
 
@@ -155,6 +154,7 @@ export default function ManualPriceManager({ product, onPriceChanged }: ManualPr
                     value={editingPrice.manualPrice}
                     onChange={(e) => setEditingPrice({ ...editingPrice, manualPrice: parseFloat(e.target.value) })}
                     className="w-24 bg-white border border-[#c7c4d8]/30 rounded-lg px-3 py-2 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-[#ba1a1a]/20"
+                    placeholder="0.00"
                   />
                   <button onClick={handleUpdateManualPrice} className="p-2 text-[#1a8e3d] hover:bg-[#e2f9e9] rounded-lg transition-colors">
                     <Save className="w-4 h-4" />
@@ -169,7 +169,7 @@ export default function ManualPriceManager({ product, onPriceChanged }: ManualPr
                     {price.manualPrice.toLocaleString()} {price.currency}
                   </p>
                   <p className="text-[10px] font-bold text-[#777587] uppercase tracking-tighter">
-                    Fixed Price
+                    Təyin edilmiş qiymət
                   </p>
                 </div>
               )}
@@ -204,8 +204,9 @@ export default function ManualPriceManager({ product, onPriceChanged }: ManualPr
                   className="w-full bg-white border border-[#c7c4d8]/30 rounded-xl px-4 py-2 text-sm font-bold focus:outline-none"
                 />
               </div>
+              
               <div className="space-y-2">
-                <label className="text-[10px] font-bold text-[#777587] uppercase tracking-widest">Currency</label>
+                <label className="text-[10px] font-bold text-[#777587] uppercase tracking-widest">Valyuta</label>
                 <select
                   value={newManualPrice.currency}
                   onChange={(e) => setNewManualPrice({ ...newManualPrice, currency: e.target.value as Currency })}
@@ -216,8 +217,9 @@ export default function ManualPriceManager({ product, onPriceChanged }: ManualPr
                   ))}
                 </select>
               </div>
+              
               <div className="space-y-2">
-                <label className="text-[10px] font-bold text-[#777587] uppercase tracking-widest">Fixed Price</label>
+                <label className="text-[10px] font-bold text-[#777587] uppercase tracking-widest">Məbləğ</label>
                 <input
                   type="number"
                   value={newManualPrice.manualPrice}
@@ -226,12 +228,13 @@ export default function ManualPriceManager({ product, onPriceChanged }: ManualPr
                   placeholder="0.00"
                 />
               </div>
+              
               <div className="flex items-end gap-2">
                 <button
                   onClick={handleCreateManualPrice}
                   className="flex-1 bg-[#ba1a1a] text-white py-2 rounded-xl font-bold text-sm hover:bg-[#93000a] transition-all"
                 >
-                  Save Override
+                  Yarat
                 </button>
                 <button
                   onClick={() => setIsAdding(false)}
@@ -247,7 +250,7 @@ export default function ManualPriceManager({ product, onPriceChanged }: ManualPr
         {manualPrices.length === 0 && !isAdding && (
           <div className="text-center py-12 border-2 border-dashed border-[#c7c4d8]/10 rounded-2xl">
             <RefreshCw className="w-8 h-8 text-[#c7c4d8] mx-auto mb-2 opacity-20" />
-            <p className="text-sm font-medium text-[#777587]">No manual overrides active.</p>
+            <p className="text-sm font-medium text-[#777587]">Hələ heç bir xarici valyuta təyin edilməyib.</p>
           </div>
         )}
       </div>
