@@ -35,7 +35,6 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(response));
     }
     @GetMapping("/{id}")
-
     public ResponseEntity<ApiResponse<OrderDetailResponse>> getOrderById(@PathVariable Long id) {
         long userId = currentContext.getCurrentUserId();
         log.info("GET /api/orders/{} - User: {}", id, userId);
