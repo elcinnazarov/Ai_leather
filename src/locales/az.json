@@ -58,24 +58,49 @@
     "thickness": "Dəri Qalınlığı",
     "care": "Qulluq Təlimatı"
   },
-
-  "orders": {
-    "title": "Şəxsi Arxiv",
-    "my_acquisitions": "Sifarişlərim",
-    "no_orders": "Keçmiş Sifariş Tapılmadı",
-    "explore_msg": "Sizin xüsusi səyahətiniz burada başlayır.",
-    "explore_btn": "Kolleksiyaları Kəşf Et",
-    "number": "Sifariş Nömrəsi",
+"orders": {
+    "title": "Sifarişlərim",
+    "empty": "Hələ heç bir sifarişiniz yoxdur",
+    "createSuccess": "Sifariş uğurla yaradıldı",
+    "createError": "Sifariş yaradılarkən xəta baş verdi",
+    "fetchError": "Sifarişlər yüklənərkən xəta baş verdi",
+    "detailError": "Sifariş detalı yüklənərkən xəta baş verdi",
+    "cancelSuccess": "Sifariş ləğv edildi",
+    "cancelError": "Sifarişi ləğv edərkən xəta baş verdi",
+    "cancelConfirm": "Bu sifarişi ləğv etmək istədiyinizə əminsiniz?",
+    "orderNumber": "Sifariş №",
     "date": "Tarix",
-    "view_dossier": "Dosyeyə Bax",
-    "other_items_one": "+ daha {{count}} məhsul",
-    "other_items_other": "+ daha {{count}} məhsul",
+    "total": "Yekun",
+    "status": "Status",
+    "paymentStatus": "Ödəniş",
+    "items": "Məhsullar",
+    "shipping": "Çatdırılma",
+    "subtotal": "Məbləğ",
+    "viewDetail": "Detallara bax",
+    "cancel": "Ləğv et",
+    "loadMore": "Daha çox yüklə",
+    "showing": "{{count}} sifarişdən {{total}} göstərilir",
+    
     "status": {
-      "PENDING": "Təsdiq Gözləyir",
-      "PROCESSING": "Atelyedə Hazırlanır",
-      "SHIPPED": "Yoldadır",
-      "DELIVERED": "Çatdırılıb",
-      "CANCELLED": "Ləğv Edilib"
+      "PENDING": "Gözləyir",
+      "PAID": "Ödənilib",
+      "MANUFACTURING": "Hazırlanır",
+      "SHIPPED": "Göndərilib",
+      "COMPLETED": "Tamamlanıb",
+      "CANCELLED": "Ləğv edilib"
+    },
+    
+    "paymentStatus": {
+      "WAITING": "Gözləyir",
+      "SUCCESS": "Uğurlu",
+      "FAILED": "Uğursuz"
+    },
+    
+    "designStatus": {
+      "GENERATING": "AI hazırlanır",
+      "SUCCESS": "AI hazır",
+      "FAILED": "AI xətası",
+      "COMPLETED": "Tamamlanıb"
     }
   },
   "about": {
@@ -151,6 +176,7 @@
     "shipping": "Çatdırılma (Təxmini)",
     "total": "Yekun Məbləğ",
     "qty": "Say",
+    "country_warning": "Seçdiyiniz ölkəyə əsasən vergilər və çatdırılma xərcləri dəyişə bilər. Yekun məbləğ hesablanacaq.",
     "validation": {
       "required_address": "Çatdırılma üçün tam ünvan qeyd edilməlidir.",
       "required_phone": "Kuryerlə əlaqə üçün telefon nömrəsi mütləqdir.",
@@ -173,6 +199,7 @@
       "resolveBeforeCheckout": "Zəhmət olmasa səbətdəki xətaları düzəldin"
     }
   }
+  
 
   
 }

@@ -1,6 +1,11 @@
 import {  Currency } from "../types";
 
-export type ProductCategory = "BAG" | "WALLET" | "BELT" | "ACCESSORY";
+export enum ProductCategory {
+  BAG = 'BAG',
+  BELT = 'BELT',
+  WALLET = 'WALLET',
+  ACCESSORY = 'ACCESSORY' // <-- Bura mütləq BÖYÜK HƏRFLƏRƏ uyğun əlavə edilməlidir
+}
 
 // ProductSummary DTO-su
 export interface ProductSummary {

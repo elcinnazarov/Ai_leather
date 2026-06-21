@@ -1,31 +1,50 @@
+// src/types/order.ts
 import { Currency } from "../types";
 
 export enum OrderType {
-  STANDARD = "STANDARD",
-  BESPOKE = "BESPOKE"
+  READY_PRODUCT = "READY_PRODUCT",
+  AI_CUSTOM_DESIGN = "AI_CUSTOM_DESIGN"
 }
 
 export enum OrderStatus {
   PENDING = "PENDING",
-  PROCESSING = "PROCESSING",
+  PAID = "PAID",
+  MANUFACTURING = "MANUFACTURING",
   SHIPPED = "SHIPPED",
-  DELIVERED = "DELIVERED",
+  COMPLETED = "COMPLETED",
   CANCELLED = "CANCELLED"
 }
 
 export enum PaymentStatus {
-  UNPAID = "UNPAID",
-  PAID = "PAID",
-  REFUNDED = "REFUNDED"
+  WAITING = "WAITING",
+  SUCCESS = "SUCCESS",
+  FAILED = "FAILED"
 }
 
 export enum DesignProcessStatus {
-  NOT_STARTED = "NOT_STARTED",
-  IN_PROGRESS = "IN_PROGRESS",
-  APPROVED = "APPROVED"
+  GENERATING = "GENERATING",
+  SUCCESS = "SUCCESS",
+  FAILED = "FAILED",
+  COMPLETED = "COMPLETED"
 }
 
-import { Country } from "../types";
+export enum Country {
+  AZERBAIJAN = "AZERBAIJAN",
+  TURKEY = "TURKEY",
+  RUSSION = "RUSSION",
+  GERMANY = "GERMANY",
+  FRANCE = "FRANCE",
+  ITALY = "ITALY",
+  UNITED_KINGDOM = "UNITED_KINGDOM",
+  SWITZERLAND = "SWITZERLAND",
+  USA = "USA",
+  CANADA = "CANADA",
+  JAPAN = "JAPAN",
+  AUSTRALIA = "AUSTRALIA",
+  UAE = "UAE",
+  SAUDI_ARABIA = "SAUDI_ARABIA",
+  INTERNATIONAL_OTHER = "INTERNATIONAL_OTHER"
+}
 
 export interface OrderItemRequest {
   productModelId: number;
@@ -39,14 +58,14 @@ export interface OrderItemRequest {
 }
 
 export interface CreateOrderRequest {
-  orderType: OrderType | string;
-  country: Country | string;
+  orderType: OrderType;
+  country: Country;
   cityName?: string;
   postalCode?: string;
   deliveryAddress: string;
-  customerPhone?: string;
+  customerPhone: string;
   notes?: string;
-  currency: Currency | string;
+  currency: Currency;
   items: OrderItemRequest[];
   idempotencyKey?: string;
 }
@@ -66,14 +85,14 @@ export interface OrderItemResponse {
 export interface OrderResponse {
   orderId: number;
   orderNumber: string;
-  orderType: OrderType | string;
-  status: OrderStatus | string;
-  paymentStatus: PaymentStatus | string;
-  designStatus: DesignProcessStatus | string;
+  orderType: OrderType;
+  status: OrderStatus;
+  paymentStatus: PaymentStatus;
+  designStatus: DesignProcessStatus;
   subTotal: number;
   shippingFee: number;
   finalPrice: number;
-  currency: Currency | string;
+  currency: Currency;
   deliveryAddress: string;
   customerPhone: string;
   notes: string;
@@ -86,10 +105,10 @@ export interface OrderResponse {
 export interface OrderSummaryResponse {
   orderId: number;
   orderNumber: string;
-  status: OrderStatus | string;
-  paymentStatus: PaymentStatus | string;
+  status: OrderStatus;
+  paymentStatus: PaymentStatus;
   finalPrice: number;
-  currency: Currency | string;
+  currency: Currency;
   createdAt: string;
   itemCount: number;
   firstProductName: string;
@@ -107,10 +126,10 @@ export interface PageResponse<T> {
 export interface OrderDetailResponse {
   orderId: number;
   orderNumber: string;
-  orderType: OrderType | string;
-  status: OrderStatus | string;
-  paymentStatus: PaymentStatus | string;
-  designStatus: DesignProcessStatus | string;
+  orderType: OrderType;
+  status: OrderStatus;
+  paymentStatus: PaymentStatus;
+  designStatus: DesignProcessStatus;
   customerEmail: string;
   customerPhone: string;
   deliveryAddress: string;
@@ -118,9 +137,16 @@ export interface OrderDetailResponse {
   subTotal: number;
   shippingFee: number;
   finalPrice: number;
-  currency: Currency | string;
+  currency: Currency;
   createdAt: string;
   paidAt?: string;
   completedAt?: string;
   items: OrderItemResponse[];
+}
+
+export interface OrderFilter {
+  status?: OrderStatus;
+  paymentStatus?: PaymentStatus;
+  from?: string;
+  to?: string;
 }

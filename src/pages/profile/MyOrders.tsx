@@ -6,7 +6,8 @@ import { orderService } from "../../services/orderService";
 import { OrderSummaryResponse, OrderStatus } from "../../types/order";
 import { Box, Package, CheckCircle, Clock, XCircle } from "lucide-react";
 import { useCurrencyStore } from "../../store/useCurrencyStore";
-import { useAITranslation } from "../../hooks/useAITranslation";
+
+import { useAITranslation } from "../../lib/hooks/useAITranslation";
 
 function OrderListItem({ order, index, t, symbol, navigate, getStatusColorClass, getStatusIcon }: any) {
   const dynModelName = useAITranslation(order.firstProductName);

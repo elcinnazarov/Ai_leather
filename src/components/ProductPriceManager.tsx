@@ -289,8 +289,11 @@ export default function ProductPriceManager({ product }: ProductPriceManagerProp
         </section>
       )}
 
-      {/* Manual Overrides Section */}
-      <ManualPriceManager product={product} />
+      {/* Manual Overrides Section - Qlobal yeniləmə üçün onPriceChanged prop-u verildi! */}
+      <ManualPriceManager 
+        product={product} 
+        onPriceChanged={fetchPrices} 
+      />
     </div>
   );
 }

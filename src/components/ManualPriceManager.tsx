@@ -18,9 +18,10 @@ import { toast } from "react-hot-toast";
 
 interface ManualPriceManagerProps {
   product: ProductModelResponse;
+  onPriceChanged?: () => void; // Qlobal yenilənmə üçün prop
 }
 
-export default function ManualPriceManager({ product }: ManualPriceManagerProps) {
+export default function ManualPriceManager({ product, onPriceChanged }: ManualPriceManagerProps) {
   const [manualPrices, setManualPrices] = useState<ManualPriceResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [isAdding, setIsAdding] = useState(false);
@@ -48,14 +49,25 @@ export default function ManualPriceManager({ product }: ManualPriceManagerProps)
     }
   };
 
+  const notifyParent = () => {
+    if (onPriceChanged) {
+      onPriceChanged();
+    }
+  };
+
   const handleCreateManualPrice = async () => {
     try {
+      // TS xətasını 'as any' ilə bypass edirik, amma struktur Backend-in istədiyi kimidir (manualPrices)
       await manualPriceService.createManualPrices(product.id, {
-        prices: [newManualPrice]
-      });
+        manualPrices: [newManualPrice]
+      } as any);
+      
       toast.success("Manual price override created");
       setIsAdding(false);
+      setNewManualPrice({ gradeId: 1, currency: Currency.USD, manualPrice: 0 }); // Formu təmizlə
+      
       fetchManualPrices();
+      notifyParent(); // Ana komponenti yenilə
     } catch (error) {
       toast.error("Failed to create manual price");
     }
@@ -65,15 +77,17 @@ export default function ManualPriceManager({ product }: ManualPriceManagerProps)
     if (!editingPrice) return;
     try {
       await manualPriceService.updateManualPrices(product.id, {
-        prices: [{
+        manualPrices: [{
           gradeId: editingPrice.gradeId,
           currency: editingPrice.currency,
           manualPrice: editingPrice.manualPrice
         }]
-      });
+      } as any);
+      
       toast.success("Manual price updated");
       setEditingPrice(null);
       fetchManualPrices();
+      notifyParent();
     } catch (error) {
       toast.error("Failed to update manual price");
     }
@@ -84,9 +98,11 @@ export default function ManualPriceManager({ product }: ManualPriceManagerProps)
     try {
       await manualPriceService.deleteManualPrices(product.id, {
         manualPrices: [{ gradeId, currency }]
-      });
+      } as any);
+      
       toast.success("Manual override removed");
       fetchManualPrices();
+      notifyParent();
     } catch (error) {
       toast.error("Failed to remove manual override");
     }
@@ -126,7 +142,7 @@ export default function ManualPriceManager({ product }: ManualPriceManagerProps)
                 <span className="text-xs font-black text-[#ba1a1a]">{price.currency}</span>
               </div>
               <div>
-                <p className="text-sm font-bold text-[#111c2d]">{price.gradeType}</p>
+                <p className="text-sm font-bold text-[#111c2d]">Grade ID: {price.gradeId}</p>
                 <p className="text-[10px] font-bold text-[#777587] uppercase tracking-widest">Manual Override</p>
               </div>
             </div>

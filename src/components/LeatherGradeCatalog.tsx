@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { leatherGradeService } from "../services/leatherGradeService";
 import { GradeListResponse } from "../types/leatherGrade";
 import { motion } from "motion/react";
-import { useAITranslation } from "../hooks/useAITranslation";
+import { useAITranslation } from "../lib/hooks/useAITranslation";
 import { useTranslation } from "react-i18next";
 
 function TranslatedText({ text, className }: { text: string; className?: string }) {

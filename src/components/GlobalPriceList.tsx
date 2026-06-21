@@ -127,18 +127,18 @@ export default function GlobalPriceList() {
         {data && (
           <div className="px-8 py-6 bg-[#f9f9ff] border-t border-[#c7c4d8]/10 flex items-center justify-between">
             <p className="text-xs font-bold text-[#777587] uppercase">
-              Page {data.number + 1} of {data.totalPages}
+              Page {data.pageNumber + 1} of {data.totalPages}
             </p>
             <div className="flex gap-2">
               <button
-                disabled={data.number === 0}
+                disabled={data.pageNumber === 0}
                 onClick={() => setPage(p => p - 1)}
                 className="px-4 py-2 bg-white border border-[#c7c4d8]/20 rounded-xl text-xs font-bold disabled:opacity-50"
               >
                 Previous
               </button>
               <button
-                disabled={data.number + 1 === data.totalPages}
+                disabled={data.pageNumber + 1 === data.totalPages}
                 onClick={() => setPage(p => p + 1)}
                 className="px-4 py-2 bg-white border border-[#c7c4d8]/20 rounded-xl text-xs font-bold disabled:opacity-50"
               >

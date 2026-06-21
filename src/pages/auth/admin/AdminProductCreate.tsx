@@ -128,10 +128,10 @@ export default function AdminProductCreate() {
                 onChange={handleChange}
                 className={`${inputBaseClass} cursor-pointer`}
               >
-                <option value="BAG">Çanta (Bag)</option>
-                <option value="WALLET">Cüzdan (Wallet)</option>
-                <option value="BELT">Kəmər (Belt)</option>
-                <option value="ACCESSORY">Aksessuar (Accessory)</option>
+               <option value="BAG">Çanta (Bag)</option>
+  <option value="BELT">Kəmər (Belt)</option>
+  <option value="WALLET">Pulqabı (Wallet)</option>
+  <option value="ACCESSORY">Aksessuar (Accessory)</option> {/* Value mütləq "ACCESSORY" olmalıdır */}
               </select>
             </div>
           </div>

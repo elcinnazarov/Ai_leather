@@ -4,7 +4,7 @@ import { leatherService } from "../services/leatherService";
 import { LeatherDetailResponse } from "../types/leather";
 import { motion, AnimatePresence } from "framer-motion"; // motion/react əvəzinə
 import { ArrowLeft } from "lucide-react";
-import { useAITranslation } from "../hooks/useAITranslation";
+import { useAITranslation } from "../lib/hooks/useAITranslation";
 
 function TranslatedText({ text, className }: { text: string; className?: string }) {
   const translatedText = useAITranslation(text);

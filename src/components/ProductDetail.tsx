@@ -5,7 +5,7 @@ import { ProductDetailResponse, P_AvailableLeatherResponse } from "../types/prod
 import { ArrowLeft, Loader2, ShoppingBag, X, Check } from "lucide-react";
 import { cn } from "../lib/utils";
 import { useCartStore } from "../store/useCartStore";
-import { useAITranslation } from "../hooks/useAITranslation";
+import { useAITranslation } from "../lib/hooks/useAITranslation";
 import { motion, AnimatePresence } from "framer-motion";
 import { getCurrencySymbol } from '../lib/currencyMapper';
 

@@ -6,7 +6,7 @@ import { OrderDetailResponse, OrderStatus } from "../../types/order";
 import { ArrowLeft, FileText, MapPin } from "lucide-react";
 import { useCurrencyStore } from "../../store/useCurrencyStore";
 import { useTranslation } from "react-i18next";
-import { useAITranslation } from "../../hooks/useAITranslation";
+import { useAITranslation } from "../../lib/hooks/useAITranslation";
 
 function OrderItemInfo({ item, symbol }: any) {
   const dynModelName = useAITranslation(item.productModelName);

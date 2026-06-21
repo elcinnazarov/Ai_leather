@@ -72,23 +72,50 @@
     }
   },
   "orders": {
-    "title": "Personal Archive",
-    "my_acquisitions": "My Acquisitions",
-    "no_orders": "No Past Acquisitions",
-    "explore_msg": "Your bespoke journey awaits.",
-    "explore_btn": "Explore Products",
-    "number": "Order Number",
+    "title": "My Orders",
+    "empty": "You don't have any orders yet",
+    "createSuccess": "Order created successfully",
+    "createError": "Error creating order",
+    "fetchError": "Error loading orders",
+    "detailError": "Error loading order details",
+    "cancelSuccess": "Order cancelled",
+    "cancelError": "Error cancelling order",
+    "cancelConfirm": "Are you sure you want to cancel this order?",
+    "orderNumber": "Order #",
     "date": "Date",
-    "view_dossier": "View Dossier",
-    "other_items_one": "+ {{count}} other item",
-    "other_items_other": "+ {{count}} other items",
+    "total": "Total",
+    "status": "Status",
+    "paymentStatus": "Payment",
+    "items": "Items",
+    "shipping": "Shipping",
+    "subtotal": "Subtotal",
+    "viewDetail": "View details",
+    "cancel": "Cancel",
+    "loadMore": "Load more",
+    "showing": "Showing {{count}} of {{total}} orders",
+    
     "status": {
-      "PENDING": "Pending Validation",
-      "PROCESSING": "Atelier Processing",
-      "SHIPPED": "In Transit",
-      "DELIVERED": "Delivered",
+      "PENDING": "Pending",
+      "PAID": "Paid",
+      "MANUFACTURING": "Manufacturing",
+      "SHIPPED": "Shipped",
+      "COMPLETED": "Completed",
       "CANCELLED": "Cancelled"
+    },
+    
+    "paymentStatus": {
+      "WAITING": "Waiting",
+      "SUCCESS": "Success",
+      "FAILED": "Failed"
+    },
+    
+    "designStatus": {
+      "GENERATING": "AI Generating",
+      "SUCCESS": "AI Ready",
+      "FAILED": "AI Failed",
+      "COMPLETED": "Completed"
     }
+  
   },
   "about": {
     "title": "Our Heritage",
@@ -163,6 +190,7 @@
     "shipping": "Shipping (Estimated)",
     "total": "Final Settlement",
     "qty": "Qty",
+    "country_warning": "Based on your selected country, taxes and shipping costs may vary. The final amount will be recalculated.",
     "validation": {
       "required_address": "Delivery address is obligatory for dispatch.",
       "required_phone": "Contact number is necessary for concierge coordination.",

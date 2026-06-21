@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { leatherService } from "../services/leatherService";
 import { LeatherListResponse, GradeType } from "../types/leather";
 import { motion } from "framer-motion"; 
-import { useAITranslation } from "../hooks/useAITranslation";
+import { useAITranslation } from "../lib/hooks/useAITranslation";
 import { useTranslation } from "react-i18next";
 
 function LeatherCatalogItem({ leather, index, onClick }: { leather: LeatherListResponse, index: number, onClick: (id: number, imgUrl?: string) => void }) {
