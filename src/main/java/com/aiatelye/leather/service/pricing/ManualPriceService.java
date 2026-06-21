@@ -348,7 +348,10 @@ public class ManualPriceService {
         private Map<Long, ProductGradePrice> getPriceMap(Long productId, List<Long> gradeIds) {
             return productGradePriceRepository.findByProductModelIdAndGradeIdIn(productId, gradeIds)
                     .stream()
-                    .collect(Collectors.toMap(ProductGradePrice::getId, p -> p));
+                    .collect(Collectors.toMap(
+                            p -> p.getGrade().getId(),  // ✅ gradeId key olmalıdır
+                            p -> p
+                    ));
         }
 
         private Map<Enums.Currency, PricingRule> getRulesMap() {

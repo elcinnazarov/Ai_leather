@@ -36,7 +36,7 @@ public class Leather extends BaseEntity {
 
     @Column(name = "is_active", nullable = false)
     @Builder.Default
-    private Boolean isActive = false;
+    private Boolean isActive = true;
 
 
     @Enumerated(EnumType.STRING)

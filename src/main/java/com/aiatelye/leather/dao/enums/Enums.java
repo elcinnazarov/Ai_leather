@@ -9,7 +9,7 @@ public class Enums {
     public enum Currency { AZN, USD, EUR }
     public enum NotificationType { ORDER_CONFIRMATION, ORDER_SHIPPED, PAYMENT_FAILED, ADMIN_NEW_ORDER }// musteriye melumat gondermek ucun
     public enum DesignProcessStatus { GENERATING, SUCCESS, FAILED ,COMPLETED}
-    public  enum ProductCategory {BAG, BELT, WALLET}
+    public  enum ProductCategory {BAG, BELT, WALLET, ACCESSORY}
     public enum OrderType {READY_PRODUCT, AI_CUSTOM_DESIGN }
     public enum FavoriteTargetType {PRODUCT_MODEL, AI_DESIGN}
     public enum MinioFolderType {PRODUCT, LEATHER, AI}
@@ -43,7 +43,7 @@ public class Enums {
         ARCHIVED,
         OUT_OF_STOCK;
 
-        public boolean canTransitionTo(AvailabilityStatus next) {
+       public boolean canTransitionTo(AvailabilityStatus next) {
             if (this == next) return false;
             return switch (this) {
                 case DRAFT, OUT_OF_STOCK -> next == ACTIVE || next == ARCHIVED;
@@ -77,33 +77,34 @@ public class Enums {
 
         }
 
+    } public enum Country {
+        // Yerli
+        AZERBAIJAN,
+
+        // Avropa (Keyfiyyət və Sənətkarlıq)
+        GERMANY,
+        FRANCE,
+        ITALY,
+        UNITED_KINGDOM,
+        SWITZERLAND,
+
+        // Şimali Amerika (Böyük Bazar)
+        USA,
+        CANADA,
+
+        // Asiya və Okeaniya (Detallara önəm verənlər)
+        JAPAN,
+        AUSTRALIA,
+
+        // Körfəz ölkələri (Lüks seqment)
+        UAE,
+        SAUDI_ARABIA,
+
+        // Digər
+        INTERNATIONAL_OTHER
+
     }
-        public enum Country {
-            // Yerli
-            AZERBAIJAN,
 
-            // Avropa (Keyfiyyət və Sənətkarlıq)
-            GERMANY,
-            FRANCE,
-            ITALY,
-            UNITED_KINGDOM,
-            SWITZERLAND,
-
-            // Şimali Amerika (Böyük Bazar)
-            USA,
-            CANADA,
-
-            // Asiya və Okeaniya (Detallara önəm verənlər)
-            JAPAN,
-            AUSTRALIA,
-
-            // Körfəz ölkələri (Lüks seqment)
-            UAE,
-            SAUDI_ARABIA,
-
-            // Digər
-            INTERNATIONAL_OTHER
-        }
 
 
 }

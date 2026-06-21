@@ -1,16 +1,20 @@
 package com.aiatelye.leather.controller.admin;
 
+import com.aiatelye.leather.dto.admin.leather.*;
 import com.aiatelye.leather.dto.defalutResponse.ApiResponse;
-import com.aiatelye.leather.dto.admin.leather.CreatLeatherRequest;
-import com.aiatelye.leather.dto.admin.leather.LeatherResponse;
-import com.aiatelye.leather.dto.admin.leather.UpdateLeatherRequest;
 import com.aiatelye.leather.dao.enums.Enums;
+import com.aiatelye.leather.dto.defalutResponse.PageResponse;
+import com.aiatelye.leather.service.admin.AdminLeatherService;
 import com.aiatelye.leather.service.catalog.LeatherServiceImpl;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,21 +28,45 @@ import org.springframework.web.multipart.MultipartFile;
 public class AdminLeathersController {
     private  final LeatherServiceImpl leatherService;
 
+    private final AdminLeatherService adminLeatherService;
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<ApiResponse<LeatherResponse>> createLeather(
-            @Parameter(content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
-            @RequestPart("data") @Valid CreatLeatherRequest request,
-            @RequestPart("image") MultipartFile image
-    ) {
-        log.info("POST /api/admin/leathers - Create leather request: {}", request.getLeatherName());
+    @GetMapping
+    @Operation(summary = "Get all leathers (Admin sees ALL regardless of status)")
+    public ResponseEntity<ApiResponse<PageResponse<LeatherResponseAdmin>>> getLeathers(
+            @Valid LeatherFilter filter,
+            @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
 
-        LeatherResponse response= leatherService.createLeather(request, image);
+        log.info("GET /api/admin/leathers - filter: {}, page: {}", filter, pageable);
 
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(ApiResponse.success(response));
+        PageResponse<LeatherResponseAdmin> response = adminLeatherService.getLeathers(filter, pageable);
+
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
+
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Get leather detail by ID (Admin)")
+    public ResponseEntity<ApiResponse<LeatherResponseAdmin>> getLeatherById(@PathVariable Long id) {
+        log.info("GET /api/admin/leathers/{} - Get leather detail", id);
+
+        LeatherResponseAdmin response = adminLeatherService.getLeatherById(id);
+        return ResponseEntity.ok(ApiResponse.success(response));
+    }
+    
+        @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+        public ResponseEntity<ApiResponse<LeatherResponse>> createLeather(
+                @Parameter(content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
+                @RequestPart("data") @Valid CreatLeatherRequest request,
+                @RequestPart("image") MultipartFile image
+        ) {
+            log.info("POST /api/admin/leathers - Create leather request: {}", request.getLeatherName());
+    
+            LeatherResponse response= leatherService.createLeather(request, image);
+    
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body(ApiResponse.success(response));
+        }
 
 
     @DeleteMapping("/{leatherId}/image")

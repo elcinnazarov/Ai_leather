@@ -26,7 +26,7 @@ public class AdminProductPriceController {
     private  final ProductCatalogCacheRepository productCatalogCacheRepository;
 
   // butun  qiymetleri verir!!!
-    @GetMapping
+    @GetMapping("/prices")
     public ResponseEntity<ApiResponse<PageResponse<ProductPriceResponse>>> getPrices(
             @Valid @ModelAttribute ProductPriceFilter filter,
             @PageableDefault(sort = "price", direction = Sort.Direction.DESC) Pageable pageable) {

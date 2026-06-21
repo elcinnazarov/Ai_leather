@@ -35,7 +35,7 @@ public class OrderResponse {
     private List<OrderItemResponse> items;
 
     @Data
-    @Builder
+    @Builder    
     public static class OrderItemResponse {
         private Long orderItemId;
         private Long productModelId;

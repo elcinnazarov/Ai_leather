@@ -38,13 +38,13 @@ public class AdminShippingController {
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
-    @PostMapping
-    public ResponseEntity<ApiResponse<AdminShippingLocationResponse>> createLocation(
-            @Valid @RequestBody CreateShippingLocationRequest request) {
-
-        AdminShippingLocationResponse response = adminShippingService.createLocation(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(response));
-    }
+        @PostMapping
+        public ResponseEntity<ApiResponse<AdminShippingLocationResponse>> createLocation(
+                @Valid @RequestBody CreateShippingLocationRequest request) {
+    
+            AdminShippingLocationResponse response = adminShippingService.createLocation(request);
+            return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(response));
+        }
 
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<AdminShippingLocationResponse>> updateLocation(

@@ -1,14 +1,12 @@
 package com.aiatelye.leather.repository;
 
 import com.aiatelye.leather.dao.ProductModel;
+import jakarta.persistence.QueryHint;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.repository.EntityGraph;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -58,11 +56,16 @@ public interface ProductModelRepository extends JpaRepository<ProductModel,Long>
     @EntityGraph(attributePaths = {"images", "gradePrices", "gradePrices.grade"})
     Optional<ProductModel> findById(Long id);
 
-    @Query("SELECT pm FROM ProductModel pm " +
-            "LEFT JOIN FETCH pm.images " +
-            "LEFT JOIN FETCH pm.gradePrices pgp " +
-            "LEFT JOIN FETCH pgp.grade " +
-            "WHERE pm.id = :id")
+    // ✅ YENİ: Cache bypass, həmişə son vəziyyəti DB-dən oxuyur
+    @Query("SELECT p FROM ProductModel p LEFT JOIN FETCH p.images LEFT JOIN FETCH p.gradePrices WHERE p.id = :id")
+    @QueryHints(@QueryHint(name = "org.hibernate.cacheable", value = "false"))
+    Optional<ProductModel> findByIdWithFreshState(@Param("id") Long id);
+
+
+    @Query("SELECT p FROM ProductModel p " +
+            "LEFT JOIN FETCH p.images " +
+            // DİQQƏT: gradePrices və ya favorites üçün JOIN FETCH YAZMA!
+            "WHERE p.id = :id")
     Optional<ProductModel> findByIdWithDetails(@Param("id") Long id);
 
 

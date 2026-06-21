@@ -35,7 +35,7 @@ public class ProductController {
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
-
+// bu endpointi user gore bilmez admin gormeldir!!!
     @GetMapping("/{id}/prices")
     public ResponseEntity<ApiResponse<ProductPriceMatrixResponse>> getProductPrices(
             @PathVariable Long id) {

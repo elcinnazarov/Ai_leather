@@ -78,7 +78,7 @@ public class SecurtyConfiguration {
                         .requestMatchers("/api/designs/generate").hasRole(CUSTOMER.name())
                         .requestMatchers("/api/orders").hasAuthority("order:create")
                         .anyRequest().authenticated())
-
+                  .cors(Customizer.withDefaults()) // 👈 DİQQƏT: BUNU MÜTLƏQ ƏLAVƏ ET!
                 .authenticationManager(authenticationManager)
                 .authenticationProvider(daoAuthenticationProvider())
                   .csrf(AbstractHttpConfigurer::disable)

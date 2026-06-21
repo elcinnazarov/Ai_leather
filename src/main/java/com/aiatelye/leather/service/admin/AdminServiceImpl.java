@@ -189,10 +189,9 @@ public class AdminServiceImpl {
         }
 
         // 2. Enum daxilindəki keçid yoxlaması
-        if (product.getAvailabilityStatus().canTransitionTo(newStatus)) {
+        if (!product.getAvailabilityStatus().canTransitionTo(newStatus)) { // <--- BURA DİQQƏT: Başında "!" olmalıdır
             throw new InvalidStateTransitionException("error.status.invalid-transition",
                     product.getAvailabilityStatus(), newStatus);
-
         }
 
         // 3. Status və isActive sinxronlaşdırılması
