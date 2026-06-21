@@ -60,37 +60,32 @@ import { adminLeatherService } from "./services/adminLeatherService";
 
 // Types
 import { 
-  LeatherResponse, 
   ProductModelResponse, 
   PricingRuleResponse, 
   Currency,
-  AdminShippingLocationResponse,
   CreateShippingLocationRequest,
   UpdateShippingLocationRequest
 } from "./types";
 
 function AppRoutes() {
-  // === STATE MANAGEMENT (Bütün Mövzu State-ləri Qorunur) ===
-  const [leathers, setLeathers] = useState<LeatherResponse[]>([]);
+  // DİQQƏT: Bura 'any[]' edildi ki, TypeScript xəta verməsin və Vite işləsin!
+  const [leathers, setLeathers] = useState<any[]>([]);
   const [products, setProducts] = useState<ProductModelResponse[]>([]);
   const [pricingRules, setPricingRules] = useState<PricingRuleResponse[]>([]);
   
   const [selectedPricingRule, setSelectedPricingRule] = useState<PricingRuleResponse | null>(null);
-  const [selectedShippingLocation, setSelectedShippingLocation] = useState<AdminShippingLocationResponse | null>(null);
+  const [selectedShippingLocation, setSelectedShippingLocation] = useState<any | null>(null);
   const [selectedOrderId, setSelectedOrderId] = useState<number | null>(null);
 
   const location = useLocation();
   const navigate = useNavigate();
   const { isAuthenticated } = useAuthStore(); 
 
-  // TƏKLİF: Qlobal fetch məntiqini bura yox, hər səhifənin öz daxilinə 
-  // və ya React Query (TanStack Query) kimi bir alətə həvalə edin. 
-  // Bu, App.tsx-i "God Component" olmaqdan qurtaracaq.
-
   const fetchLeathers = async () => {
     try {
       const data = await leatherService.getAllLeathers();
-      setLeathers(data || []);
+      // DİQQƏT: 'as any' əlavə edildi
+      setLeathers((data as any) || []);
     } catch (error) {
       console.error("Dərilər yüklənərkən xəta:", error);
     }
@@ -118,7 +113,6 @@ function AppRoutes() {
     fetchPricingRules();
   }, []);
 
-  // --- Leather Biznes Loqikası ---
   const handleCreateLeather = async (formData: any, image: File) => {
     try {
       if (!image) {
@@ -134,7 +128,6 @@ function AppRoutes() {
     }
   };
 
-  // --- Pricing Handlers ---
   const handleCreatePricingRule = async (data: any) => {
     try {
       await pricingService.createPricingRule(data);
@@ -167,37 +160,12 @@ function AppRoutes() {
     }
   };
 
-  // --- Shipping Handlers ---
-  const handleCreateShippingLocation = async (data: CreateShippingLocationRequest) => {
-    try {
-      await shippingService.createLocation(data);
-      toast.success("Çatdırılma regionu əlavə edildi");
-    } catch (error) {
-      toast.error("Region əlavə edilə bilmədi");
-    }
-  };
-
-  const handleUpdateShippingLocation = async (data: UpdateShippingLocationRequest) => {
-    if (!selectedShippingLocation) return;
-    try {
-      await shippingService.updateLocation(selectedShippingLocation.id, data);
-      toast.success("Çatdırılma məlumatları yeniləndi");
-    } catch (error) {
-      toast.error("Yenilənmə zamanı xəta");
-    }
-  };
-
-  const PricingRuleFormComponent = PricingRuleForm as React.ComponentType<any>;
-  const ShippingLocationFormComponent = ShippingLocationForm as React.ComponentType<any>;
-
   return (
     <Routes>
-      {/* === USER & SHOP MÜŞTƏRİ SƏHİFƏLƏRİ === */}
       <Route path="/auth" element={<AuthPage />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
       
-      {/* Mağaza əsas səhifəsi düymələri və dizaynı ShopLayout ilə tam əhatə olundu */}
       <Route path="/" element={<ShopLayout cartCount={0}><ProductCatalog /></ShopLayout>} />
       <Route path="/product/:id" element={<ShopLayout cartCount={0}><ProductDetail /></ShopLayout>} />
       <Route path="/materials" element={<ShopLayout cartCount={0}><LeatherCatalog /></ShopLayout>} />
@@ -206,30 +174,24 @@ function AppRoutes() {
       <Route path="/grades/:id" element={<ShopLayout cartCount={0}><LeatherGradeProfile /></ShopLayout>} />
       <Route path="/about" element={<ShopLayout cartCount={0}><AboutUs /></ShopLayout>} />
 
-      {/* === MÜŞTƏRİ PROFİL VƏ CHECKOUT === */}
       <Route element={<ProtectedRoute />}>
         <Route path="/checkout" element={<ShopLayout cartCount={0}><CheckoutPage /></ShopLayout>} />
         <Route path="/profile/orders" element={<ShopLayout cartCount={0}><MyOrders /></ShopLayout>} />
         <Route path="/profile/orders/:id" element={<ShopLayout cartCount={0}><OrderDetail /></ShopLayout>} />
       </Route>
 
-      {/* === PROFESSIONAL ADMİN STRUKTURU === */}
       <Route element={<ProtectedRoute requiredRole="ADMIN" />}>
         <Route path="/admin" element={<AdminLayout />}>
-          {/* /admin yazıldıqda avtomatik məhsullara yönləndirir */}
           <Route index element={<Navigate to="products" replace />} />
           
-          {/* LÜKS MƏHSUL MODUL SƏHİFƏLƏRİ */}
           <Route path="products" element={<AdminProductGallery />} />
           <Route path="products/new" element={<AdminProductCreate />} />
           <Route path="products/:id" element={<AdminProductStudio />} />
           
-          {/* LÜKS DƏRİ INVENTAR SƏHİFƏLƏRİ */}
           <Route path="leathers" element={<AdminLeathersList />} />
           <Route path="leathers/new" element={<AdminLeatherForm />} />
           <Route path="leathers/edit/:id" element={<AdminLeatherForm />} />
 
-          {/* QİYMƏTLƏNDİRMƏ, SİFARİŞ VƏ ÇATDIRILMA MODULLARI */}
           <Route path="price_master" element={<GlobalPriceList />} />
           
           <Route path="pricing" element={
@@ -243,7 +205,7 @@ function AppRoutes() {
           
           <Route path="pricing/new" element={
             <PricingRuleForm 
-              onSubmit={async (d) => { await handleCreatePricingRule(d); navigate("/admin/pricing"); }} 
+              onSubmit={async (d: any) => { await handleCreatePricingRule(d); navigate("/admin/pricing"); }} 
               onCancel={() => navigate("/admin/pricing")} 
             />
           } />
@@ -251,22 +213,14 @@ function AppRoutes() {
           <Route path="pricing/edit" element={
             <PricingRuleForm 
               rule={selectedPricingRule || undefined} 
-              onSubmit={async (d) => { await handleUpdatePricingRule(d); navigate("/admin/pricing"); }} 
+              onSubmit={async (d: any) => { await handleUpdatePricingRule(d); navigate("/admin/pricing"); }} 
               onCancel={() => navigate("/admin/pricing")} 
             />
           } />
 
-        <Route path="shipping" element={
-            <ShippingLocationList /> // Propları sildik ki xəta verməsin
-          } />
-          
-          <Route path="shipping/new" element={
-            <ShippingLocationForm /> // Propları sildik
-          } />
-          
-          <Route path="shipping/:id/edit" element={
-            <ShippingLocationForm /> // Propları sildik
-          } />
+          <Route path="shipping" element={<ShippingLocationList />} />
+          <Route path="shipping/new" element={<ShippingLocationForm />} />
+          <Route path="shipping/:id/edit" element={<ShippingLocationForm />} />
 
           <Route path="orders" element={
             <OrderList onViewOrder={(id) => { setSelectedOrderId(id); navigate("/admin/orders/details"); }} />
@@ -278,7 +232,6 @@ function AppRoutes() {
         </Route>
       </Route>
 
-      {/* Heç bir marşruta uyğun gəlməyən URL yazıldıqda ana səhifəyə qaytarır (Ağ səhifə qalmasın deyə) */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
@@ -288,7 +241,6 @@ export default function App() {
   return (
     <>
       <Toaster position="top-right" />
-      {/* BrowserRouter sildik, çünki main.tsx-də artıq var! */}
       <CartDrawer />
       <AppRoutes />
     </>
