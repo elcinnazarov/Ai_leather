@@ -8,7 +8,9 @@
     "cancel": "İmtina Et",
     "continue": "Davam Et",
     "save": "Yadda Saxla",
-    "currency": "Valyuta"
+    "currency": "Valyuta",
+    "previous": "Əvvəlki",
+    "next": "Növbəti"
   },
   "nav": {
     "home": "Ana Səhifə",
@@ -30,7 +32,12 @@
       "price_low_high": "Qiymət: Ucuzdan Bahaya",
       "price_high_low": "Qiymət: Bahadan Ucuza"
     },
-    "empty": "Kriteriyalarınıza uyğun məhsul tapılmadı."
+    "empty": "Kriteriyalarınıza uyğun məhsul tapılmadı.",
+    "search": "Arxivdə axtar...",
+    "all": "Bütün Kolleksiyalar",
+    "wallets": "Pul kisələri",
+    "belts": "Kəmərlər",
+    "accessories": "Aksesuarlar"
   },
   "products": {
     "details": "Məhsul Detalları",
@@ -58,7 +65,7 @@
     "thickness": "Dəri Qalınlığı",
     "care": "Qulluq Təlimatı"
   },
-"orders": {
+  "orders": {
     "title": "Sifarişlərim",
     "empty": "Hələ heç bir sifarişiniz yoxdur",
     "createSuccess": "Sifariş uğurla yaradıldı",
@@ -71,7 +78,7 @@
     "orderNumber": "Sifariş №",
     "date": "Tarix",
     "total": "Yekun",
-    "status": "Status",
+    "status_label": "Status",
     "paymentStatus": "Ödəniş",
     "items": "Məhsullar",
     "shipping": "Çatdırılma",
@@ -80,7 +87,31 @@
     "cancel": "Ləğv et",
     "loadMore": "Daha çox yüklə",
     "showing": "{{count}} sifarişdən {{total}} göstərilir",
-    
+    "loading_archive": "Sənədlər yüklənir...",
+    "client_portal": "Müştəri Portalı",
+    "my_records": "Sifariş Arxivləri",
+    "records_found": "Sifariş tapıldı",
+    "no_orders": "Heç bir qeyd tapılmadı.",
+    "empty_desc": "Sizin sifariş tarixçəniz hazırda boşdur.",
+    "start_journey": "Yeni Sifarişə Başla",
+    "settled": "Yekun Məbləğ",
+    "back_to_records": "Arxivə Qayıt",
+    "dossier": "Sifariş Dosyesi",
+    "type": "Tip",
+    "placed_on": "Sifariş Tarixi",
+    "date_locale": "az-AZ",
+    "manifest": "Məhsul Siyahısı",
+    "modify_request": "Dəyişiklik Sorğusu",
+    "cancel_desc": "Sifarişiniz təsdiq gözləyir. Fikrinizi dəyişmisinizsə, sifarişi indi ləğv edə bilərsiniz.",
+    "withdrawing": "Ləğv edilir...",
+    "withdraw": "Sifarişi Ləğv Et",
+    "ledger": "Hesabat",
+    "total_settled": "Yekun Ödəniş",
+    "payment": "Ödəniş",
+    "logistics": "Logistika",
+    "destination": "Təyinat",
+    "contact": "Əlaqə",
+    "concierge_notes": "Xüsusi Qeyd",
     "status": {
       "PENDING": "Gözləyir",
       "PAID": "Ödənilib",
@@ -89,13 +120,11 @@
       "COMPLETED": "Tamamlanıb",
       "CANCELLED": "Ləğv edilib"
     },
-    
     "paymentStatus": {
       "WAITING": "Gözləyir",
       "SUCCESS": "Uğurlu",
       "FAILED": "Uğursuz"
     },
-    
     "designStatus": {
       "GENERATING": "AI hazırlanır",
       "SUCCESS": "AI hazır",
@@ -111,13 +140,6 @@
     "customer": "Əsl lüks fərdiyyətə olan mütləq ehtiramda tapılır. Siz incəliklə fərqlisiniz və bizim ən böyük işimiz həmin fərqliliyi zamansız bir sənətə çevirməkdir.",
     "quote": "Fərqli olanların seçimi.",
     "vision": "Kökünü Bakının ürəyindən alan atelyemiz, indi bu yerli nəfis sənətkarlıq irsini qlobal səhnəyə daşıyır."
-  },
-  "catalog": {
-    "search": "Arxivdə axtar...",
-    "all": "Bütün Kolleksiyalar",
-    "wallets": "Pul kisələri",
-    "belts": "Kəmərlər",
-    "accessories": "Aksesuarlar"
   },
   "brand": {
     "name": "E1000 Leather Baku Atelier",
@@ -184,9 +206,8 @@
       "required_city": "Çatdırılmanı dəqiq hesablamaq üçün şəhər daxil edilməlidir.",
       "postal_code_invalid": "Azərbaycan üçün poçt indeksi boş qalmalıdır, digər ölkələr üçün mütləqdir."
     }
-  }
-,
-   "cart": {
+  },
+  "cart": {
     "title": "Səbətiniz",
     "empty": "Səbətiniz boşdur",
     "total": "Yekun Məbləğ",
@@ -199,7 +220,4 @@
       "resolveBeforeCheckout": "Zəhmət olmasa səbətdəki xətaları düzəldin"
     }
   }
-  
-
-  
 }

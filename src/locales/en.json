@@ -8,7 +8,9 @@
     "cancel": "Cancel",
     "continue": "Continue",
     "save": "Save",
-    "currency": "Currency"
+    "currency": "Currency",
+    "previous": "Previous",
+    "next": "Next"
   },
   "nav": {
     "home": "Home",
@@ -30,7 +32,12 @@
       "price_low_high": "Price: Low to High",
       "price_high_low": "Price: High to Low"
     },
-    "empty": "No items found matching your criteria."
+    "empty": "No items found matching your criteria.",
+    "search": "Search the archive...",
+    "all": "All Products",
+    "wallets": "Wallets",
+    "belts": "Belts",
+    "accessories": "Accessories"
   },
   "products": {
     "details": "Product Details",
@@ -58,19 +65,6 @@
     "thickness": "Leather Thickness",
     "care": "Care Instructions"
   },
-  "cart": {
-    "title": "Your Cart",
-    "empty": "Your cart is empty",
-    "total": "Total Amount",
-    "checkout": "Proceed to Checkout",
-    "resolveErrors": "Resolve Errors",
-    "itemUnavailable": "Item is unavailable",
-    "errors": {
-      "syncFailed": "Failed to synchronize cart data",
-      "endpointNotFound": "Cart service temporarily unavailable",
-      "resolveBeforeCheckout": "Please resolve cart errors before checkout"
-    }
-  },
   "orders": {
     "title": "My Orders",
     "empty": "You don't have any orders yet",
@@ -84,7 +78,7 @@
     "orderNumber": "Order #",
     "date": "Date",
     "total": "Total",
-    "status": "Status",
+    "status_label": "Status",
     "paymentStatus": "Payment",
     "items": "Items",
     "shipping": "Shipping",
@@ -93,7 +87,31 @@
     "cancel": "Cancel",
     "loadMore": "Load more",
     "showing": "Showing {{count}} of {{total}} orders",
-    
+    "loading_archive": "Accessing Archives...",
+    "client_portal": "Client Portal",
+    "my_records": "Order Archives",
+    "records_found": "Records",
+    "no_orders": "No records found.",
+    "empty_desc": "Your ledger is currently empty.",
+    "start_journey": "Begin a Commission",
+    "settled": "Settled",
+    "back_to_records": "Back to Records",
+    "dossier": "Order Dossier",
+    "type": "Type",
+    "placed_on": "Placed On",
+    "date_locale": "en-GB",
+    "manifest": "Manifest",
+    "modify_request": "Modify Request",
+    "cancel_desc": "Your order is pending confirmation. If you've changed your mind, you can withdraw this commission now.",
+    "withdrawing": "Withdrawing...",
+    "withdraw": "Withdraw Order",
+    "ledger": "The Ledger",
+    "total_settled": "Total Settled",
+    "payment": "Payment",
+    "logistics": "Logistics",
+    "destination": "Destination",
+    "contact": "Contact",
+    "concierge_notes": "Concierge Directive",
     "status": {
       "PENDING": "Pending",
       "PAID": "Paid",
@@ -102,20 +120,17 @@
       "COMPLETED": "Completed",
       "CANCELLED": "Cancelled"
     },
-    
     "paymentStatus": {
       "WAITING": "Waiting",
       "SUCCESS": "Success",
       "FAILED": "Failed"
     },
-    
     "designStatus": {
       "GENERATING": "AI Generating",
       "SUCCESS": "AI Ready",
       "FAILED": "AI Failed",
       "COMPLETED": "Completed"
     }
-  
   },
   "about": {
     "title": "Our Heritage",
@@ -125,13 +140,6 @@
     "customer": "True luxury lies in absolute reverence for the individual. You are beautifully distinct, and our life's work is to translate that individuality into timeless art.",
     "quote": "The choice of the distinct.",
     "vision": "Rooted in the heart of Baku, our atelier is now carrying this local heritage of fine artisanship onto the global stage."
-  },
-  "catalog": {
-    "search": "Search the archive...",
-    "all": "All Products",
-    "wallets": "Wallets",
-    "belts": "Belts",
-    "accessories": "Accessories"
   },
   "brand": {
     "name": "E1000 Leather Baku atelier",
@@ -197,6 +205,19 @@
       "invalid_phone": "Please provide a valid contact format.",
       "required_city": "City is required to estimate accurate shipping logistics.",
       "postal_code_invalid": "Postal code must be left blank for Azerbaijan, and is mandatory for other countries."
+    }
+  },
+  "cart": {
+    "title": "Your Cart",
+    "empty": "Your cart is empty",
+    "total": "Total Amount",
+    "checkout": "Proceed to Checkout",
+    "resolveErrors": "Resolve Errors",
+    "itemUnavailable": "Item is unavailable",
+    "errors": {
+      "syncFailed": "Failed to synchronize cart data",
+      "endpointNotFound": "Cart service temporarily unavailable",
+      "resolveBeforeCheckout": "Please resolve cart errors before checkout"
     }
   }
 }

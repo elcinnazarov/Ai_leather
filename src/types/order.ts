@@ -7,12 +7,12 @@ export enum OrderType {
 }
 
 export enum OrderStatus {
-  PENDING = "PENDING",
-  PAID = "PAID",
-  MANUFACTURING = "MANUFACTURING",
-  SHIPPED = "SHIPPED",
-  COMPLETED = "COMPLETED",
-  CANCELLED = "CANCELLED"
+  PENDING = 'PENDING',
+  PAID = 'PAID',
+  MANUFACTURING = 'MANUFACTURING',
+  SHIPPED = 'SHIPPED',
+  COMPLETED = 'COMPLETED',
+  CANCELLED = 'CANCELLED'
 }
 
 export enum PaymentStatus {
@@ -123,24 +123,25 @@ export interface PageResponse<T> {
   last: boolean;
 }
 
+// GET /api/orders/{id} endpointinin cavabı (Response)
 export interface OrderDetailResponse {
   orderId: number;
   orderNumber: string;
-  orderType: OrderType;
-  status: OrderStatus;
-  paymentStatus: PaymentStatus;
-  designStatus: DesignProcessStatus;
+  orderType: string; // Və ya uyğun Enum (məs: 'STANDARD' | 'CUSTOM')
+  status: string; // Və ya uyğun Enum (məs: 'PENDING' | 'COMPLETED')
+  paymentStatus: string; 
+  designStatus: string;
   customerEmail: string;
   customerPhone: string;
   deliveryAddress: string;
-  notes: string;
+  notes: string | null;
   subTotal: number;
   shippingFee: number;
   finalPrice: number;
-  currency: Currency;
+  currency: string;
   createdAt: string;
-  paidAt?: string;
-  completedAt?: string;
+  paidAt: string | null;
+  completedAt: string | null;
   items: OrderItemResponse[];
 }
 
