@@ -90,7 +90,7 @@ public class ErrorHandle extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ErrorResponse> BadRequest(BadRequestException exception,
-                                                        Locale locale) {
+                                                    Locale locale) {
         // DÜZƏLİŞ BURADADIR: 3-cü parametr kimi exception.getMessage() əlavə etdik
         String errorMessage = messageSource.getMessage(
                 exception.getMessage(), // 1. Axtarılan açar
@@ -101,6 +101,21 @@ public class ErrorHandle extends ResponseEntityExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorResponse(HttpStatus.BAD_REQUEST.value(), errorMessage));
+    }
+
+
+    @ExceptionHandler(com.aiatelye.leather.error.Exception.PaymentFailedException.class)
+    public ResponseEntity<ErrorResponse> PaymentFailed(com.aiatelye.leather.error.Exception.PaymentFailedException exception,
+                                                       Locale locale) {
+        String errorMessage = messageSource.getMessage(
+                exception.getMessage(),
+                null,
+                exception.getMessage(),
+                locale
+        );
+
+        return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
+                .body(new ErrorResponse(HttpStatus.BAD_GATEWAY.value(), errorMessage));
     }
 
 
@@ -142,10 +157,10 @@ public class ErrorHandle extends ResponseEntityExceptionHandler {
                         messageSource.getMessage(exception.getMessage(), exception.getArgs(), locale)));
     }
 
-//burda qaldim
+    //burda qaldim
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorResponse> NotFoundException(NotFoundException exception,
-                                                               Locale locale) {
+                                                           Locale locale) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(),
                         messageSource.getMessage(exception.getMessage(), null, locale)));
@@ -247,7 +262,7 @@ public class ErrorHandle extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(InvalidOrderStatusTransitionException.class)
     public ResponseEntity<ErrorResponse> InvalidOrderStatusTransitionException(InvalidStateTransitionException exception,
-                                                                     Locale locale) {
+                                                                               Locale locale) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorResponse(HttpStatus.BAD_REQUEST.value(),
                         messageSource.getMessage(exception.getMessage(), null,locale)));
@@ -256,7 +271,7 @@ public class ErrorHandle extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ConflictException.class)
     public ResponseEntity<ErrorResponse> ConflictException(ConflictException exception,
-                                                                     Locale locale) {
+                                                           Locale locale) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(new ErrorResponse(HttpStatus.CONFLICT.value(),
                         messageSource.getMessage("""
@@ -267,7 +282,7 @@ public class ErrorHandle extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(PostalCodeRequiredException.class)
     public ResponseEntity<ErrorResponse> PostalCodeRequiredException(PostalCodeRequiredException exception,
-                                                                               Locale locale) {
+                                                                     Locale locale) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorResponse(HttpStatus.BAD_REQUEST.value(),
                         messageSource.getMessage(exception.getMessage(), null,locale)));
@@ -275,7 +290,7 @@ public class ErrorHandle extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(PriceMismatchException.class)
     public ResponseEntity<ErrorResponse> PriceMismatchException(PriceMismatchException exception,
-                                                                     Locale locale) {
+                                                                Locale locale) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(new ErrorResponse(HttpStatus.CONFLICT.value(),
                         messageSource.getMessage(exception.getMessage(), null,locale)));
@@ -284,7 +299,7 @@ public class ErrorHandle extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(OrderAlreadyProcessingException.class)
     public ResponseEntity<ErrorResponse> OrderAlreadyProcessingException(OrderAlreadyProcessingException exception,
-                                                                Locale locale) {
+                                                                         Locale locale) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(new ErrorResponse(HttpStatus.CONFLICT.value(),
                         messageSource.getMessage(exception.getMessage(), null,locale)));
@@ -293,7 +308,7 @@ public class ErrorHandle extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(OrderAlreadyCreatedException.class)
     public ResponseEntity<ErrorResponse> OrderAlreadyCreatedException(OrderAlreadyCreatedException exception,
-                                                                         Locale locale) {
+                                                                      Locale locale) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(new ErrorResponse(HttpStatus.CONFLICT.value(),
                         messageSource.getMessage(exception.getMessage(), null,locale)));
@@ -302,7 +317,7 @@ public class ErrorHandle extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(DuplicateOrderException.class)
     public ResponseEntity<ErrorResponse> DuplicateOrderException(DuplicateOrderException exception,
-                                                                      Locale locale) {
+                                                                 Locale locale) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(new ErrorResponse(HttpStatus.CONFLICT.value(),
                         messageSource.getMessage(exception.getMessage(), null,locale)));
@@ -311,7 +326,7 @@ public class ErrorHandle extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<ErrorResponse> UnauthorizedException(UnauthorizedException exception,
-                                                                 Locale locale) {
+                                                               Locale locale) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(new ErrorResponse(HttpStatus.FORBIDDEN.value(),
                         messageSource.getMessage(exception.getMessage(), null,locale)));
@@ -319,7 +334,7 @@ public class ErrorHandle extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(OrderCannotBeCancelledException.class)
     public ResponseEntity<ErrorResponse> OrderCannotBeCancelledException(OrderCannotBeCancelledException exception,
-                                                               Locale locale) {
+                                                                         Locale locale) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(new ErrorResponse(HttpStatus.FORBIDDEN.value(),
                         messageSource.getMessage(exception.getMessage(), null,locale)));
@@ -328,7 +343,7 @@ public class ErrorHandle extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(InsufficientQuotaException.class)
     public ResponseEntity<ErrorResponse> InsufficientQuotaException(InsufficientQuotaException exception,
-                                                                         Locale locale) {
+                                                                    Locale locale) {
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
                 .body(new ErrorResponse(HttpStatus.TOO_MANY_REQUESTS.value(),
                         messageSource.getMessage("\"The daily custom design limit has been exceeded.: "+exception.getMessage(), null,locale)));
@@ -337,7 +352,7 @@ public class ErrorHandle extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(DailyUsageLimitException.class)
     public ResponseEntity<ErrorResponse> DailyUsageLimitException(DailyUsageLimitException exception,
-                                                                    Locale locale) {
+                                                                  Locale locale) {
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
                 .body(new ErrorResponse(HttpStatus.TOO_MANY_REQUESTS.value(),
                         messageSource.getMessage(" Daily standard design limit is over " ,null,locale)));
@@ -346,7 +361,7 @@ public class ErrorHandle extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(UserLimitNotFoundException.class)
     public ResponseEntity<ErrorResponse> UserLimitNotFoundException(UserLimitNotFoundException exception,
-                                                                         Locale locale) {
+                                                                    Locale locale) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(new ErrorResponse(HttpStatus.FORBIDDEN.value(),
                         messageSource.getMessage(exception.getMessage(), null,locale)));
@@ -355,7 +370,7 @@ public class ErrorHandle extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(UserCustomLimitNotFound.class)
     public ResponseEntity<ErrorResponse> UserCustomLimitNotFound(UserCustomLimitNotFound exception,
-                                                                    Locale locale) {
+                                                                 Locale locale) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(new ErrorResponse(HttpStatus.FORBIDDEN.value(),
                         messageSource.getMessage(exception.getMessage(), null,locale)));
@@ -381,7 +396,7 @@ public class ErrorHandle extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(AIImageProcessingException.class)
     public ResponseEntity<ErrorResponse> AIImageProcessingException(AIImageProcessingException exception,
-                                                                             Locale locale) {
+                                                                    Locale locale) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(),
                         messageSource.getMessage(exception.getMessage(), null,locale)));

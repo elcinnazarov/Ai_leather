@@ -4,7 +4,7 @@ package com.aiatelye.leather.dao.enums;
 public class Enums {
 
     public enum GradeType { STANDARD, PREMIUM, EXOTIC }
-    public enum PaymentStatus { WAITING, SUCCESS, FAILED }
+    public enum PaymentStatus { WAITING, SUCCESS, FAILED, CANCELLED, REFUNDED }
     public enum AuthProvider { LOCAL, GOOGLE }
     public enum Currency { AZN, USD, EUR }
     public enum NotificationType { ORDER_CONFIRMATION, ORDER_SHIPPED, PAYMENT_FAILED, ADMIN_NEW_ORDER }// musteriye melumat gondermek ucun
@@ -77,7 +77,9 @@ public class Enums {
 
         }
 
-    } public enum Country {
+    }
+
+    public enum Country {
         // Yerli
         AZERBAIJAN,
 
@@ -102,7 +104,6 @@ public class Enums {
 
         // Digər
         INTERNATIONAL_OTHER
-
     }
 
 
