@@ -9,6 +9,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 @Repository
@@ -75,9 +76,12 @@ public class LeatherCacheRepository {
      * Pattern ilə sil (ehtiyat üçün)
      */
     public void invalidateAll() {
-        // Bütün "leathers:available:*" key-ləri sil
-        // Implementasiya əlavə edilə bilər
-        log.info("All leather caches invalidated");
+        // "leathers:available:*" ilə başlayan bütün açarları (keys) tap
+        Set<String> keys = redisTemplate.keys(LEATHER_PREFIX + "*");
+        if (!keys.isEmpty()) {
+            redisTemplate.delete(keys); // Hamısını eyni anda sil
+        }
+        log.info("All leather caches invalidated. Count: {}", keys.size());
     }
 
     private String buildKey(Long productId) {

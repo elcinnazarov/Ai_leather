@@ -1,4 +1,4 @@
-package com.aiatelye.leather.dto.admin.Securty;
+package com.aiatelye.leather.dto.Securty;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;

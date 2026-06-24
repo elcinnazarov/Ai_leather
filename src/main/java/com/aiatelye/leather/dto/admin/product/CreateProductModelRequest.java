@@ -27,3 +27,36 @@ public class CreateProductModelRequest {
     @Size(max = 100, message = "Ölçülər maksimum 100 simvol ola bilər")
     private String dimensions;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

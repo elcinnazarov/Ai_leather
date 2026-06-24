@@ -33,7 +33,7 @@ public class AdminPricingRuleController {
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(response));
     }
 
-    @GetMapping("/pricing/rules")
+    @GetMapping("/rules")
     public ResponseEntity <ApiResponse<List<PricingRuleResponse>>> getAllPricingRules(
             @RequestParam(required = false,
             defaultValue = "true") boolean activeOnly){

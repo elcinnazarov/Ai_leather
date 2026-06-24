@@ -273,12 +273,11 @@ public class ProductCatalogService {
     }
 
 
-
     @Transactional(readOnly = true)
     public List<P_AvailableLeatherResponse> getAvailableLeathers(Long productId) {
         log.info("Fetching available leathers for product: {}", productId);
 
-        // 1. KEŞ YOXLA (query-dən asılı olmayaraq)
+        // 1. KEŞ YOXLA
         var cached = leatherCacheRepository.getAvailableLeathers(
                 productId,
                 P_AvailableLeatherResponse.class
@@ -299,14 +298,18 @@ public class ProductCatalogService {
         // 4. MAP ET
         List<P_AvailableLeatherResponse> response = availableLeatherMapper.toResponseList(leathers);
 
-        // 5. KEŞLƏ (query-dən asılı olmayaraq)
-        leatherCacheRepository.cacheAvailableLeathers(productId, response);
-
-        log.info("Found and cached {} leathers for product: {}", response.size(), productId);
+        // 5. KEŞLƏ (MÜDAFİƏ QATI: YALNIZ BOŞ DEYİLSƏ KEŞLƏ)
+        if (response != null && !response.isEmpty()) {
+            leatherCacheRepository.cacheAvailableLeathers(productId, response);
+            log.info("Found and cached {} leathers for product: {}", response.size(), productId);
+        } else {
+            // Əgər bazadan boş gəldisə, Redis-ə YAZMA!
+            // Növbəti dəfə sorğu gələndə məcbur yenə DB-yə baxsın.
+            log.warn("No leathers found for product: {}. Skipping cache to prevent empty cache pollution.", productId);
+        }
 
         return response;
     }
-
     /** bu kod gelcekde lazim ola biler
       Admin stok dəyişəndə çağırılacaq
 

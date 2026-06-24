@@ -1,4 +1,4 @@
-package com.aiatelye.leather.service.Securty;
+package com.aiatelye.leather.Securty.service;
 
 import com.aiatelye.leather.Securty.Configuration.PasswordConfiguration;
 import com.aiatelye.leather.Securty.model.Enums.UserRole;
@@ -6,7 +6,7 @@ import com.aiatelye.leather.Securty.repository.AuthUserRepository;
 import com.aiatelye.leather.componet.JwtTokenUtil;
 import com.aiatelye.leather.dao.User;
 import com.aiatelye.leather.dao.enums.Enums;
-import com.aiatelye.leather.dto.admin.Securty.RegisterRequest;
+import com.aiatelye.leather.dto.Securty.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

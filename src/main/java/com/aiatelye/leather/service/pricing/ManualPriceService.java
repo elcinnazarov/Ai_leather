@@ -31,8 +31,7 @@ public class ManualPriceService {
     private final PricingRuleRepository pricingRuleRepository;
     private final ManualPriceMapper manualPriceMapper;
     private final CalculatePriceService calculatePriceService;
-    private  final PriceCacheRepository priceCacheRepository;
-
+    private final PriceCacheRepository priceCacheRepository;
 
     @Transactional
     public ListManuelPricesResponse createManualPrices(Long productModelId, ListCreateManualPricesRequest request) {
@@ -48,7 +47,7 @@ public class ManualPriceService {
                 .toList();
 
         // 3. N+1 Həlli: Bütün qiymətləri və qaydaları BİR DƏFƏYƏ çəkirik
-        Map<Long, ProductGradePrice> priceMap =getPriceMap(productModelId,gradeIds);
+        Map<Long, ProductGradePrice> priceMap = getPriceMap(productModelId, gradeIds);
         Map<Enums.Currency, PricingRule> rulesMap = getRulesMap();
 
         List<ManualPriceResponse> successList = new ArrayList<>();
@@ -64,7 +63,7 @@ public class ManualPriceService {
                 }
 
                 ProductGradePrice price = priceMap.get(priceRequest.getGradeId());
-                if (price == null)throw new BaseProductGradePriceNotFoundException("error.pricing.base-not-found", priceRequest.getGradeId());
+                if (price == null) throw new BaseProductGradePriceNotFoundException("error.pricing.base-not-found", priceRequest.getGradeId());
 
                 PricingRule rule = rulesMap.get(priceRequest.getCurrency());
                 BigDecimal autoCalculated = calculatePriceService.calculateAutoPrice(price.getPrice(), rule);
@@ -81,8 +80,7 @@ public class ManualPriceService {
 
                     log.info("Manual USD price cached for Product: {} | Grade: {} | Amount: {}",
                             productModelId, priceRequest.getGradeId(), priceRequest.getManualPrice());
-                }
-                else {
+                } else {
                     price.setManualEur(priceRequest.getManualPrice());
 
                     priceCacheRepository.savaPrice(
@@ -101,7 +99,6 @@ public class ManualPriceService {
                         price, priceRequest.getCurrency(), priceRequest.getManualPrice(), autoCalculated
                 ));
 
-
             } catch (Exception e) {
                 errors.add("Grade " + priceRequest.getGradeId() + ": " + e.getMessage());
             }
@@ -112,7 +109,7 @@ public class ManualPriceService {
             productGradePriceRepository.saveAll(pricesToUpdate);
         }
 
-        // 6. Builder ilə Response (Daha təmiz)
+        // 6. Builder ilə Response
         return ListManuelPricesResponse.builder()
                 .productModelId(productModelId)
                 .productModelName(product.getModelname())
@@ -127,27 +124,25 @@ public class ManualPriceService {
     public ListManuelPricesResponse getManualPrices(Long productModelId) {
         log.info("Fetching manual prices for product: {}", productModelId);
 
-
         ProductModel product = productModelRepository.findById(productModelId)
                 .orElseThrow(() -> new NotFoundException("Product not found: " + productModelId));
 
+        Map<Enums.Currency, PricingRule> rulesMap = getRulesMap();
 
-        Map<Enums.Currency, PricingRule> rulesMap =getRulesMap();
-
-        //Qiymət siyahısını çəkirik
         List<ProductGradePrice> prices = productGradePriceRepository.findByProductModelId(productModelId);
         List<ManualPriceResponse> responses = new ArrayList<>();
 
         for (ProductGradePrice price : prices) {
-            // USD üçün: Bazaya getmək yerinə Map-dən (RAM) götürürük
+            // DÜZƏLİŞ 1: USD üçün listə əlavə etmək məntiqi artırıldı
             if (price.getManualUsd() != null) {
                 PricingRule usdRule = rulesMap.get(Enums.Currency.USD);
                 BigDecimal autoUsd = calculatePriceService.calculateAutoPrice(price.getPrice(), usdRule);
 
-
+                responses.add(manualPriceMapper.toResponse(
+                        price, Enums.Currency.USD, price.getManualUsd(), autoUsd
+                ));
             }
 
-            // EUR üçün: Bazaya getmək yerinə Map-dən (RAM) götürürük
             if (price.getManualEur() != null) {
                 PricingRule eurRule = rulesMap.get(Enums.Currency.EUR);
                 BigDecimal autoEur = calculatePriceService.calculateAutoPrice(price.getPrice(), eurRule);
@@ -156,7 +151,6 @@ public class ManualPriceService {
                         price, Enums.Currency.EUR, price.getManualEur(), autoEur
                 ));
             }
-
         }
 
         return ListManuelPricesResponse.builder()
@@ -165,76 +159,62 @@ public class ManualPriceService {
                 .manualPrices(responses)
                 .totalCount(responses.size())
                 .successCount(responses.size())
-                .errors(Collections.emptyList()) // New ArrayList yerinə daha performanslı Collections.emptyList()
+                .errors(Collections.emptyList())
                 .build();
-
     }
 
-
     @Transactional
-    public ListManuelPricesResponse updateManualPrices(Long productModelId,  ListCreateManualPricesRequest request) {
+    public ListManuelPricesResponse updateManualPrices(Long productModelId, ListCreateManualPricesRequest request) {
         log.info("Updating manual prices for product: {}", productModelId);
 
-        // 1. Məhsulu tapırıq
         ProductModel product = productModelRepository.findById(productModelId)
                 .orElseThrow(() -> new NotFoundException("Product not found: " + productModelId));
 
-        // 2. ADDIM 1: Bütün aktiv qaydaları bir dəfəyə çəkib Map-ə yığırıq (N+1 həlli)
-        Map<Enums.Currency, PricingRule> rulesMap = pricingRuleRepository.findAllByIsActiveTrue()
-                .stream()
-                .collect(Collectors.toMap(PricingRule::getTargetCurrency, rule -> rule, (existing, replacement) -> existing));
+        // DÜZƏLİŞ 2: Update prosesi N+1-dən qurtarıldı, DB-dən tək sorğu ilə məlumatlar RAM-a çəkildi
+        List<Long> gradeIds = request.getManualPrices().stream()
+                .map(CreateManualPriceRequest::getGradeId)
+                .toList();
+
+        Map<Long, ProductGradePrice> priceMap = getPriceMap(productModelId, gradeIds);
+        Map<Enums.Currency, PricingRule> rulesMap = getRulesMap();
 
         List<ManualPriceResponse> successList = new ArrayList<>();
         List<String> errors = new ArrayList<>();
+        List<ProductGradePrice> pricesToUpdate = new ArrayList<>();
 
         for (CreateManualPriceRequest priceRequest : request.getManualPrices()) {
             try {
-                // Validasiya: AZN manual ola bilməz
                 if (priceRequest.getCurrency() == Enums.Currency.AZN) {
                     errors.add("Grade " + priceRequest.getGradeId() + ": Cannot set manual price for base currency (AZN)");
                     continue;
                 }
 
-                // Base qiyməti tapırıq
-                ProductGradePrice price = productGradePriceRepository.findByProductModelIdAndGradeId(productModelId, priceRequest.getGradeId())
-                        .orElseThrow(() ->new BaseProductGradePriceNotFoundException("error.pricing.base-not-set"));
+                // Bazaya getmirik, Map-dən tapırıq
+                ProductGradePrice price = priceMap.get(priceRequest.getGradeId());
+                if (price == null) throw new BaseProductGradePriceNotFoundException("error.pricing.base-not-set");
 
-                // Köhnə qiyməti loglama üçün saxlayırıq
                 BigDecimal oldManual = (priceRequest.getCurrency() == Enums.Currency.USD) ? price.getManualUsd() : price.getManualEur();
 
-                // Manual qiyməti set edirik
                 if (priceRequest.getCurrency() == Enums.Currency.USD) {
                     price.setManualUsd(priceRequest.getManualPrice());
-
-                    priceCacheRepository.deletePrice(productModelId,
-                            priceRequest.getGradeId(),
-                            Enums.Currency.USD.name());
-                    log.info("delete Cache  old ManuelPrice USD prodcutmodel ID {} grade id {}",
-                            productModelId,priceRequest.getGradeId() );
+                    priceCacheRepository.deletePrice(productModelId, priceRequest.getGradeId(), Enums.Currency.USD.name());
+                    log.info("delete Cache  old ManuelPrice USD prodcutmodel ID {} grade id {}", productModelId, priceRequest.getGradeId());
                 } else {
                     price.setManualEur(priceRequest.getManualPrice());
+                    priceCacheRepository.deletePrice(productModelId, priceRequest.getGradeId(), Enums.Currency.EUR.name());
+                    log.info("delete Cache  old ManuelPrice EUR productmodel ID {} grade id {}", productModelId, priceRequest.getGradeId());
+                }
 
-                    priceCacheRepository.deletePrice(productModelId,
-                            priceRequest.getGradeId(),
-                            Enums.Currency.EUR.name());
-                } log.info("delete Cache  old ManuelPrice EUR productmodel ID {} grade id {}",
-                        productModelId,priceRequest.getGradeId() );
-
-                ProductGradePrice saved = productGradePriceRepository.save(price);
-
-                // 3. Map-dən qaydanı O(1) sürəti ilə götürürük (Bazaya getmirik!)
                 PricingRule rule = rulesMap.get(priceRequest.getCurrency());
                 BigDecimal autoCalculated = calculatePriceService.calculateAutoPrice(price.getPrice(), rule);
 
-                // Response-a çevirmə (Mapper vasitəsilə)
                 ManualPriceResponse response = manualPriceMapper.toResponse(
-                        saved,
-                        priceRequest.getCurrency(),
-                        priceRequest.getManualPrice(),
-                        autoCalculated
+                        price, priceRequest.getCurrency(), priceRequest.getManualPrice(), autoCalculated
                 );
 
+                pricesToUpdate.add(price);
                 successList.add(response);
+
                 log.info("Manual price updated: {} {} -> {} for grade {}",
                         priceRequest.getCurrency(), oldManual, priceRequest.getManualPrice(), priceRequest.getGradeId());
 
@@ -242,10 +222,12 @@ public class ManualPriceService {
                 log.error("Error processing price for grade {}: {}", priceRequest.getGradeId(), e.getMessage());
                 errors.add("Grade " + priceRequest.getGradeId() + ": " + e.getMessage());
             }
-
-
         }
 
+        // Bütün məlumatlar sonda bir dəfəyə DB-yə yazılır
+        if (!pricesToUpdate.isEmpty()) {
+            productGradePriceRepository.saveAll(pricesToUpdate);
+        }
 
         return buildBatchResponse(
                 productModelId,
@@ -254,28 +236,23 @@ public class ManualPriceService {
                 request.getManualPrices().size());
     }
 
-
-
     private ListManuelPricesResponse buildBatchResponse(Long id, String name, List<ManualPriceResponse> success, List<String> errors, int total) {
         return ListManuelPricesResponse.builder()
                 .productModelId(id)
                 .productModelName(name)
                 .manualPrices(success)
                 .totalCount(total)
-                .successCount(success.size()) // Hesablamanı birbaşa burada edirik
+                .successCount(success.size())
                 .errors(errors)
                 .build();
     }
 
-
     @Transactional
-    public ListManuelPricesResponse deleteManualPrices(Long productModelId,
-                                                       ListDeleteManualPricesRequest request) {
+    public ListManuelPricesResponse deleteManualPrices(Long productModelId, ListDeleteManualPricesRequest request) {
 
         ProductModel product = productModelRepository.findById(productModelId)
                 .orElseThrow(() -> new NotFoundException("Product not found"));
 
-// Datatları hazırla
         Set<Long> gradeIds = request.getManualPrices()
                 .stream()
                 .map(DeleteManualPriceRequest::getGradeId)
@@ -288,14 +265,13 @@ public class ManualPriceService {
         List<String> errors = new ArrayList<>();
         List<ProductGradePrice> toUpdate = new ArrayList<>();
 
-        // İcra et
         for (DeleteManualPriceRequest req : request.getManualPrices()) {
             try {
                 processSingleDelete(req, priceMap, rulesMap, deletedList, toUpdate);
 
-                priceCacheRepository.invalidateManuelPrices(productModelId,req.getGradeId());
+                priceCacheRepository.invalidateManuelPrices(productModelId, req.getGradeId());
                 log.info("delete Cache  old ManuelPrice USD and EUR at deleteManualPrices  prodcutmodel ID {} grade id {}",
-                        productModelId,req.getGradeId() );
+                        productModelId, req.getGradeId());
 
             } catch (Exception e) {
                 errors.add("Grade " + req.getGradeId() + ": " + e.getMessage());
@@ -304,17 +280,14 @@ public class ManualPriceService {
 
         if (!toUpdate.isEmpty()) productGradePriceRepository.saveAll(toUpdate);
 
-
         return ListManuelPricesResponse.builder()
                 .productModelId(product.getId())
                 .productModelName(product.getModelname())
                 .manualPrices(deletedList)
                 .totalCount(request.getManualPrices().size())
-                .successCount(deletedList.size()) // Hesablamanı birbaşa burada edirik
+                .successCount(deletedList.size())
                 .errors(errors)
                 .build();
-
-
     }
 
     private void processSingleDelete(DeleteManualPriceRequest req,
@@ -326,11 +299,9 @@ public class ManualPriceService {
         ProductGradePrice price = priceMap.get(req.getGradeId());
         if (price == null) throw new NotFoundException("Price not found");
 
-        // Manual qiyməti təmizlə
         if (req.getCurrency() == Enums.Currency.USD) price.setManualUsd(null);
         else price.setManualEur(null);
 
-        // Yeni avto qiyməti hesabla
         PricingRule rule = rulesMap.get(req.getCurrency());
         BigDecimal autoPrice = calculatePriceService.calculateAutoPrice(price.getPrice(), rule);
 
@@ -338,22 +309,19 @@ public class ManualPriceService {
         successList.add(manualPriceMapper.toResponse(price, req.getCurrency(), null, autoPrice));
     }
 
-        //for delete
-        private Map<Long, ProductGradePrice> getPriceMap(Long productId, Set<Long> gradeIds) {
-            return productGradePriceRepository.findByProductModelIdAndGradeIdIn(productId, gradeIds)
-                    .stream()
-                    .collect(Collectors.toMap(ProductGradePrice::getId, p -> p));
-        }
-        //for create
-        private Map<Long, ProductGradePrice> getPriceMap(Long productId, List<Long> gradeIds) {
-            return productGradePriceRepository.findByProductModelIdAndGradeIdIn(productId, gradeIds)
-                    .stream()
-                    .collect(Collectors.toMap(ProductGradePrice::getId, p -> p));
-        }
-
-        private Map<Enums.Currency, PricingRule> getRulesMap() {
-            return pricingRuleRepository.findAllByIsActiveTrue()
-                    .stream()
-                    .collect(Collectors.toMap(PricingRule::getTargetCurrency, r -> r));
-        }
+    // DÜZƏLİŞ 3: Universal getPriceMap - Collection qəbul edir, həm Set, həm List ilə işləyir və Key olaraq HƏMİŞƏ GradeId qaytarır
+    private Map<Long, ProductGradePrice> getPriceMap(Long productId, Collection<Long> gradeIds) {
+        return productGradePriceRepository.findByProductModelIdAndGradeIdIn(productId, gradeIds)
+                .stream()
+                .collect(Collectors.toMap(
+                        p -> p.getGrade().getId(),
+                        p -> p
+                ));
     }
+
+    private Map<Enums.Currency, PricingRule> getRulesMap() {
+        return pricingRuleRepository.findAllByIsActiveTrue()
+                .stream()
+                .collect(Collectors.toMap(PricingRule::getTargetCurrency, r -> r));
+    }
+}

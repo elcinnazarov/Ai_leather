@@ -152,18 +152,26 @@ public class LeatherServiceImpl implements LeatherService {
                 throw new BadRequestException("error.leather.already-exists");
             }
         }
+
+        // 4. MapStruct ilə fieldləri mənimsət (grade ignore olunur)
         leatherMapper.updateLeatherEntityFromRequest(request, leather);
+
+// 5. 🟢 ƏSAS DÜZƏLİŞ: Grade-i manual tapıb set etmək
+        if (request.getGradeId() != null) {
+            // QEYD: Əgər repository adınız fərqlidirsə (məs: leatherGradeRepository), onu dəyişərsiniz
+            LeatherGrade newGrade = leatherGradeRepository.findById(request.getGradeId())
+                    .orElseThrow(() -> new NotFoundException("Grade not found with id: " + request.getGradeId()));
+            leather.setGrade(newGrade);
+        }
         Leather updated = leatherRepository.save(leather);
 
         log.info("Leather ID: {} updated successfully", leatherId);
 
         leatherCacheRepository.invalidateAll();
-        log.info("Leather ID: {} updated by Admin. " +
-                "lobal leather cache invalidated to ensure data consistency.", leatherId);
+        log.info("Leather ID: {} updated by Admin. Global leather cache invalidated to ensure data consistency.", leatherId);
         clearAllCaches();
+
         return leatherMapper.toLeatherResponse(updated);
-
-
     }
 
         public LeatherResponse updateLeatherStatus(Long leatherId, Enums.AvailabilityStatus newstatus) {
@@ -179,13 +187,14 @@ public class LeatherServiceImpl implements LeatherService {
                 throw new ResourcePassiveException("error.resource.passive-update");
             }
 
-            // 2. Enum daxilindəki keçid yoxlaması
-            if (leather.getAvailabilityStatus().canTransitionTo(newstatus)) {
-                throw new InvalidStateTransitionException("error.status.invalid-transition",
-                        leather.getAvailabilityStatus(), newstatus);
-
-            }
-
+           /* // 2. Enum daxilindəki keçid yoxlaması
+            if (!leather.getAvailabilityStatus().canTransitionTo(newstatus)) {
+                throw new InvalidStateTransitionException(
+                        "error.status.invalid-transition",
+                        leather.getAvailabilityStatus(),
+                        newstatus
+                );
+            }*/
             // 3. Status və isActive sinxronlaşdırılması
             leather.setAvailabilityStatus(newstatus);
             Boolean nextIsActive = newstatus.getAssociatedIsActive();

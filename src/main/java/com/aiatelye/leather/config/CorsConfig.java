@@ -14,7 +14,13 @@ public class CorsConfig implements WebMvcConfigurer {
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 // ƏN VACİB HİSSƏ: React-in bu başlıqları oxumasına və göndərməsinə icazə veririk
-                .exposedHeaders("Authorization", "X-Currency", "Accept-Language")
+                .exposedHeaders(
+                        "Authorization",
+                        "X-Currency",
+                        "Accept-Language",
+                        "X-Currency-Symbol", // Frontend-in axtardığı yeni başlıq
+                        "X-Region"           // Frontend-in axtardığı yeni başlıq
+                )
                 .allowCredentials(true);
     }
 }

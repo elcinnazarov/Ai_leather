@@ -25,7 +25,7 @@ public class User extends BaseEntity{
     @Column(nullable = false)
     private String name;
 
-    @Column(name = "whatsapp_number", nullable = false)
+    @Column(name = "whatsapp_number",unique = true)
     private String whatsappNumber;
 
     @Enumerated(EnumType.STRING)

@@ -1,0 +1,205 @@
+2026-06-22 22:40:52.029 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2026-06-22 22:40:52.275 [main] INFO  c.a.leather.AiatelyeApplication - Starting AiatelyeApplication using Java 21.0.8 with PID 14800 (D:\My_project_Spring\Aiatelye\Aiatelye\build\classes\java\main started by elcin in D:\My_project_Spring\Aiatelye\Aiatelye)
+2026-06-22 22:40:52.278 [main] INFO  c.a.leather.AiatelyeApplication - No active profile set, falling back to 1 default profile: "default"
+2026-06-22 22:41:08.718 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-06-22 22:41:08.723 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-22 22:41:09.571 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 826 ms. Found 14 JPA repository interfaces.
+2026-06-22 22:41:09.621 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-06-22 22:41:09.625 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-06-22 22:41:09.707 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.CustomDesignRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-06-22 22:41:09.709 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.LeatherGradeRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-06-22 22:41:09.709 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.LeatherRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-06-22 22:41:09.711 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.OrderItemRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-06-22 22:41:09.712 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.OrderRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-06-22 22:41:09.713 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.PasswordResetTokenRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-06-22 22:41:09.716 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.PricingRuleRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-06-22 22:41:09.717 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.ProductGradePriceRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-06-22 22:41:09.718 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.ProductImageRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-06-22 22:41:09.720 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.ProductModelRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-06-22 22:41:09.720 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.ShippingLocationRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-06-22 22:41:09.721 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.UserLimitRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-06-22 22:41:09.721 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-06-22 22:41:09.723 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.Securty.repository.AuthUserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-06-22 22:41:09.723 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 70 ms. Found 0 Redis repository interfaces.
+2026-06-22 22:41:10.876 [main] INFO  o.s.cloud.context.scope.GenericScope - BeanFactory id=930839d3-68bb-3b19-a1cc-69fbabdf9cca
+2026-06-22 22:41:12.678 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-06-22 22:41:12.722 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-06-22 22:41:12.730 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-06-22 22:41:12.730 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.50]
+2026-06-22 22:41:13.210 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-06-22 22:41:13.210 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 20786 ms
+2026-06-22 22:41:14.120 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-06-22 22:41:14.495 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.41.Final
+2026-06-22 22:41:14.654 [main] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-06-22 22:41:15.772 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-22 22:41:15.910 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-06-22 22:41:17.854 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@2190508d
+2026-06-22 22:41:17.859 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-06-22 22:41:18.813 [main] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 15.17
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-06-22 22:41:24.552 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-06-22 22:41:31.464 [main] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Warning Code: 0, SQLState: 00000
+2026-06-22 22:41:31.464 [main] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - constraint "uk781pmjx7kf279uopjhmbwnqhl" of relation "favorites" does not exist, skipping
+2026-06-22 22:41:58.801 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-22 22:42:11.025 [main] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-06-22 22:42:17.001 [main] INFO  o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name daoAuthenticationProvider
+2026-06-22 22:42:17.003 [main] WARN  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-06-22 22:42:20.593 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-06-22 22:42:20.697 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-06-22 22:42:20.717 [main] INFO  o.s.a.r.c.CachingConnectionFactory - Attempting to connect to: [localhost:5672]
+2026-06-22 22:42:22.839 [main] INFO  o.s.a.r.c.CachingConnectionFactory - Created new connection: rabbitConnectionFactory#62281081:0/SimpleConnection@6634f211 [delegate=amqp://admin@127.0.0.1:5672/, localPort=55276]
+2026-06-22 22:42:37.159 [main] INFO  c.a.leather.AiatelyeApplication - Started AiatelyeApplication in 107.827 seconds (process running for 113.123)
+2026-06-22 22:43:20.846 [HikariPool-1:housekeeper] WARN  com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@2190508d (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-06-22 22:57:45.388 [HikariPool-1:housekeeper] WARN  com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@62451dd4 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-06-22 23:06:03.974 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-06-22 23:06:04.001 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-06-22 23:06:04.227 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 222 ms
+2026-06-22 23:06:05.973 [http-nio-8080-exec-5] WARN  c.a.l.S.F.JwtTokenVeriflerFilter - JWT Token vaxtı bitib, istifadəçi anonim kimi davam edəcək: JWT expired at 2026-06-22T18:08:05Z. Current time: 2026-06-22T19:06:05Z, a difference of 3480971 milliseconds.  Allowed clock skew: 0 milliseconds.
+2026-06-22 23:06:05.974 [http-nio-8080-exec-4] WARN  c.a.l.S.F.JwtTokenVeriflerFilter - JWT Token vaxtı bitib, istifadəçi anonim kimi davam edəcək: JWT expired at 2026-06-22T18:08:05Z. Current time: 2026-06-22T19:06:05Z, a difference of 3480970 milliseconds.  Allowed clock skew: 0 milliseconds.
+2026-06-22 23:06:06.256 [http-nio-8080-exec-5] INFO  c.a.l.c.catalog.ProductController - GET /api/products - page: 0, filter: ProductFilterRequest(modelType=null, search=, page=0, size=12)
+2026-06-22 23:06:06.349 [http-nio-8080-exec-5] INFO  c.a.l.s.c.ProductCatalogService - Fetching product catalog - page: 0, currency: USD
+2026-06-22 23:06:06.349 [http-nio-8080-exec-7] WARN  c.a.l.S.F.JwtTokenVeriflerFilter - JWT Token vaxtı bitib, istifadəçi anonim kimi davam edəcək: JWT expired at 2026-06-22T18:08:05Z. Current time: 2026-06-22T19:06:06Z, a difference of 3481349 milliseconds.  Allowed clock skew: 0 milliseconds.
+2026-06-22 23:06:09.312 [http-nio-8080-exec-5] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:8:grade:3:AZN
+2026-06-22 23:06:09.425 [http-nio-8080-exec-5] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:5:grade:2:AZN
+2026-06-22 23:06:09.469 [http-nio-8080-exec-5] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:1:grade:1:AZN
+2026-06-22 23:06:09.562 [http-nio-8080-exec-5] INFO  c.a.l.c.ProductCatalogCacheRepository - Initial page cached for USD: 4 products
+2026-06-22 23:08:28.384 [http-nio-8080-exec-1] INFO  c.a.l.c.a.AdminProductPriceManuelController - POST /api/admin/products/10/manual-prices
+2026-06-22 23:08:28.567 [http-nio-8080-exec-1] INFO  c.a.l.s.pricing.ManualPriceService - Creating manual prices for product: 10
+2026-06-22 23:08:30.440 [http-nio-8080-exec-1] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:10:grade:1:USD
+2026-06-22 23:08:30.440 [http-nio-8080-exec-1] INFO  c.a.l.s.pricing.ManualPriceService - Manual USD price cached for Product: 10 | Grade: 1 | Amount: 150.00
+2026-06-22 23:09:36.492 [http-nio-8080-exec-7] INFO  c.a.l.c.catalog.ProductController - GET /api/products - page: 0, filter: ProductFilterRequest(modelType=null, search=, page=0, size=12)
+2026-06-22 23:09:36.501 [http-nio-8080-exec-7] INFO  c.a.l.s.c.ProductCatalogService - Fetching product catalog - page: 0, currency: USD
+2026-06-22 23:09:36.672 [http-nio-8080-exec-7] INFO  c.a.l.c.ProductCatalogCacheRepository - Initial page cache hit for USD
+2026-06-22 23:09:40.400 [http-nio-8080-exec-8] INFO  c.a.l.c.order.OrderController - GET /api/orders/me - User: 11, page: 0
+2026-06-22 23:09:40.533 [http-nio-8080-exec-9] INFO  c.a.l.c.order.OrderController - GET /api/orders/me - User: 11, page: 0
+2026-06-22 23:09:43.847 [http-nio-8080-exec-10] INFO  c.a.l.c.catalog.ProductController - GET /api/products - page: 0, filter: ProductFilterRequest(modelType=null, search=, page=0, size=12)
+2026-06-22 23:09:43.850 [http-nio-8080-exec-10] INFO  c.a.l.s.c.ProductCatalogService - Fetching product catalog - page: 0, currency: USD
+2026-06-22 23:09:43.856 [http-nio-8080-exec-10] INFO  c.a.l.c.ProductCatalogCacheRepository - Initial page cache hit for USD
+2026-06-22 23:09:51.146 [http-nio-8080-exec-1] INFO  c.a.l.c.order.OrderController - GET /api/orders/me - User: 11, page: 0
+2026-06-22 23:09:51.191 [http-nio-8080-exec-3] INFO  c.a.l.c.order.OrderController - GET /api/orders/me - User: 11, page: 0
+2026-06-22 23:10:00.763 [http-nio-8080-exec-4] INFO  c.a.l.c.catalog.ProductController - GET /api/products - page: 0, filter: ProductFilterRequest(modelType=null, search=, page=0, size=12)
+2026-06-22 23:10:00.831 [http-nio-8080-exec-4] INFO  c.a.l.s.c.ProductCatalogService - Fetching product catalog - page: 0, currency: USD
+2026-06-22 23:10:00.837 [http-nio-8080-exec-4] INFO  c.a.l.c.ProductCatalogCacheRepository - Initial page cache hit for USD
+2026-06-22 23:10:08.965 [http-nio-8080-exec-5] INFO  c.a.l.c.order.CartController - POST /api/cart/preview - 5 items, currency: USD
+2026-06-22 23:10:08.970 [http-nio-8080-exec-5] INFO  c.a.l.s.Order.CartPreviewService - Cart preview requested with 5 items, currency: USD
+2026-06-22 23:10:09.132 [http-nio-8080-exec-5] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:8:grade:3:AZN
+2026-06-22 23:10:09.151 [http-nio-8080-exec-5] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:1:grade:3:AZN
+2026-06-22 23:10:09.173 [http-nio-8080-exec-5] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:1:grade:3:AZN
+2026-06-22 23:10:09.216 [http-nio-8080-exec-5] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:5:grade:3:AZN
+2026-06-22 23:10:09.235 [http-nio-8080-exec-5] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:5:grade:3:AZN
+2026-06-22 23:10:10.456 [http-nio-8080-exec-8] INFO  c.a.l.c.order.CartController - POST /api/cart/preview - 5 items, currency: AZN
+2026-06-22 23:10:10.461 [http-nio-8080-exec-8] INFO  c.a.l.s.Order.CartPreviewService - Cart preview requested with 5 items, currency: AZN
+2026-06-22 23:10:10.465 [http-nio-8080-exec-9] INFO  c.a.l.c.order.CartController - POST /api/cart/preview - 5 items, currency: AZN
+2026-06-22 23:10:10.492 [http-nio-8080-exec-9] INFO  c.a.l.s.Order.CartPreviewService - Cart preview requested with 5 items, currency: AZN
+2026-06-22 23:10:10.517 [http-nio-8080-exec-8] INFO  c.a.l.cache.PriceCacheRepository - Price cache hit: price:product:8:grade:3:AZN
+2026-06-22 23:10:10.520 [http-nio-8080-exec-8] INFO  c.a.l.cache.PriceCacheRepository - Price cache hit: price:product:1:grade:3:AZN
+2026-06-22 23:10:10.525 [http-nio-8080-exec-8] INFO  c.a.l.cache.PriceCacheRepository - Price cache hit: price:product:1:grade:3:AZN
+2026-06-22 23:10:10.541 [http-nio-8080-exec-8] INFO  c.a.l.cache.PriceCacheRepository - Price cache hit: price:product:5:grade:3:AZN
+2026-06-22 23:10:10.548 [http-nio-8080-exec-8] INFO  c.a.l.cache.PriceCacheRepository - Price cache hit: price:product:5:grade:3:AZN
+2026-06-22 23:10:10.549 [http-nio-8080-exec-8] WARN  c.a.l.s.Order.CartPreviewService - Price mismatch for product 1: seen=26, current=100.00
+2026-06-22 23:10:10.549 [http-nio-8080-exec-8] WARN  c.a.l.s.Order.CartPreviewService - Price mismatch for product 5: seen=704, current=600.00
+2026-06-22 23:10:10.549 [http-nio-8080-exec-8] WARN  c.a.l.s.Order.CartPreviewService - Price mismatch for product 1: seen=26, current=100.00
+2026-06-22 23:10:10.549 [http-nio-8080-exec-8] WARN  c.a.l.s.Order.CartPreviewService - Price mismatch for product 5: seen=704, current=600.00
+2026-06-22 23:10:10.549 [http-nio-8080-exec-8] WARN  c.a.l.s.Order.CartPreviewService - Price mismatch for product 8: seen=5, current=150.00
+2026-06-22 23:10:10.658 [http-nio-8080-exec-9] INFO  c.a.l.cache.PriceCacheRepository - Price cache hit: price:product:8:grade:3:AZN
+2026-06-22 23:10:10.675 [http-nio-8080-exec-9] INFO  c.a.l.cache.PriceCacheRepository - Price cache hit: price:product:1:grade:3:AZN
+2026-06-22 23:10:10.693 [http-nio-8080-exec-9] INFO  c.a.l.cache.PriceCacheRepository - Price cache hit: price:product:1:grade:3:AZN
+2026-06-22 23:10:10.725 [http-nio-8080-exec-9] INFO  c.a.l.cache.PriceCacheRepository - Price cache hit: price:product:5:grade:3:AZN
+2026-06-22 23:10:10.740 [http-nio-8080-exec-9] INFO  c.a.l.cache.PriceCacheRepository - Price cache hit: price:product:5:grade:3:AZN
+2026-06-22 23:10:10.741 [http-nio-8080-exec-9] WARN  c.a.l.s.Order.CartPreviewService - Price mismatch for product 1: seen=26, current=100.00
+2026-06-22 23:10:10.741 [http-nio-8080-exec-9] WARN  c.a.l.s.Order.CartPreviewService - Price mismatch for product 5: seen=704, current=600.00
+2026-06-22 23:10:10.741 [http-nio-8080-exec-9] WARN  c.a.l.s.Order.CartPreviewService - Price mismatch for product 1: seen=26, current=100.00
+2026-06-22 23:10:10.742 [http-nio-8080-exec-9] WARN  c.a.l.s.Order.CartPreviewService - Price mismatch for product 5: seen=704, current=600.00
+2026-06-22 23:10:10.742 [http-nio-8080-exec-9] WARN  c.a.l.s.Order.CartPreviewService - Price mismatch for product 8: seen=5, current=150.00
+2026-06-22 23:12:53.681 [http-nio-8080-exec-4] INFO  c.a.l.c.order.CartController - POST /api/cart/preview - 5 items, currency: USD
+2026-06-22 23:12:53.950 [http-nio-8080-exec-4] INFO  c.a.l.s.Order.CartPreviewService - Cart preview requested with 5 items, currency: USD
+2026-06-22 23:13:01.619 [http-nio-8080-exec-4] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:8:grade:3:AZN
+2026-06-22 23:13:01.783 [http-nio-8080-exec-4] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:1:grade:3:AZN
+2026-06-22 23:13:01.951 [http-nio-8080-exec-4] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:1:grade:3:AZN
+2026-06-22 23:13:02.048 [http-nio-8080-exec-4] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:5:grade:3:AZN
+2026-06-22 23:13:02.351 [http-nio-8080-exec-7] INFO  c.a.l.c.order.CartController - POST /api/cart/preview - 5 items, currency: AZN
+2026-06-22 23:13:02.539 [http-nio-8080-exec-7] INFO  c.a.l.s.Order.CartPreviewService - Cart preview requested with 5 items, currency: AZN
+2026-06-22 23:13:02.606 [http-nio-8080-exec-4] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:5:grade:3:AZN
+2026-06-22 23:13:03.390 [http-nio-8080-exec-7] INFO  c.a.l.cache.PriceCacheRepository - Price cache hit: price:product:8:grade:3:AZN
+2026-06-22 23:13:03.419 [http-nio-8080-exec-7] INFO  c.a.l.cache.PriceCacheRepository - Price cache hit: price:product:1:grade:3:AZN
+2026-06-22 23:13:03.424 [http-nio-8080-exec-7] INFO  c.a.l.cache.PriceCacheRepository - Price cache hit: price:product:1:grade:3:AZN
+2026-06-22 23:13:03.441 [http-nio-8080-exec-7] INFO  c.a.l.cache.PriceCacheRepository - Price cache hit: price:product:5:grade:3:AZN
+2026-06-22 23:13:03.462 [http-nio-8080-exec-7] INFO  c.a.l.cache.PriceCacheRepository - Price cache hit: price:product:5:grade:3:AZN
+2026-06-22 23:13:03.464 [http-nio-8080-exec-7] WARN  c.a.l.s.Order.CartPreviewService - Price mismatch for product 1: seen=26, current=100.00
+2026-06-22 23:13:03.464 [http-nio-8080-exec-7] WARN  c.a.l.s.Order.CartPreviewService - Price mismatch for product 5: seen=704, current=600.00
+2026-06-22 23:13:03.465 [http-nio-8080-exec-7] WARN  c.a.l.s.Order.CartPreviewService - Price mismatch for product 1: seen=26, current=100.00
+2026-06-22 23:13:03.465 [http-nio-8080-exec-7] WARN  c.a.l.s.Order.CartPreviewService - Price mismatch for product 5: seen=704, current=600.00
+2026-06-22 23:13:03.465 [http-nio-8080-exec-7] WARN  c.a.l.s.Order.CartPreviewService - Price mismatch for product 8: seen=5, current=150.00
+2026-06-22 23:15:38.077 [HikariPool-1:housekeeper] WARN  com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@516b97ea (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-06-22 23:24:59.769 [HikariPool-1:housekeeper] WARN  com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@6554e4eb (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-06-22 23:36:34.746 [http-nio-8080-exec-7] INFO  c.a.l.c.catalog.ProductController - GET /api/products - page: 0, filter: ProductFilterRequest(modelType=null, search=, page=0, size=12)
+2026-06-22 23:36:34.867 [http-nio-8080-exec-7] INFO  c.a.l.s.c.ProductCatalogService - Fetching product catalog - page: 0, currency: USD
+2026-06-22 23:36:35.670 [http-nio-8080-exec-7] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:8:grade:3:AZN
+2026-06-22 23:36:35.703 [http-nio-8080-exec-7] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:5:grade:2:AZN
+2026-06-22 23:36:35.733 [http-nio-8080-exec-7] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:1:grade:1:AZN
+2026-06-22 23:36:35.787 [http-nio-8080-exec-7] INFO  c.a.l.c.ProductCatalogCacheRepository - Initial page cached for USD: 4 products
+2026-06-22 23:36:43.656 [http-nio-8080-exec-6] INFO  c.a.l.c.order.CartController - POST /api/cart/preview - 5 items, currency: USD
+2026-06-22 23:36:43.694 [http-nio-8080-exec-6] INFO  c.a.l.s.Order.CartPreviewService - Cart preview requested with 5 items, currency: USD
+2026-06-22 23:36:44.779 [http-nio-8080-exec-6] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:8:grade:3:AZN
+2026-06-22 23:36:44.988 [http-nio-8080-exec-6] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:1:grade:3:AZN
+2026-06-22 23:36:45.123 [http-nio-8080-exec-6] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:1:grade:3:AZN
+2026-06-22 23:36:45.322 [http-nio-8080-exec-6] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:5:grade:3:AZN
+2026-06-22 23:36:45.427 [http-nio-8080-exec-6] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:5:grade:3:AZN
+2026-06-22 23:36:49.940 [http-nio-8080-exec-5] INFO  c.a.l.c.catalog.ProductController - GET /api/products - page: 0, filter: ProductFilterRequest(modelType=null, search=, page=0, size=12)
+2026-06-22 23:36:49.948 [http-nio-8080-exec-5] INFO  c.a.l.s.c.ProductCatalogService - Fetching product catalog - page: 0, currency: USD
+2026-06-22 23:36:49.990 [http-nio-8080-exec-5] INFO  c.a.l.c.ProductCatalogCacheRepository - Initial page cache hit for USD
+2026-06-22 23:36:51.409 [http-nio-8080-exec-8] INFO  c.a.l.c.order.CartController - POST /api/cart/preview - 5 items, currency: USD
+2026-06-22 23:36:51.442 [http-nio-8080-exec-8] INFO  c.a.l.s.Order.CartPreviewService - Cart preview requested with 5 items, currency: USD
+2026-06-22 23:36:51.589 [http-nio-8080-exec-8] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:8:grade:3:AZN
+2026-06-22 23:36:51.637 [http-nio-8080-exec-8] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:1:grade:3:AZN
+2026-06-22 23:36:51.661 [http-nio-8080-exec-8] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:1:grade:3:AZN
+2026-06-22 23:36:51.694 [http-nio-8080-exec-8] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:5:grade:3:AZN
+2026-06-22 23:36:51.751 [http-nio-8080-exec-8] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:5:grade:3:AZN
+2026-06-22 23:37:10.860 [http-nio-8080-exec-1] INFO  c.a.l.c.catalog.ProductController - GET /api/products - page: 0, filter: ProductFilterRequest(modelType=null, search=, page=0, size=12)
+2026-06-22 23:37:10.861 [http-nio-8080-exec-1] INFO  c.a.l.s.c.ProductCatalogService - Fetching product catalog - page: 0, currency: USD
+2026-06-22 23:37:10.874 [http-nio-8080-exec-1] INFO  c.a.l.c.ProductCatalogCacheRepository - Initial page cache hit for USD
+2026-06-22 23:37:12.463 [http-nio-8080-exec-2] INFO  c.a.l.c.order.CartController - POST /api/cart/preview - 5 items, currency: USD
+2026-06-22 23:37:12.493 [http-nio-8080-exec-2] INFO  c.a.l.s.Order.CartPreviewService - Cart preview requested with 5 items, currency: USD
+2026-06-22 23:37:12.724 [http-nio-8080-exec-2] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:8:grade:3:AZN
+2026-06-22 23:37:12.794 [http-nio-8080-exec-2] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:1:grade:3:AZN
+2026-06-22 23:37:12.828 [http-nio-8080-exec-2] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:1:grade:3:AZN
+2026-06-22 23:37:12.872 [http-nio-8080-exec-2] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:5:grade:3:AZN
+2026-06-22 23:37:12.901 [http-nio-8080-exec-2] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:5:grade:3:AZN
+2026-06-22 23:37:14.059 [http-nio-8080-exec-7] INFO  c.a.l.c.order.CartController - POST /api/cart/preview - 5 items, currency: AZN
+2026-06-22 23:37:14.058 [http-nio-8080-exec-4] INFO  c.a.l.c.order.CartController - POST /api/cart/preview - 5 items, currency: AZN
+2026-06-22 23:37:14.077 [http-nio-8080-exec-7] INFO  c.a.l.s.Order.CartPreviewService - Cart preview requested with 5 items, currency: AZN
+2026-06-22 23:37:14.077 [http-nio-8080-exec-4] INFO  c.a.l.s.Order.CartPreviewService - Cart preview requested with 5 items, currency: AZN
+2026-06-22 23:37:14.160 [http-nio-8080-exec-7] INFO  c.a.l.cache.PriceCacheRepository - Price cache hit: price:product:8:grade:3:AZN
+2026-06-22 23:37:14.166 [http-nio-8080-exec-7] INFO  c.a.l.cache.PriceCacheRepository - Price cache hit: price:product:1:grade:3:AZN
+2026-06-22 23:37:14.174 [http-nio-8080-exec-7] INFO  c.a.l.cache.PriceCacheRepository - Price cache hit: price:product:1:grade:3:AZN
+2026-06-22 23:37:14.186 [http-nio-8080-exec-7] INFO  c.a.l.cache.PriceCacheRepository - Price cache hit: price:product:5:grade:3:AZN
+2026-06-22 23:37:14.196 [http-nio-8080-exec-7] INFO  c.a.l.cache.PriceCacheRepository - Price cache hit: price:product:5:grade:3:AZN
+2026-06-22 23:37:14.196 [http-nio-8080-exec-7] WARN  c.a.l.s.Order.CartPreviewService - Price mismatch for product 1: seen=26, current=100.00
+2026-06-22 23:37:14.199 [http-nio-8080-exec-7] WARN  c.a.l.s.Order.CartPreviewService - Price mismatch for product 5: seen=704, current=600.00
+2026-06-22 23:37:14.200 [http-nio-8080-exec-7] WARN  c.a.l.s.Order.CartPreviewService - Price mismatch for product 1: seen=26, current=100.00
+2026-06-22 23:37:14.201 [http-nio-8080-exec-7] WARN  c.a.l.s.Order.CartPreviewService - Price mismatch for product 5: seen=704, current=600.00
+2026-06-22 23:37:14.201 [http-nio-8080-exec-7] WARN  c.a.l.s.Order.CartPreviewService - Price mismatch for product 8: seen=5, current=150.00
+2026-06-22 23:37:14.609 [http-nio-8080-exec-4] INFO  c.a.l.cache.PriceCacheRepository - Price cache hit: price:product:8:grade:3:AZN
+2026-06-22 23:37:14.611 [http-nio-8080-exec-4] INFO  c.a.l.cache.PriceCacheRepository - Price cache hit: price:product:1:grade:3:AZN
+2026-06-22 23:37:14.616 [http-nio-8080-exec-4] INFO  c.a.l.cache.PriceCacheRepository - Price cache hit: price:product:1:grade:3:AZN
+2026-06-22 23:37:14.620 [http-nio-8080-exec-4] INFO  c.a.l.cache.PriceCacheRepository - Price cache hit: price:product:5:grade:3:AZN
+2026-06-22 23:37:14.625 [http-nio-8080-exec-4] INFO  c.a.l.cache.PriceCacheRepository - Price cache hit: price:product:5:grade:3:AZN
+2026-06-22 23:37:14.626 [http-nio-8080-exec-4] WARN  c.a.l.s.Order.CartPreviewService - Price mismatch for product 1: seen=26, current=100.00
+2026-06-22 23:37:14.626 [http-nio-8080-exec-4] WARN  c.a.l.s.Order.CartPreviewService - Price mismatch for product 5: seen=704, current=600.00
+2026-06-22 23:37:14.626 [http-nio-8080-exec-4] WARN  c.a.l.s.Order.CartPreviewService - Price mismatch for product 1: seen=26, current=100.00
+2026-06-22 23:37:14.626 [http-nio-8080-exec-4] WARN  c.a.l.s.Order.CartPreviewService - Price mismatch for product 5: seen=704, current=600.00
+2026-06-22 23:37:14.626 [http-nio-8080-exec-4] WARN  c.a.l.s.Order.CartPreviewService - Price mismatch for product 8: seen=5, current=150.00
+2026-06-22 23:46:01.193 [HikariPool-1:housekeeper] WARN  com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@2426da4 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-06-22 23:48:03.683 [http-nio-8080-exec-2] INFO  c.a.l.c.order.CartController - POST /api/cart/preview - 5 items, currency: USD
+2026-06-22 23:48:03.792 [http-nio-8080-exec-2] INFO  c.a.l.s.Order.CartPreviewService - Cart preview requested with 5 items, currency: USD
+2026-06-22 23:48:04.519 [http-nio-8080-exec-2] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:8:grade:3:AZN
+2026-06-22 23:48:04.589 [http-nio-8080-exec-2] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:1:grade:3:AZN
+2026-06-22 23:48:04.656 [http-nio-8080-exec-2] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:1:grade:3:AZN
+2026-06-22 23:48:04.754 [http-nio-8080-exec-2] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:5:grade:3:AZN
+2026-06-22 23:48:04.815 [http-nio-8080-exec-2] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:5:grade:3:AZN

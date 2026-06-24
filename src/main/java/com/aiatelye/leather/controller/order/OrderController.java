@@ -35,6 +35,16 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(response));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<OrderDetailResponse>> getOrderById(@PathVariable Long id) {
+        long userId = currentContext.getCurrentUserId();
+        log.info("GET /api/orders/{} - User: {}", id, userId);
+
+        OrderDetailResponse response = orderService.getOrderById(id, userId);
+        return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
+
     @GetMapping("/me")
     public ResponseEntity<ApiResponse<PageResponse<OrderSummaryResponse>>> getMyOrders(
             @RequestParam(defaultValue = "0") int page,
@@ -47,15 +57,6 @@ public class OrderController {
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
-    @GetMapping("/{id}")
-
-    public ResponseEntity<ApiResponse<OrderDetailResponse>> getOrderById(@PathVariable Long id) {
-        long userId = currentContext.getCurrentUserId();
-        log.info("GET /api/orders/{} - User: {}", id, userId);
-
-        OrderDetailResponse response = orderService.getOrderById(id, userId);
-        return ResponseEntity.ok(ApiResponse.success(response));
-    }
 
 
     @PutMapping("/{id}/cancel")

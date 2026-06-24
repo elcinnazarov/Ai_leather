@@ -5,6 +5,7 @@ import com.aiatelye.leather.dao.*;
 import com.aiatelye.leather.dto.admin.leather.CreatLeatherRequest;
 import com.aiatelye.leather.dto.admin.leather.LeatherResponse;
 import com.aiatelye.leather.dto.admin.leather.UpdateLeatherRequest;
+import com.aiatelye.leather.dto.admin.leather.LeatherResponseAdmin;
 import org.mapstruct.*;
 
 @Mapper(componentModel = "spring",
@@ -35,9 +36,13 @@ public interface LeatherMapper {
      @Mapping(target = "grade", ignore = true)           // Manual set edilir
      @Mapping(target = "leathername", source = "leatherName")
      @Mapping(target = "imageUrl", ignore = true)
-     void updateLeatherEntityFromRequest(UpdateLeatherRequest leatherUpdateRequest, @MappingTarget Leather entity);
+ void updateLeatherEntityFromRequest(UpdateLeatherRequest leatherUpdateRequest, @MappingTarget Leather entity);
 
-
+    // DB: leathername → DTO: leathername (eyni ad)
+    // DB: imageUrl → DTO: imageUrl (eyni ad)
+    // DB: grade.gradename → DTO: gradeType
+    @Mapping(source = "grade.gradeType", target = "gradeType")
+    LeatherResponseAdmin toResponse(Leather leather);
     /*//Catalog of codes here
 
     @Mapping(target = "name", source = "leathername")

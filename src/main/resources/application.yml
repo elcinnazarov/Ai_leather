@@ -1,7 +1,7 @@
 spring:
   messages:
-   basename : i18n/messages/messages
-   encoding : UTF-8
+    basename: i18n/messages/messages
+    encoding: UTF-8
 
   application:
     name: Aiatelye
@@ -52,6 +52,21 @@ spring:
       password: ${REDIS_PASSWORD}
       timeout: 6000ms
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  google:
+    client:
+      id: ${GOOGLE_CLIENT_ID}
+
 server:
   port: 8080
 
@@ -86,10 +101,11 @@ app:
   geoip:
     database-path: classpath:GeoLite2-Country.mmdb
 
+
 cache:
   redis:
     account:
-     ttl: 120
+      ttl: 120
     price:
       ttl: 12
     product-list:

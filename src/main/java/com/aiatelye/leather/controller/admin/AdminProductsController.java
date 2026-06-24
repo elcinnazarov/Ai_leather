@@ -1,14 +1,20 @@
 package com.aiatelye.leather.controller.admin;
 
+import com.aiatelye.leather.dto.admin.product.*;
 import com.aiatelye.leather.dto.defalutResponse.ApiResponse;
-import com.aiatelye.leather.dto.admin.product.CreateProductModelRequest;
-import com.aiatelye.leather.dto.admin.product.ProductModelResponse;
-import com.aiatelye.leather.dto.admin.product.UpdateProductModelRequest;
 import com.aiatelye.leather.dao.enums.Enums;
+import com.aiatelye.leather.dto.defalutResponse.PageResponse;
 import com.aiatelye.leather.service.admin.AdminServiceImpl;
+import com.aiatelye.leather.service.catalog.AdminProductModelService;
+import io.swagger.v3.oas.annotations.Operation;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +30,37 @@ import java.util.List;
 @RequestMapping("/api/admin/products")
 public class AdminProductsController {
 
-    private final AdminServiceImpl adminService;
 
+    private final AdminProductModelService adminProductModelService;
+    private final AdminServiceImpl adminService;
+    // ==========================================
+    // GET - YENİ (Admin bütün product-ları görür)
+    // ==========================================
+    @GetMapping
+    @Operation(summary = "Get all product models (Admin sees ALL regardless of status)")
+    public ResponseEntity<ApiResponse<PageResponse<AdminProductModelResponse>>> getProductModels(
+            @Valid ProductModelFilter filter,
+            @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+
+        log.info("GET /api/admin/products - filter: {}, page: {}", filter, pageable);
+
+        PageResponse<AdminProductModelResponse> response = adminProductModelService.getProductModels(filter, pageable);
+
+        return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
+    // ==========================================
+    // GET BY ID - YENİ
+    // ==========================================
+    @GetMapping("/{id}")
+    @Operation(summary = "Get product model by ID")
+    public ResponseEntity<ApiResponse<AdminProductModelResponse>> getProductModelById(@PathVariable Long id) {
+        log.info("GET /api/admin/products/{}", id);
+
+        AdminProductModelResponse response = adminProductModelService.getProductModelById(id);
+
+        return ResponseEntity.ok(ApiResponse.success(response));
+    }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<ProductModelResponse>>createProductModel(
