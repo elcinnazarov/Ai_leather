@@ -9,6 +9,7 @@ import com.aiatelye.leather.error.Exception.InvalidOrderStatusTransitionExceptio
 import com.aiatelye.leather.error.Exception.NotFoundException;
 import com.aiatelye.leather.error.Exception.OrderSpesificationException;
 import com.aiatelye.leather.mapper.AdminOrderMapper;
+import com.aiatelye.leather.repository.LeatherRepository;
 import com.aiatelye.leather.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +29,7 @@ public class AdminOrderService {
 
     private final OrderRepository orderRepository;
     private final AdminOrderMapper adminOrderMapper;
+    private final LeatherRepository leatherRepository;
 
     @Transactional(readOnly = true)
     public PageResponse<AdminOrderListResponse> getOrders(OrderFilter filter, Pageable pageable) {
@@ -65,7 +67,22 @@ public class AdminOrderService {
         Order order = orderRepository.findByIdWithDetails(orderId)
                 .orElseThrow(() -> new NotFoundException("Order not found with id: " + orderId));
 
-        return adminOrderMapper.toDetailResponse(order);
+        // 1. Sifarişin əsas məlumatlarını DTO-ya çeviririk
+        AdminOrderDetailResponse response = adminOrderMapper.toDetailResponse(order);
+
+        // 2. YENİ: Hər bir sifariş edilən məhsulun dəri məlumatlarını bazadan tapıb DTO-ya doldururuq
+        if (response.getItems() != null) {
+            response.getItems().forEach(item -> {
+                if (item.getLeatherId() != null) {
+                    leatherRepository.findById(item.getLeatherId()).ifPresent(leather -> {
+                        item.setLeatherImageUrl(leather.getImageUrl()); // Dərinin şəkli
+
+                    });
+                }
+            });
+        }
+
+        return response;
     }
 
 

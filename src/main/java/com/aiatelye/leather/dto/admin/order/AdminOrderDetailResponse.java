@@ -65,6 +65,7 @@ public class AdminOrderDetailResponse {
         private String productModelName;
         private Long leatherId;
         private String leatherName;
+        private String leatherImageUrl;
         private String renderImageUrl;
         private Integer quantity;
         private BigDecimal unitPrice;
