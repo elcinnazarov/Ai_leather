@@ -21,6 +21,9 @@ configurations {
         extendsFrom annotationProcessor
     }
 }
+configurations.all {
+    exclude group: 'org.slf4j', module: 'slf4j-simple'
+}
 repositories {
     mavenCentral()
 }
@@ -38,6 +41,7 @@ processResources {
         duplicatesStrategy = DuplicatesStrategy.INCLUDE
     }
 }
+
 dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -80,6 +84,14 @@ dependencies {
 
     //IP adres
     implementation 'com.maxmind.geoip2:geoip2:4.2.0'
+    // Testing framework
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.11.0'
+
+    // Mocking library
+    testImplementation 'org.mockito:mockito-core:5.11.0'
+
+    // Runtime logger for test execution
+    testRuntimeOnly 'org.slf4j:slf4j-simple:2.0.12'
 }
 
 tasks.named('test') {

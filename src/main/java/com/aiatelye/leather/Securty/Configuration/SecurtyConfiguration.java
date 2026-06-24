@@ -46,6 +46,7 @@ public class SecurtyConfiguration {
             "/api/designs/popular",
             "/api/designs/recent",
             "/api/internal/ai-callback",
+            "/api/internal/payriff-callback",
             //swager
             "/swagger-ui/**",
             "/swagger-ui.html",
