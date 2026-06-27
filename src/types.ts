@@ -363,6 +363,7 @@ export interface OrderItemDetail {
   productModelName: string;
   leatherId: number;
   leatherName: string;
+  leatherImageUrl?: string; // <--- YENİ ƏLAVƏ EDİLDİ (Dərinin şəkli)
   renderImageUrl: string;
   quantity: number;
   unitPrice: number;

@@ -15,7 +15,9 @@ import {
   FileText,
   DollarSign,
   Tag,
-  RefreshCw
+  RefreshCw,
+  X,
+  ZoomIn
 } from "lucide-react";
 import { 
   AdminOrderDetailResponse, 
@@ -40,10 +42,29 @@ export default function OrderDetails({ orderId, onBack }: OrderDetailsProps) {
   const [updating, setUpdating] = useState(false);
   const [newStatus, setNewStatus] = useState<OrderStatus | "">("");
   const [notes, setNotes] = useState("");
+  
+  // --- YENİ: Dəri şəkli lightbox state ---
+  const [activeLeatherImage, setActiveLeatherImage] = useState<string | null>(null);
+  const [activeLeatherName, setActiveLeatherName] = useState<string>("");
 
   useEffect(() => {
     fetchOrderDetail();
   }, [orderId]);
+
+  // --- YENİ: ESC ilə modal bağlama + scroll bloklama ---
+  useEffect(() => {
+    if (activeLeatherImage) {
+      document.body.style.overflow = "hidden";
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === "Escape") closeLeatherModal();
+      };
+      window.addEventListener("keydown", handleKeyDown);
+      return () => {
+        window.removeEventListener("keydown", handleKeyDown);
+        document.body.style.overflow = "";
+      };
+    }
+  }, [activeLeatherImage]);
 
   const fetchOrderDetail = async () => {
     try {
@@ -78,6 +99,17 @@ export default function OrderDetails({ orderId, onBack }: OrderDetailsProps) {
     }
   };
 
+  // --- YENİ: Modal aç/bağla ---
+  const openLeatherModal = (url: string, name: string) => {
+    setActiveLeatherImage(url);
+    setActiveLeatherName(name);
+  };
+
+  const closeLeatherModal = () => {
+    setActiveLeatherImage(null);
+    setActiveLeatherName("");
+  };
+
   const getStatusIcon = (status: OrderStatus) => {
     switch (status) {
       case OrderStatus.PENDING: return <Clock className="w-5 h-5 text-yellow-500" />;
@@ -102,6 +134,58 @@ export default function OrderDetails({ orderId, onBack }: OrderDetailsProps) {
 
   return (
     <div className="max-w-7xl mx-auto pb-32 animate-in fade-in duration-500">
+      {/* === YENİ: LEATHER LIGHTBOX MODAL === */}
+      {activeLeatherImage && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8 animate-in fade-in zoom-in-95 duration-200"
+          onClick={closeLeatherModal}
+        >
+          {/* Backdrop */}
+          <div className="absolute inset-0 bg-[#111c2d]/80 backdrop-blur-md" />
+          
+          {/* Modal Content */}
+          <div 
+            className="relative z-10 w-full max-w-3xl bg-white rounded-[2.5rem] shadow-2xl overflow-hidden border border-[#c7c4d8]/20 animate-in zoom-in-95 slide-in-from-bottom-4 duration-300"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between px-6 py-4 border-b border-[#c7c4d8]/10 bg-[#f9f9ff]">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-[#3525cd] rounded-xl flex items-center justify-center text-white">
+                  <ZoomIn className="w-4 h-4" />
+                </div>
+                <div>
+                  <p className="text-[10px] font-black text-[#777587] uppercase tracking-widest">Selected Leather</p>
+                  <p className="text-sm font-bold text-[#111c2d]">{activeLeatherName}</p>
+                </div>
+              </div>
+              <button
+                onClick={closeLeatherModal}
+                className="w-10 h-10 rounded-2xl bg-white border border-[#c7c4d8]/20 flex items-center justify-center text-[#777587] hover:text-[#3525cd] hover:border-[#3525cd]/30 hover:shadow-md transition-all active:scale-90"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Image */}
+            <div className="relative bg-[#f0f3ff] p-6 md:p-10 flex items-center justify-center">
+              <img
+                src={activeLeatherImage}
+                alt={activeLeatherName}
+                className="w-full max-h-[60vh] object-contain rounded-3xl shadow-lg border border-white"
+              />
+            </div>
+
+            {/* Footer hint */}
+            <div className="px-6 py-3 bg-white border-t border-[#c7c4d8]/10 flex items-center justify-center gap-2">
+              <p className="text-[10px] font-bold text-[#777587] uppercase tracking-widest">
+                Press ESC or click outside to close
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
         <div className="space-y-2">
           <button
@@ -185,7 +269,7 @@ export default function OrderDetails({ orderId, onBack }: OrderDetailsProps) {
             <div className="divide-y divide-[#c7c4d8]/10">
               {order.items.map((item) => (
                 <div key={item.id} className="p-8 flex flex-col sm:flex-row gap-6 hover:bg-[#f9f9ff]/50 transition-colors">
-                  <div className="w-full sm:w-32 h-32 rounded-2xl overflow-hidden bg-[#f0f3ff] shadow-sm border border-[#c7c4d8]/10">
+                  <div className="w-full sm:w-32 h-32 rounded-2xl overflow-hidden bg-[#f0f3ff] shadow-sm border border-[#c7c4d8]/10 flex-shrink-0">
                     <img 
                       src={item.renderImageUrl || "https://picsum.photos/seed/product/200/200"} 
                       alt={item.productModelName}
@@ -193,7 +277,7 @@ export default function OrderDetails({ orderId, onBack }: OrderDetailsProps) {
                     />
                   </div>
                   <div className="flex-1 space-y-4">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div className="flex flex-col sm:flex-row justify-between gap-4">
                       <div>
                         <h5 className="text-lg font-bold text-[#111c2d]">{item.productModelName}</h5>
                         <div className="flex items-center gap-2 mt-1">
@@ -202,8 +286,37 @@ export default function OrderDetails({ orderId, onBack }: OrderDetailsProps) {
                             Leather: {item.leatherName}
                           </span>
                         </div>
+                        
+                        {/* === DƏRİ ŞƏKLİ — MODERN + CLICKABLE === */}
+                      {item.leatherImageUrl && (
+  <div 
+    className="group flex items-center gap-3 mt-4 bg-[#f0f3ff] p-2.5 pr-5 rounded-xl border border-[#3525cd]/10 w-fit cursor-pointer hover:bg-[#3525cd]/5 hover:border-[#3525cd]/30 hover:shadow-md transition-all active:scale-95"
+    onClick={() => {
+      if (item.leatherImageUrl) {
+        openLeatherModal(item.leatherImageUrl, item.leatherName);
+      }
+    }}
+  >
+                            <div className="relative">
+                              <img
+                                src={item.leatherImageUrl}
+                                alt={item.leatherName}
+                                className="w-12 h-12 object-cover rounded-full border-2 border-white shadow-sm group-hover:scale-110 transition-transform duration-300"
+                              />
+                              <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-[#3525cd] rounded-full flex items-center justify-center text-white shadow-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                                <ZoomIn className="w-3 h-3" />
+                              </div>
+                            </div>
+                            <div>
+                              <p className="text-[9px] font-black text-[#3525cd] uppercase tracking-widest">Selected Leather</p>
+                              <p className="text-xs font-bold text-[#111c2d]">{item.leatherName}</p>
+                              <p className="text-[9px] font-bold text-[#777587] mt-0.5">Click to preview</p>
+                            </div>
+                          </div>
+                        )}
                       </div>
-                      <div className="text-right">
+                      
+                      <div className="text-left sm:text-right">
                         <p className="font-['Manrope'] font-extrabold text-[#3525cd] text-lg">
                           {item.totalPrice.toLocaleString()} {order.currency}
                         </p>
@@ -266,7 +379,7 @@ export default function OrderDetails({ orderId, onBack }: OrderDetailsProps) {
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder="Add internal notes about this status change..."
-                  className="w-full px-4 py-3 bg-[#f9f9ff] border border-[#c7c4d8]/20 rounded-2xl text-sm font-medium focus:ring-2 focus:ring-[#3525cd]/20 focus:border-[#3525cd] transition-all h-24 resize-none"
+                  className="w-full px-4 py-3 bg-[#f9f3ff] border border-[#c7c4d8]/20 rounded-2xl text-sm font-medium focus:ring-2 focus:ring-[#3525cd]/20 focus:border-[#3525cd] transition-all h-24 resize-none"
                 />
               </div>
 
