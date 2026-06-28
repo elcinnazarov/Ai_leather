@@ -2,6 +2,7 @@ package com.aiatelye.leather.dao;
 import com.aiatelye.leather.dao.enums.Enums;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -25,6 +26,7 @@ public class Favorite {
     @Column(name = "favorite_model_name")
     private String targetName; // snapshot (opsional)
 
+    @CreationTimestamp
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 

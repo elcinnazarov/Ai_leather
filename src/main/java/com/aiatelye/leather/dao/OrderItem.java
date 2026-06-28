@@ -1,6 +1,7 @@
 package com.aiatelye.leather.dao;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -50,6 +51,7 @@ public class OrderItem extends BaseEntity{
     @Column(name = "total_price", nullable = false, precision = 19, scale = 4)
     private BigDecimal totalPrice; // unitPrice * quantity
 
+    @CreationTimestamp
     @Column(name = "created_at" ,nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

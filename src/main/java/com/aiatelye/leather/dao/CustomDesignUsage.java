@@ -2,6 +2,7 @@ package com.aiatelye.leather.dao;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -28,6 +29,7 @@ public class CustomDesignUsage {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @CreationTimestamp
     @Column(name = "used_at", nullable = false)
     private LocalDateTime usedAt;
 }

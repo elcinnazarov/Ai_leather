@@ -4,6 +4,7 @@ package com.aiatelye.leather.dao;
 import com.aiatelye.leather.dao.enums.Enums;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -30,7 +31,7 @@ public class LeatherGrade {
 
     @Column(name = "is_active")
     private Boolean isActive = true;
-
+    @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 

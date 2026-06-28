@@ -2,6 +2,9 @@ package com.aiatelye.leather.dao;
 import com.aiatelye.leather.dao.enums.Enums;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.CreatedBy;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -34,6 +37,7 @@ public class Payment {
     private String rawResponse;
 
     @Column(name = "created_at", nullable = false)
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
     @Column(name = "confirmed_at")
