@@ -54,4 +54,32 @@ export const shippingService = {
   deleteLocation: async (id: number): Promise<void> => {
     await api.delete(`${API_BASE_URL}/${id}`);
   },
+
+  // 🔗 MÜŞTƏRİ ÜÇÜN (Yalnız User token ilə): Aktiv ölkələri gətirir
+ getActiveCountries: async () => {
+    try {
+      const response: any = await api.get("/shipping/public/active-countries");
+      // Datanı təhlükəsiz şəkildə çıxarmaq üçün faylın yuxarısındakı extractData-nı istifadə edirik
+      return extractData(response); 
+    } catch (error) {
+      console.error("Aktiv ölkələri çəkərkən API xətası:", error);
+      return []; // Xəta olsa kodun çökməməsi üçün boş massiv qaytarırıq
+    }
+  },
+
+  // ADMIN (Admin tokeni ilə): Bütün 82 ölkəni gətirir
+  getAllCountriesForAdmin: async () => {
+    const response = await api.get("/admin/shipping-countries");
+    // Təhlükəsiz məlumat çəkimi (Əgər undefined olarsa boş massiv qaytarır ki, filter() xəta verməsin)
+    return response?.data?.data || response?.data || [];
+  },
+
+  // ADMIN (Admin tokeni ilə): Ölkənin statusunu dəyişdirir
+  toggleCountryStatus: async (countryEnum: string, isActive: boolean) => {
+    // Backend endpointinə uyğun olaraq sonuna "/toggle" əlavə edildi
+    const response = await api.patch(`/admin/shipping-countries/${countryEnum}/toggle`, {
+      isActive: isActive // Backend-dəki ToggleCountryRequest DTO-suna uyğun göndərilir
+    });
+    return response.data.data;
+  }
 };

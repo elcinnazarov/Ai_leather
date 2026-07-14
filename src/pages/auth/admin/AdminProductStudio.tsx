@@ -67,7 +67,8 @@ export default function AdminProductStudio() {
         });
       }
 
-      const priceRes = await adminProductService.getCalculatedPrices(Number(id));
+    // adminProductService əvəzinə productPriceService istifadə edin
+const priceRes = await productPriceService.getCalculatedPrices(Number(id));
       const calcData = (priceRes as any)?.data?.data || (priceRes as any)?.data || priceRes;
       setCalculatedPrices(calcData);
     } catch (error) {

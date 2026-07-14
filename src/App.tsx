@@ -41,7 +41,8 @@ import AdminProductCreate from "./pages/auth/admin/AdminProductCreate";
 import AdminProductStudio from "./pages/auth/admin/AdminProductStudio";
 import AdminLeathersList from "./pages/auth/admin/AdminLeathersList";
 import AdminLeatherForm from "./pages/auth/admin/AdminLeatherForm";
-
+// Import əlavə et (digər importların yanına)
+import AdminShippingCountries from './pages/auth/admin/AdminShippingCountries';
 // === KÖHNƏ ADMİN KOMPONENTLƏRİ ===
 import OrderList from "./components/OrderList";
 import OrderDetails from "./components/OrderDetails";
@@ -58,6 +59,8 @@ import { pricingService } from "./services/pricingService";
 import { shippingService } from "./services/shippingService";
 import { adminLeatherService } from "./services/adminLeatherService";
 
+
+
 // Types
 import { 
   ProductModelResponse, 
@@ -68,7 +71,6 @@ import {
 } from "./types";
 
 function AppRoutes() {
-  // DİQQƏT: Bura 'any[]' edildi ki, TypeScript xəta verməsin və Vite işləsin!
   const [leathers, setLeathers] = useState<any[]>([]);
   const [products, setProducts] = useState<ProductModelResponse[]>([]);
   const [pricingRules, setPricingRules] = useState<PricingRuleResponse[]>([]);
@@ -79,12 +81,16 @@ function AppRoutes() {
 
   const location = useLocation();
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuthStore(); 
+
+  // ✅ DƏYİŞİKLİK: user da əlavə edildi
+  const { isAuthenticated, user } = useAuthStore();
+
+  // ✅ ADMIN olub olmadığını yoxlayan helper
+  const isAdmin = isAuthenticated && user?.role === "ADMIN";
 
   const fetchLeathers = async () => {
     try {
       const data = await leatherService.getAllLeathers();
-      // DİQQƏT: 'as any' əlavə edildi
       setLeathers((data as any) || []);
     } catch (error) {
       console.error("Dərilər yüklənərkən xəta:", error);
@@ -109,9 +115,14 @@ function AppRoutes() {
     }
   };
 
+  // ✅ ƏSAS DƏYİŞİKLİK: yalnız ADMIN isə pricing rules yüklə
+  // Əvvəl: hər user üçün işləyirdi → CUSTOMER üçün 403 → "çıxış" görünürdü
+  // İndi: yalnız ADMIN rollu istifadəçi üçün işləyir
   useEffect(() => {
-    fetchPricingRules();
-  }, []);
+    if (isAdmin) {
+      fetchPricingRules();
+    }
+  }, [isAdmin]);
 
   const handleCreateLeather = async (formData: any, image: File) => {
     try {
@@ -221,7 +232,7 @@ function AppRoutes() {
           <Route path="shipping" element={<ShippingLocationList />} />
           <Route path="shipping/new" element={<ShippingLocationForm />} />
           <Route path="shipping/:id/edit" element={<ShippingLocationForm />} />
-
+<Route path="shipping-countries" element={<AdminShippingCountries />} />
           <Route path="orders" element={
             <OrderList onViewOrder={(id) => { setSelectedOrderId(id); navigate("/admin/orders/details"); }} />
           } />
@@ -229,6 +240,8 @@ function AppRoutes() {
           <Route path="orders/details" element={
             selectedOrderId ? <OrderDetails orderId={selectedOrderId} onBack={() => navigate("/admin/orders")} /> : <Navigate to="/admin/orders" replace />
           } />
+
+          
         </Route>
       </Route>
 

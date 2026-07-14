@@ -212,6 +212,7 @@
     "empty": "Your cart is empty",
     "total": "Total Amount",
     "checkout": "Proceed to Checkout",
+     "add_to_cart": "Add to Cart",
     "resolveErrors": "Resolve Errors",
     "itemUnavailable": "Item is unavailable",
     "errors": {

@@ -6,6 +6,7 @@ import { ArrowLeft, Loader2, ShoppingBag, X, Check } from "lucide-react";
 import { cn } from "../lib/utils";
 import { useCartStore } from "../store/useCartStore";
 import { useAITranslation } from "../lib/hooks/useAITranslation";
+import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
 import { getCurrencySymbol } from '../lib/currencyMapper';
 
@@ -117,6 +118,8 @@ export default function ProductDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   
+  const { t } = useTranslation();
+  
   const cartStore = useCartStore() as any;
   const addItemToCart = cartStore.addItem;
   const openCartPanel = cartStore.setIsOpen || cartStore.setIsCartOpen;
@@ -205,7 +208,6 @@ export default function ProductDetail() {
   const tSelectedMaterialName = useAITranslation(selectedMaterial?.name || "");
   const tSelectedMaterialGrade = useAITranslation((selectedMaterial?.gradeType || 'STANDART').replace('_', ' '));
   const tGoBack = useAITranslation("Geri Qayıt");
-  const tAddToCart = useAITranslation("Səbətə Əlavə Et");
 
   const handleMaterialSelect = useCallback((leather: P_AvailableLeatherResponse) => {
     setSelectedMaterial(leather);
@@ -427,15 +429,18 @@ export default function ProductDetail() {
               </div>
             )}
 
-            {/* 🛒 STICKY MOBILE SƏBƏT DÜYMƏSİ */}
-            <div className="fixed bottom-0 left-0 right-0 p-4 pb-8 bg-white/95 backdrop-blur-xl border-t border-gray-200 z-50 lg:static lg:bg-transparent lg:border-none lg:p-0 lg:z-auto shadow-[0_-10px_30px_rgba(0,0,0,0.05)] lg:shadow-none transition-all">
+            {/* 🛒 STICKY MOBILE SƏBƏT DÜYMƏSİ — LÜKS DİZAYN */}
+            <div className="fixed bottom-0 left-0 right-0 p-4 pb-8 bg-white/80 backdrop-blur-2xl border-t border-neutral-100/80 z-50 lg:static lg:bg-transparent lg:border-none lg:p-0 lg:z-auto shadow-[0_-12px_40px_rgba(0,0,0,0.04)] lg:shadow-none transition-all duration-500">
               <button 
                 onClick={handleAddToCart}
                 disabled={!selectedMaterial}
-                className="w-full flex items-center justify-center gap-3 bg-[#111] text-white px-8 py-5 rounded-2xl font-sans text-xs font-bold uppercase tracking-[0.2em] hover:bg-black transition-all active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed shadow-xl shadow-black/10"
+                className="w-full group relative flex items-center justify-center gap-3 bg-gradient-to-r from-[#111] via-[#1a1a1a] to-[#111] text-white px-8 py-[22px] rounded-2xl font-sans text-[11px] font-bold uppercase tracking-[0.25em] hover:shadow-2xl hover:shadow-black/25 transition-all duration-500 active:scale-[0.97] disabled:opacity-25 disabled:cursor-not-allowed disabled:hover:shadow-none border border-white/[0.04] overflow-hidden"
               >
-                <ShoppingBag className="w-5 h-5" />
-                {tAddToCart}
+                {/* Shimmer overlay */}
+                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.07] to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
+                
+                <ShoppingBag className="w-[18px] h-[18px] relative z-10 stroke-[1.5]" />
+                <span className="relative z-10">{t('cart.add_to_cart')}</span>
               </button>
             </div>
             

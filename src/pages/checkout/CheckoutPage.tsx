@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
 import { useCartStore } from "../../store/useCartStore";
 import { cartService } from "../../services/cartService";
+import { shippingService } from "../../services/shippingService";  // ← YENİ IMPORT
 import { useOrders } from "../../lib/hooks/useOrders";
 import { useAITranslation } from "../../lib/hooks/useAITranslation";
 import { OrderType, Country } from "../../types/order";
@@ -125,6 +126,9 @@ export default function CheckoutPage() {
   const [showCountryWarning, setShowCountryWarning] = useState(false);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
 
+  // ← YENİ: Backend-dən gələn aktiv ölkələr (default olaraq bütün ölkələr — fallback)
+ const [activeCountries, setActiveCountries] = useState<typeof ALL_COUNTRIES>([]);
+
   const [formData, setFormData] = useState({
     uiCountryCode: "AZ",
     backendCountryEnum: Country.AZERBAIJAN,
@@ -142,6 +146,64 @@ export default function CheckoutPage() {
 
   const displayCurrency = previewData?.currency || activeCurrency;
   const displaySymbol = useMemo(() => getCurrencySymbol(displayCurrency), [displayCurrency]);
+
+  // YENİ VƏ POSTMAN DATASINA 100% UYĞUNLAŞDIRILMIŞ VERSİYA
+  useEffect(() => {
+ const fetchActiveCountries = async () => {
+      try {
+        // 1. Datanı çəkirik
+        const backendData = await shippingService.getActiveCountries();
+        
+        // ZİREH: Əgər cavab undefined gələrsə və ya massiv deyilsə, boş qəbul et
+        const safeData = Array.isArray(backendData) ? backendData : [];
+
+        if (safeData.length === 0) {
+          console.warn("Backend-dən heç bir aktiv ölkə gəlmədi və ya data boşdur.");
+          setActiveCountries([]);
+          return; 
+        }
+
+        // 2. Kodları çıxarırıq (məs: "TR", "US")
+        const activeCodesFromBackend = safeData.map((item: any) => 
+          String(item.countryCode || item.country || "").toUpperCase()
+        );
+
+        // 3. 82 ölkəni süzürük
+        const perfectlyFilteredCountries = ALL_COUNTRIES.filter(c => 
+          c.code && activeCodesFromBackend.includes(c.code.toUpperCase())
+        );
+
+        if (perfectlyFilteredCountries.length > 0) {
+          setActiveCountries(perfectlyFilteredCountries);
+
+          setFormData(prev => {
+            const isCurrentlySelectedValid = perfectlyFilteredCountries.some(c => c.code === prev.uiCountryCode);
+            
+            if (!isCurrentlySelectedValid) {
+              const firstActiveCountry = perfectlyFilteredCountries[0];
+              return {
+                ...prev,
+                uiCountryCode: firstActiveCountry.code,
+                backendCountryEnum: firstActiveCountry.enum,
+                phoneCode: firstActiveCountry.phoneCode,
+                postalCode: firstActiveCountry.enum === Country.AZERBAIJAN ? "" : prev.postalCode
+              };
+            }
+            return prev; 
+          });
+          
+        } else {
+          setActiveCountries([]); 
+        }
+
+      } catch (error) {
+        console.error("Aktiv ölkələr çəkilərkən xəta baş verdi:", error);
+        setActiveCountries([]);
+      }
+    };
+    
+    fetchActiveCountries();
+  }, []); // Səhifə yalnız bir dəfə açılanda işləyir
 
   // Cart preview fetch
   useEffect(() => {
@@ -180,7 +242,8 @@ export default function CheckoutPage() {
       const newData = { ...prev, [name]: value };
 
       if (name === "uiCountryCode") {
-        const selectedCountryData = ALL_COUNTRIES.find((c) => c.code === value);
+        // ← DƏYİŞİLİB: ALL_COUNTRIES əvəzinə activeCountries istifadə edilir
+        const selectedCountryData = activeCountries.find((c) => c.code === value);
 
         if (selectedCountryData) {
           newData.backendCountryEnum = selectedCountryData.enum;
@@ -385,7 +448,8 @@ export default function CheckoutPage() {
                         onChange={handleInputChange}
                         className="w-full appearance-none bg-white border border-[#e0d8d4] rounded-md py-3.5 pl-4 pr-12 text-[13px] text-[#271310] focus:outline-none focus:ring-2 focus:ring-[#271310]/10 focus:border-[#271310] transition-all cursor-pointer font-sans"
                       >
-                        {ALL_COUNTRIES.map((c) => (
+                        {/* ← DƏYİŞİLİB: ALL_COUNTRIES əvəzinə activeCountries */}
+                        {activeCountries.map((c) => (
                           <option key={c.code} value={c.code}>
                             {t(`countries.${c.name.toLowerCase().replace(/ /g, "_")}`, c.name)}
                           </option>
@@ -509,6 +573,7 @@ export default function CheckoutPage() {
                           onChange={handleInputChange}
                           className="w-full h-full appearance-none bg-transparent py-3.5 pl-4 pr-8 text-[12px] text-[#271310] focus:outline-none cursor-pointer font-sans"
                         >
+                          {/* Telefon kodları bütün ölkələr üçün qalır (daha geniş çeşid) */}
                           {ALL_COUNTRIES.map((c) => (
                             <option key={`phone-${c.code}`} value={c.phoneCode}>
                               {c.code} {c.phoneCode}

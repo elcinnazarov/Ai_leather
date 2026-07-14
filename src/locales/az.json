@@ -212,6 +212,7 @@
     "empty": "Səbətiniz boşdur",
     "total": "Yekun Məbləğ",
     "checkout": "Ödənişə Keç",
+    "add_to_cart": "Səbətə Əlavə Et",
     "resolveErrors": "Xətaları Düzəldin",
     "itemUnavailable": "Məhsul anbarda yoxdur",
     "errors": {
