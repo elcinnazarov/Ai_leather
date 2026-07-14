@@ -78,6 +78,8 @@ public class SecurtyConfiguration {
                         .requestMatchers("/api/admin/**").hasRole(ADMIN.name())
                         .requestMatchers("/api/designs/generate").hasRole(CUSTOMER.name())
                         .requestMatchers("/api/orders/**").hasRole(CUSTOMER.name())
+                          .requestMatchers("/api/shipping/public/active-countries").hasRole(CUSTOMER.name())
+
                         .anyRequest().authenticated())
                   .cors(Customizer.withDefaults()) // 👈 DİQQƏT: BUNU MÜTLƏQ ƏLAVƏ ET!
                 .authenticationManager(authenticationManager)

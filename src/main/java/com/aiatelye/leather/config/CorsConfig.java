@@ -11,7 +11,7 @@ public class CorsConfig implements WebMvcConfigurer {
         registry.addMapping("/api/**")
                 // React-in işlədiyi portları bura yazırıq (Vite üçün 5173, CRA üçün 3000)
                 .allowedOrigins("http://localhost:5173", "http://localhost:3000")
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS","PATCH")
                 .allowedHeaders("*")
                 // ƏN VACİB HİSSƏ: React-in bu başlıqları oxumasına və göndərməsinə icazə veririk
                 .exposedHeaders(
