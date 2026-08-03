@@ -134,8 +134,8 @@
   },
   "about": {
     "title": "Our Heritage",
-    "subtitle": "Transforming craft into distinction since 2021.",
-    "origins": "Born in 2021 as a visual narrative of pure craftsmanship, E1000 Leather has evolved into a sanctuary of bespoke artisanship and uncompromising quality.",
+    "subtitle": "Transforming craft into distinction since 2020.",
+    "origins": "Born in 2020 as a visual narrative of pure craftsmanship, E1000 Leather has evolved into a sanctuary of bespoke artisanship and uncompromising quality.",
     "philosophy": "Every piece is sculpted from the most exceptional full-grain hides, tailored intimately to the vision of our clients. To be the finest is not merely our ambition; it is the very ethos of our atelier.",
     "customer": "True luxury lies in absolute reverence for the individual. You are beautifully distinct, and our life's work is to translate that individuality into timeless art.",
     "quote": "The choice of the distinct.",
@@ -191,7 +191,12 @@
     "postalCode": "Postal Code (Optional)",
     "phone": "Contact Number",
     "address": "Full Address",
-    "notes": "Concierge Notes (Optional)",
+   "notes": "Notes",
+  "optional": "Optional",
+  "notes_instruction": "Please specify exactly where you would like your image or text to be engraved (e.g., front bottom right corner, inside left side).",
+  "placeholders": {
+    "notes": "Placement details and other special requests..."
+  },
     "submit": "Complete Order",
     "submitting": "Processing...",
     "subtotal": "Subtotal",
@@ -219,6 +224,20 @@
       "syncFailed": "Failed to synchronize cart data",
       "endpointNotFound": "Cart service temporarily unavailable",
       "resolveBeforeCheckout": "Please resolve cart errors before checkout"
+    }
+  },
+  "pillars": {
+    "handcrafted": {
+      "title": "HANDCRAFTED",
+      "desc": "Each product is individually crafted by the hands of our master artisans."
+    },
+    "fullGrain": {
+      "title": "FULL GRAIN",
+      "desc": "Only the highest grade, natural full-grain leather is used."
+    },
+    "madeToLast": {
+      "title": "MADE TO LAST",
+      "desc": "Our designs and materials are chosen to defy time."
     }
   }
 }

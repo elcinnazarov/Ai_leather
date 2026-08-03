@@ -641,16 +641,36 @@ export default function CheckoutPage() {
               </section>
 
               {/* Notes */}
-              <section>
-                <label className="block text-[10px] font-sans uppercase tracking-[0.15em] text-[#8b7a72] mb-2">
-                  {t("checkout.notes", "Qeydlər")}
-                </label>
+             <section>
+                <div className="flex justify-between items-end mb-2">
+                  <label className="block text-[10px] font-sans uppercase tracking-[0.15em] text-[#8b7a72]">
+                    {t("checkout.notes", "Qeydlər")}
+                  </label>
+                  <span className="text-[10px] font-sans text-[#a89890] italic">
+                    {t("checkout.optional", "İstəyə bağlı")}
+                  </span>
+                </div>
+
+                {/* YENİ: İstifadəçi üçün təlimat qutusu */}
+                <div className="mb-3 flex items-start gap-2 bg-[#f5f0ed]/50 p-3 rounded border border-[#e8e0dd]">
+                  <Info className="w-3.5 h-3.5 text-[#8b7a72] mt-0.5 flex-shrink-0" />
+                  <p className="text-[11px] font-sans text-[#5a4a42] leading-relaxed">
+                    {t(
+                      "checkout.notes_instruction",
+                      "Məhsul üzərinə həkk olunacaq şəkil və ya yazının dəqiq olaraq hansı hissədə (məs: ön sağ alt künc, içəri sol tərəf) yerləşməsini istədiyinizi buraya qeyd edə bilərsiniz."
+                    )}
+                  </p>
+                </div>
+
                 <textarea
                   name="notes"
                   value={formData.notes}
                   onChange={handleInputChange}
-                  rows={3}
-                  placeholder={t("checkout.placeholders.notes", "Sifarişinizlə bağlı əlavə qeydlər...")}
+                  rows={4} // Rahat yazılması üçün 3-dən 4-ə qaldırıldı
+                  placeholder={t(
+                    "checkout.placeholders.notes",
+                    "Yerləşdirmə detalları və digər xüsusi istəkləriniz..."
+                  )}
                   className="w-full bg-white border border-[#e0d8d4] rounded-md py-3.5 px-4 text-[13px] text-[#271310] placeholder:text-[#c4bbb5] focus:outline-none focus:ring-2 focus:ring-[#271310]/10 focus:border-[#271310] transition-all font-sans resize-none"
                 />
               </section>

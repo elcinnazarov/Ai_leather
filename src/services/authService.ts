@@ -47,10 +47,31 @@ export const authService = {
 
   // 2. QEYDİYYAT (Əskik olan hissə bərpa edildi)
   register: async (data: RegisterRequest): Promise<AuthResponse> => {
-    const response = await api.post<AuthResponse>('/auth/register', data);
-    return response.data;
-  },
+    const response = await api.post('/auth/register', data);
+    const token = response.data?.token;
 
+    if (token) {
+      // Login funksiyasında etdiyimiz kimi, tokeni burada da oxuyuruq
+      const decodedPayload = parseJwt(token);
+
+      let userRole = 'CUSTOMER';
+      if (decodedPayload?.authorities && decodedPayload.authorities.length > 0) {
+        userRole = decodedPayload.authorities[0].authority.replace('ROLE_', '');
+      }
+
+      return {
+        token: token,
+        user: {
+          id: decodedPayload?.userId || 0,
+          name: data.name, // Qeydiyyat formundan gələn tam adı bura veririk
+          email: decodedPayload?.sub || data.email,
+          role: userRole
+        }
+      };
+    }
+
+    throw new Error("Serverd n token g di!");
+  },
   // 3. GOOGLE İLƏ LOGİN / QEYDİYYAT
   googleLogin: async (googleToken: string): Promise<AuthResponse> => {
     const response = await api.post('/auth/google', { token: googleToken });

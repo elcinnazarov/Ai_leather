@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useMemo, useCallback } from "react";
+import React, { useEffect, useLayoutEffect, useState, useMemo, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { productService } from "../services/productService";
 import { ProductDetailResponse, P_AvailableLeatherResponse } from "../types/product";
-import { ArrowLeft, Loader2, ShoppingBag, X, Check } from "lucide-react";
+import { ArrowLeft, Loader2, ShoppingBag, X } from "lucide-react";
 import { cn } from "../lib/utils";
 import { useCartStore } from "../store/useCartStore";
 import { useAITranslation } from "../lib/hooks/useAITranslation";
@@ -11,7 +11,17 @@ import { motion, AnimatePresence } from "framer-motion";
 import { getCurrencySymbol } from '../lib/currencyMapper';
 
 // ============================================
-// 🎨 MODERN LEATHER SEÇİM KOMPONENTİ
+// RƏNG PALİTRASI (bu versiyada fərqli ton) — komment olaraq referans:
+// bg (ağ):        #ffffff
+// bg-alt (boz):    #f7f7f7
+// text primary:    #111111
+// text secondary:  #767676
+// border:          #e5e5e5
+// accent (wine):   #6f2c3f   ← qızılı əvəzinə "leather wine" ton, hover/seçim üçün
+// ============================================
+
+// ============================================
+// LEATHER SEÇİM KOMPONENTİ — dairəvi swatch (moda saytlarındakı rəng seçici kimi)
 // ============================================
 interface LeatherOptionProps {
   leather: P_AvailableLeatherResponse;
@@ -22,55 +32,41 @@ interface LeatherOptionProps {
 function LeatherOption({ leather, isActive, onClick }: LeatherOptionProps) {
   const dynName = useAITranslation(leather?.name || "");
   
+  // LC Waikiki-də olduğu kimi: rəng/material seçimi kiçik KVADRAT şəkil
+  // "swatch"-ları ilə göstərilir (dairə yox). Seçim border-highlight ilə
+  // bildirilir, əlavə badge/overlay yoxdur — sayt strukturuna sadiq qalındı.
   return (
     <motion.button
-      whileTap={{ scale: 0.95 }}
+      whileTap={{ scale: 0.96 }}
       onClick={onClick}
-      className="relative flex flex-col items-center gap-2 group"
+      className="relative flex flex-col items-center gap-2 group flex-shrink-0"
     >
       <div className={cn(
-        "relative w-20 h-20 rounded-2xl overflow-hidden transition-all duration-500",
-        isActive 
-          ? "ring-[3px] ring-offset-[3px] ring-black shadow-[0_8px_30px_rgba(0,0,0,0.15)] scale-105" 
-          : "ring-1 ring-gray-200 hover:ring-gray-400 hover:shadow-lg"
+        "relative w-[56px] h-[56px] overflow-hidden transition-all duration-200 bg-[#f7f7f7]",
+        isActive
+          ? "border-2 border-[#111111]"
+          : "border border-[#e5e5e5] group-hover:border-[#a8a8a8]"
       )}>
         <img 
           src={leather?.imageUrl || 'https://via.placeholder.com/150'} 
           alt={dynName} 
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          className="w-full h-full object-cover"
           referrerPolicy="no-referrer"
         />
-        
-        <AnimatePresence>
-          {isActive && (
-            <motion.div
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0, opacity: 0 }}
-              className="absolute inset-0 bg-black/20 flex items-center justify-center"
-            >
-              <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-lg">
-                <Check className="w-4 h-4 text-black" strokeWidth={3} />
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
 
-      <div className="text-center space-y-0.5">
-        <span className={cn(
-          "font-sans text-[10px] uppercase tracking-widest text-center leading-tight block max-w-[80px]",
-          isActive ? "text-black font-bold" : "text-gray-500 font-medium"
-        )}>
-          {dynName}
-        </span>
-      </div>
+      <span className={cn(
+        "font-sans text-[10px] uppercase tracking-[0.1em] text-center leading-tight block max-w-[70px]",
+        isActive ? "text-[#111111] font-semibold" : "text-[#767676] font-medium"
+      )}>
+        {dynName}
+      </span>
     </motion.button>
   );
 }
 
 // ============================================
-// 🏷️ GRADE BAŞLIQ KOMPONENTİ
+// GRADE BAŞLIQ KOMPONENTİ — sol-aligned label, brend saytı tərzi (mərkəzləşməmiş)
 // ============================================
 function GradeSection({ 
   grade, 
@@ -88,16 +84,12 @@ function GradeSection({
   const collectionText = useAITranslation("Kolleksiya");
   
   return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-3">
-        <div className="h-px flex-1 bg-gradient-to-r from-gray-200 to-transparent" />
-        <h4 className="font-sans text-[10px] font-bold uppercase tracking-[0.25em] text-gray-400">
-          {gradeLabel} {collectionText}
-        </h4>
-        <div className="h-px flex-1 bg-gradient-to-l from-gray-200 to-transparent" />
-      </div>
+    <div className="space-y-3">
+      <h4 className="font-sans text-[11px] font-bold uppercase tracking-[0.15em] text-[#111111]">
+        {gradeLabel} <span className="text-[#767676] font-medium">— {collectionText}</span>
+      </h4>
       
-      <div className="flex overflow-x-auto gap-5 pb-4 pt-1 scrollbar-hide snap-x px-1">
+      <div className="flex overflow-x-auto gap-4 pb-2 pt-1 scrollbar-hide snap-x">
         {leathers.map((leather) => (
           <LeatherOption 
             key={leather.id}
@@ -112,11 +104,23 @@ function GradeSection({
 }
 
 // ============================================
-// 📦 ƏSAS KOMPONENT
+// ƏSAS KOMPONENT
 // ============================================
 export default function ProductDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+
+  // ✅ DÜZƏLİŞ: `history.scrollRestoration = "manual"` qlobal olaraq
+  // ProductCatalog-da təyin olunub — bu o deməkdir ki, artıq HEÇ KİM
+  // (nə brauzer, nə React Router) route dəyişəndə scroll-u avtomatik
+  // sıfırlamır. Ona görə buraya open olanda scroll mövqeyi kataloqdan
+  // (və ya hər hansı digər səhifədən) "daşınmış" köhnə dəyərdə qala bilirdi
+  // — nəticədə məhsulun ƏVVƏLİ deyil, təsadüfi bir aşağı nöqtəsi görünürdü.
+  // useLayoutEffect seçilib ki, bu, brauzer ekranı boyamazdan ƏVVƏL,
+  // sinxron şəkildə baş versin — flaş/görünən sıçrayış olmasın.
+  useLayoutEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+  }, [id]);
   
   const { t } = useTranslation();
   
@@ -234,45 +238,46 @@ export default function ProductDetail() {
   }, [product, selectedMaterial, currentPrice, activeImage, addItemToCart, openCartPanel]);
 
   if (loading) return (
-    <div className="flex items-center justify-center h-screen bg-[#FAF9F6]">
-      <Loader2 className="w-10 h-10 animate-spin text-black" />
+    <div className="flex items-center justify-center h-screen bg-white">
+      <Loader2 className="w-7 h-7 animate-spin text-[#111111]" />
     </div>
   );
 
   if (!product) return (
-    <div className="flex items-center justify-center h-screen bg-[#FAF9F6]">
-      <h2 className="text-2xl font-serif text-black">Məhsul tapılmadı</h2>
+    <div className="flex items-center justify-center h-screen bg-white">
+      <h2 className="text-xl font-sans uppercase tracking-[0.15em] text-[#111111]">Məhsul tapılmadı</h2>
     </div>
   );
 
   return (
     // Mobil ekranda sticky button altda qalmasın deyə pb-36 (144px) əlavə olundu
-    <div className="bg-[#FAF9F6] min-h-screen pt-24 pb-36 lg:pb-20 overflow-x-hidden">
+    <div className="bg-white min-h-screen pt-20 pb-36 lg:pb-16 overflow-x-hidden">
       
+      {/* ================= MATERIAL POPUP ================= */}
       <AnimatePresence>
         {isPopupOpen && selectedMaterial && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex flex-col items-center justify-center p-4 md:p-8 bg-black/30 backdrop-blur-md"
+            className="fixed inset-0 z-[100] flex flex-col items-center justify-center p-4 md:p-8 bg-[#111111]/60"
             onClick={() => setIsPopupOpen(false)}
           >
             <motion.div
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 20 }}
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.96 }}
               onClick={e => e.stopPropagation()}
-              className="relative w-full max-w-sm md:max-w-md"
+              className="relative w-full max-w-sm md:max-w-md bg-white"
             >
               <button
                 onClick={() => setIsPopupOpen(false)}
-                className="absolute -top-12 right-0 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform"
+                className="absolute top-3 right-3 z-10 w-9 h-9 bg-white rounded-full flex items-center justify-center shadow-md hover:scale-105 transition-transform"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4 text-[#111111]" />
               </button>
               
-              <div className="aspect-square rounded-3xl overflow-hidden shadow-2xl bg-gray-100">
+              <div className="aspect-square overflow-hidden bg-[#f7f7f7]">
                 <img 
                   src={selectedMaterial.imageUrl} 
                   alt="Selected" 
@@ -281,11 +286,11 @@ export default function ProductDetail() {
                 />
               </div>
               
-              <div className="mt-4 bg-white/95 backdrop-blur rounded-2xl p-6 shadow-lg text-center">
-                <h3 className="text-xl font-serif font-bold text-[#111]">
+              <div className="p-6 text-center border-t border-[#e5e5e5]">
+                <h3 className="text-lg font-sans font-bold uppercase tracking-[0.1em] text-[#111111]">
                   {tSelectedMaterialName}
                 </h3>
-                <p className="text-xs text-gray-500 mt-1 uppercase tracking-widest">
+                <p className="text-[11px] text-[#767676] mt-1.5 uppercase tracking-[0.2em]">
                   {tSelectedMaterialGrade}
                 </p>
               </div>
@@ -296,29 +301,30 @@ export default function ProductDetail() {
 
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         
-        {/* 📱 TOP NAVI: Desktop üçün "Geri", Mobile üçün "X" Yuxarı Sağ Küncdə */}
+        {/* ================= TOP NAV ================= */}
         <div className="flex items-center justify-end md:justify-start mb-6">
           <button 
-            onClick={() => navigate("/")}
-            className="hidden md:flex items-center gap-2 text-gray-500 hover:text-black font-sans text-xs uppercase font-bold tracking-widest transition-colors"
+            onClick={() => navigate(-1)}
+            className="hidden md:flex items-center gap-2 text-[#111111] hover:text-[#6f2c3f] font-sans text-[11px] uppercase font-bold tracking-[0.2em] transition-colors"
           >
             <ArrowLeft className="w-4 h-4" /> {tGoBack}
           </button>
 
           {/* Mobil X Düyməsi */}
           <button
-            onClick={() => navigate("/")}
-            className="md:hidden w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-sm border border-gray-100 text-[#111] hover:bg-gray-50 transition-all active:scale-95"
+            onClick={() => navigate(-1)}
+            className="md:hidden w-9 h-9 flex items-center justify-center bg-white rounded-full shadow-sm border border-[#e5e5e5] text-[#111111] active:scale-95 transition-all"
           >
-            <X className="w-5 h-5" />
+            <X className="w-[18px] h-[18px]" />
           </button>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-20">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
           
-          <div className="lg:col-span-7 flex flex-col gap-4">
+          {/* ================= SOL — Şəkil qalereyası (daha iri) ================= */}
+          <div className="lg:col-span-8 flex flex-col gap-2">
             <div 
-              className="bg-[#f5f5f5] rounded-3xl overflow-hidden aspect-[4/5] shadow-sm w-full relative"
+              className="bg-[#f7f7f7] overflow-hidden aspect-[4/5] w-full relative"
               onTouchStart={handleTouchStart}
               onTouchEnd={handleTouchEnd}
             >
@@ -331,13 +337,13 @@ export default function ProductDetail() {
               />
               
               {product?.images && product.images.length > 1 && (
-                <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2 lg:hidden">
+                <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-1.5 lg:hidden">
                   {product.images.map((img) => (
                     <div 
                       key={img.id} 
                       className={cn(
-                        "h-1.5 rounded-full transition-all",
-                        activeImage === img.imageUrl ? "bg-[#111] w-6" : "bg-white/60 w-1.5"
+                        "h-[3px] transition-all",
+                        activeImage === img.imageUrl ? "bg-[#111111] w-7" : "bg-[#111111]/25 w-[6px]"
                       )}
                     />
                   ))}
@@ -346,16 +352,16 @@ export default function ProductDetail() {
             </div>
 
             {product?.images && product.images.length > 1 && (
-              <div className="hidden lg:flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+              <div className="hidden lg:flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
                 {product.images.map((img) => (
                   <button
                     key={img.id}
                     onClick={() => setActiveImage(img.imageUrl)}
                     className={cn(
-                      "w-20 h-24 border-2 rounded-xl overflow-hidden flex-shrink-0 transition-all",
+                      "w-[72px] h-[86px] overflow-hidden flex-shrink-0 transition-all border",
                       activeImage === img.imageUrl 
-                        ? "border-black scale-105 shadow-md" 
-                        : "border-gray-200 opacity-60 hover:opacity-100"
+                        ? "border-[#111111]" 
+                        : "border-transparent opacity-50 hover:opacity-100"
                     )}
                   >
                     <img src={img.imageUrl} alt="" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
@@ -365,28 +371,29 @@ export default function ProductDetail() {
             )}
           </div>
 
-          <div className="lg:col-span-5 flex flex-col justify-start lg:justify-center pt-6 lg:pt-0">
+          {/* ================= SAĞ — Detallar (brend saytı tərzi tipoqrafiya) ================= */}
+          <div className="lg:col-span-4 flex flex-col justify-start lg:justify-center pt-4 lg:pt-0">
             
-            <div className="mb-6">
-              <span className="block font-sans text-[10px] tracking-[0.3em] uppercase text-gray-500 mb-2">
-                {product?.modelType || ""} Series
+            <div className="mb-7">
+              <span className="block font-sans text-[11px] tracking-[0.2em] uppercase text-[#767676] mb-2 font-medium">
+                {product?.modelType || ""} · E1000 ATELYE
               </span>
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-serif text-[#111] font-bold leading-tight mb-3">
+              <h1 className="text-[22px] md:text-[26px] font-sans font-normal uppercase tracking-[0.02em] leading-[1.3] text-[#111111] mb-3">
                 {dynamicModelName}
               </h1>
               
               <AnimatePresence mode="wait">
                 <motion.div
                   key={currentPrice}
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 10 }}
-                  className="text-2xl md:text-3xl font-sans font-medium text-[#111] flex items-center gap-2"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="text-[19px] font-sans font-semibold text-[#6f2c3f] flex items-baseline gap-1.5"
                 >
                   <span>{displaySymbol}</span>
                   <span>{(currentPrice || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
                   {selectedMaterial && (
-                    <span className="text-xs text-gray-400 font-normal normal-case tracking-normal">
+                    <span className="text-[11px] text-[#767676] font-normal normal-case tracking-normal ml-1">
                       / {tSelectedMaterialGrade}
                     </span>
                   )}
@@ -394,12 +401,12 @@ export default function ProductDetail() {
               </AnimatePresence>
             </div>
 
-            <p className="font-serif text-gray-600 text-sm leading-relaxed mb-8">
+            <p className="font-sans text-[#767676] text-[13px] leading-[1.7] mb-8 max-w-md">
               {dynamicDescription}
             </p>
 
             {Object.keys(groupedLeathers).length > 0 && (
-              <div className="space-y-8 mb-10 border-t border-gray-200 pt-8">
+              <div className="space-y-6 mb-8 pt-6 border-t border-[#e5e5e5]">
                 {Object.entries(groupedLeathers).map(([grade, leatherList]) => (
                   <GradeSection
                     key={grade}
@@ -413,40 +420,39 @@ export default function ProductDetail() {
             )}
 
             {selectedMaterial && (
-              <div className="flex items-center gap-3 mb-6 p-3 bg-white rounded-xl border border-gray-100">
-                <div className="w-10 h-10 rounded-lg overflow-hidden">
+              <div className="flex items-center gap-3 mb-7 py-3 border-t border-b border-[#e5e5e5]">
+                <div className="w-9 h-9 rounded-full overflow-hidden flex-shrink-0 ring-1 ring-[#e5e5e5]">
                   <img src={selectedMaterial?.imageUrl} alt="" className="w-full h-full object-cover" />
                 </div>
-                <div className="flex-1">
-                  <p className="text-xs font-bold text-[#111]">{tSelectedMaterialName}</p>
-                  <p className="text-[10px] text-gray-500 uppercase">
+                <div className="flex-1 min-w-0">
+                  <p className="text-[12px] font-semibold text-[#111111] truncate uppercase tracking-[0.05em]">{tSelectedMaterialName}</p>
+                  <p className="text-[10px] text-[#767676] uppercase tracking-[0.15em]">
                     {tSelectedMaterialGrade}
                   </p>
                 </div>
-                <div className="text-sm font-bold text-[#111]">
+                <div className="text-[13px] font-semibold text-[#6f2c3f] whitespace-nowrap">
                   {displaySymbol}{(currentPrice || 0).toFixed(2)}
                 </div>
               </div>
             )}
 
-            {/* 🛒 STICKY MOBILE SƏBƏT DÜYMƏSİ — LÜKS DİZAYN */}
-            <div className="fixed bottom-0 left-0 right-0 p-4 pb-8 bg-white/80 backdrop-blur-2xl border-t border-neutral-100/80 z-50 lg:static lg:bg-transparent lg:border-none lg:p-0 lg:z-auto shadow-[0_-12px_40px_rgba(0,0,0,0.04)] lg:shadow-none transition-all duration-500">
+            {/* ================= SƏBƏTƏ ƏLAVƏ ET — brend saytı tərzi: tam-künc, iri tracking ================= */}
+            <div className="fixed bottom-0 left-0 right-0 p-4 pb-8 bg-white/95 backdrop-blur-lg border-t border-[#e5e5e5] z-50 lg:static lg:bg-transparent lg:border-none lg:p-0 lg:z-auto transition-all duration-500">
               <button 
                 onClick={handleAddToCart}
                 disabled={!selectedMaterial}
-                className="w-full group relative flex items-center justify-center gap-3 bg-gradient-to-r from-[#111] via-[#1a1a1a] to-[#111] text-white px-8 py-[22px] rounded-2xl font-sans text-[11px] font-bold uppercase tracking-[0.25em] hover:shadow-2xl hover:shadow-black/25 transition-all duration-500 active:scale-[0.97] disabled:opacity-25 disabled:cursor-not-allowed disabled:hover:shadow-none border border-white/[0.04] overflow-hidden"
+                className="w-full flex items-center justify-center gap-3 bg-[#111111] text-white px-8 py-[18px] font-sans text-[12px] font-bold uppercase tracking-[0.3em] hover:bg-[#6f2c3f] transition-colors duration-300 active:scale-[0.98] disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-[#111111]"
               >
-                {/* Shimmer overlay */}
-                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.07] to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
-                
-                <ShoppingBag className="w-[18px] h-[18px] relative z-10 stroke-[1.5]" />
-                <span className="relative z-10">{t('cart.add_to_cart')}</span>
+                <ShoppingBag className="w-4 h-4" strokeWidth={2} />
+                <span>{t('cart.add_to_cart')}</span>
               </button>
             </div>
-            
           </div>
         </div>
       </div>
     </div>
   );
+
+
+  
 }

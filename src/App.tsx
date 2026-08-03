@@ -12,7 +12,7 @@ import { useAuthStore } from "./store/useAuthStore";
 
 // Components & Layouts
 import AdminLayout from "./components/AdminLayout";
-import ShopLayout from "./components/ShopLayout";
+import ShopLayout from "./components/bar/ShopLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import CartDrawer from "./components/CartDrawer";
 

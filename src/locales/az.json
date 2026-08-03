@@ -134,8 +134,8 @@
   },
   "about": {
     "title": "Bizim İrsimiz",
-    "subtitle": "2021-ci ildən bəri sənətkarlığı fərqliliyə çeviririk.",
-    "origins": "2021-ci ildə xalis sənətkarlığın vizual hekayəsi olaraq doğulan E1000 Leather, bu gün xüsusi dərzişliyin və güzəştsiz keyfiyyətin sığınacağına çevrilmişdir.",
+    "subtitle": "2020-ci ildən bəri sənətkarlığı fərqliliyə çeviririk.",
+    "origins": "2020-ci ildə xalis sənətkarlığın vizual hekayəsi olaraq doğulan E1000 Leather, bu gün xüsusi dərzişliyin və güzəştsiz keyfiyyətin sığınacağına çevrilmişdir.",
     "philosophy": "Hər bir əsərimiz ən nadir və keyfiyyətli təbii dərilərdən yonulur, müştərilərimizin baxış bucağına uyğun olaraq fərdiləşdirilir. Ən mükəmməl olmaq sadəcə bir məqsəd deyil, atelyemizin dərin fəlsəfəsidir.",
     "customer": "Əsl lüks fərdiyyətə olan mütləq ehtiramda tapılır. Siz incəliklə fərqlisiniz və bizim ən böyük işimiz həmin fərqliliyi zamansız bir sənətə çevirməkdir.",
     "quote": "Fərqli olanların seçimi.",
@@ -191,7 +191,13 @@
     "postalCode": "Poçt İndeksi (Ehtiyac varsa)",
     "phone": "Əlaqə Nömrəsi",
     "address": "Tam Ünvan",
-    "notes": "Əlavə Qeydlər (Könüllü)",
+  
+    "notes": "Qeydlər",
+  "optional": "İstəyə bağlı",
+  "notes_instruction": "Məhsul üzərinə həkk olunacaq şəkil və ya yazının dəqiq olaraq hansı hissədə (məs: ön sağ alt künc, içəri sol tərəf) yerləşməsini istədiyinizi buraya qeyd edə bilərsiniz.",
+  "placeholders": {
+    "notes": "Yerləşdirmə detalları və digər xüsusi istəkləriniz..."
+  },
     "submit": "Sifarişi Təsdiqlə",
     "submitting": "Hesablanır...",
     "subtotal": "Ara Cəm",
@@ -219,6 +225,20 @@
       "syncFailed": "Səbət məlumatları yenilənərkən xəta baş verdi",
       "endpointNotFound": "Səbət xidməti müvəqqəti olaraq əlçatan deyil",
       "resolveBeforeCheckout": "Zəhmət olmasa səbətdəki xətaları düzəldin"
+    }
+  },
+  "pillars": {
+    "handcrafted": {
+      "title": "UNİKAL SƏNƏTKARLIQ",
+      "desc": "Hər bir məhsul ustalarımızın əlləri ilə fərdi şəkildə hazırlanır."
+    },
+    "fullGrain": {
+      "title": "FULL GRAIN",
+      "desc": "Yalnız ən yüksək dərəcəli, təbii full-grain dəridən istifadə olunur."
+    },
+    "madeToLast": {
+      "title": "ÖMÜRLÜK",
+      "desc": "Dizaynlarımız və materiallarımız zamana meydan oxumaq üçün seçilib."
     }
   }
 }

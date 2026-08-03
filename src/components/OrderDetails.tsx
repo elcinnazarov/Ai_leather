@@ -440,11 +440,37 @@ export default function OrderDetails({ orderId, onBack }: OrderDetailsProps) {
                 <div>
                   <p className="text-xs font-bold text-[#777587] uppercase tracking-wider">Delivery Address</p>
                   <p className="font-bold text-[#111c2d] text-sm leading-relaxed">{order.deliveryAddress}</p>
+                  
                 </div>
               </div>
             </div>
           </section>
+{/* Delivery Address bloku (bu səndə onsuz da var) */}
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 bg-[#f0f3ff] rounded-xl flex items-center justify-center text-[#3525cd] shrink-0">
+                  <MapPin className="w-5 h-5" />
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-[#777587] uppercase tracking-wider">Delivery Address</p>
+                  <p className="font-bold text-[#111c2d] text-sm leading-relaxed">{order.deliveryAddress}</p>
+                </div>
+              </div>
 
+              {/* === MÜŞTƏRİ QEYDİ BURA ƏLAVƏ EDİLİR === */}
+              {order.notes && (
+                <div className="flex items-start gap-4 mt-6 pt-6 border-t border-[#c7c4d8]/10">
+                  <div className="w-10 h-10 bg-[#f0f3ff] rounded-xl flex items-center justify-center text-[#3525cd] shrink-0">
+                    <FileText className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-[#777587] uppercase tracking-wider">Customer Note</p>
+                    <p className="font-bold text-[#111c2d] text-sm leading-relaxed whitespace-pre-wrap">
+                      {order.notes}
+                    </p>
+                  </div>
+                </div>
+              )}
+              {/* ======================================= */}
           {/* Payment Detail */}
           {order.payment && (
             <section className="bg-white p-8 rounded-[2.5rem] border border-[#c7c4d8]/15 shadow-sm space-y-6">
