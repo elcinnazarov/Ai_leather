@@ -3,31 +3,18 @@ import { useNavigate } from "react-router-dom";
 import { productService } from "../services/productService";
 import { ProductSummary, ProductCategory, ProductFilterRequest } from "../types/product";
 import { useTranslation } from "react-i18next";
-import { Search, Loader2, Star, Hammer, BadgeCheck, Clock } from "lucide-react";
+import { Search, Loader2, Star, Hammer, BadgeCheck, Clock, Volume2, VolumeX } from "lucide-react";
 import { cn } from "../lib/utils";
 import { motion } from "framer-motion";
 
-// ========================
-// 1. SCROLL BƏRPASINI QLOBAL SƏVİYYƏDƏ BAĞLAMAQ
-// ========================
-// Brauzerin öz native scroll-restoration davranışını söndürürük ki, bizim
-// bərpa məntiqimizlə yarışmasın. Bu, komponent yüklənmədən əvvəl işə düşməlidir.
 if (typeof window !== "undefined" && "scrollRestoration" in window.history) {
   window.history.scrollRestoration = "manual";
 }
 
 export default function ProductCatalog() {
-  // ✅ DÜZƏLİŞ: `useLanguageStore` + inline `dict` obyekti tamamilə çıxarıldı.
-  // Layihənin qalan hissəsi (ShopLayout, ProductDetail) artıq `react-i18next`
-  // istifadə edir — bu komponent də indi eyni sistemə keçdi, mətnlər isə
-  // `src/locales/az.json` və `en.json`-dakı `catalog` / `pillars`
-  // namespace-lərindən oxunur.
   const { t, i18n } = useTranslation();
   const lang = (i18n.language?.split("-")[0] || "az") as "az" | "en";
 
-  // ========================
-  // KEŞ AÇARLARI — geri qayıdanda filtr/məhsul/scroll bərpası üçün
-  // ========================
   const CATALOG_STATE_KEY = "productCatalogState";
   const CATALOG_SCROLL_KEY = "productCatalogScrollY";
 
@@ -40,23 +27,11 @@ export default function ProductCatalog() {
     }
   };
 
-  // ========================
-  // BİZNES MƏNTİQİ VƏ STATE
-  // ========================
   const [products, setProducts] = useState<ProductSummary[]>(() => readCachedState()?.products || []);
   const [loading, setLoading] = useState(() => !readCachedState());
   const [loadingMore, setLoadingMore] = useState(false);
   const [hasNext, setHasNext] = useState(() => readCachedState()?.hasNext || false);
 
-  // Bərpa ediləcək scroll mövqeyi varsa, düzgün yerə "atılana" qədər məzmunu gizli saxlayırıq
-  const [scrollRestored, setScrollRestored] = useState(() => {
-    try {
-      return !sessionStorage.getItem(CATALOG_SCROLL_KEY);
-    } catch {
-      return true;
-    }
-  });
-  
   const [filter, setFilter] = useState<ProductFilterRequest>(() => readCachedState()?.filter || {
     modelType: null,
     search: "",
@@ -64,14 +39,49 @@ export default function ProductCatalog() {
     size: 12,
   });
   
+  const [isHeroMuted, setIsHeroMuted] = useState(true);
+
   const navigate = useNavigate();
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
   const isFirstSearchEffect = useRef(true);
   const isFirstPageEffect = useRef(true);
+  
+  // ==========================================
+  // 1. AĞILLI ANİMASİYA VƏ SCROLL İDARƏETMƏSİ
+  // ==========================================
+  const hasRestoredScrollRef = useRef(false);
+  const hasInitializedRestored = useRef(false);
+  const isRestored = useRef(false);
 
-  // ========================
-  // KATEQORİYALAR — mövcud i18n açarlarından ("catalog.*") istifadə edilir
-  // ========================
+  if (!hasInitializedRestored.current) {
+    try {
+      isRestored.current = !!sessionStorage.getItem(CATALOG_SCROLL_KEY);
+    } catch {}
+    hasInitializedRestored.current = true;
+  }
+
+  const restoredCount = useRef(products.length);
+  const skipSectionAnim = isRestored.current;
+
+  useLayoutEffect(() => {
+    if (hasRestoredScrollRef.current) return;
+
+    if (products.length > 0) {
+      try {
+        const savedY = sessionStorage.getItem(CATALOG_SCROLL_KEY);
+        if (savedY) {
+          window.scrollTo({ top: parseInt(savedY, 10), behavior: "instant" });
+          sessionStorage.removeItem(CATALOG_SCROLL_KEY); 
+        }
+      } catch (e) {
+        console.error("Scroll bərpası xətası", e);
+      }
+      hasRestoredScrollRef.current = true;
+    }
+  }, [products.length]);
+
+  // ==========================================
+
   const categories = [
     { id: null, label: t("catalog.all", lang === "az" ? "BÜTÜN MƏHSULLAR" : "ALL PRODUCTS") },
     { id: "WALLET", label: t("catalog.wallets", lang === "az" ? "CÜZDANLAR" : "WALLETS") },
@@ -85,12 +95,9 @@ export default function ProductCatalog() {
     return t(`catalog.modelTypes.${type.toUpperCase()}`, type);
   };
 
-  // ========================
-  // STATİK DATALAR & VİDEOLAR
-  // ========================
   const reels = [
-    { src: "http://localhost:9000/ui-videos/anasehife2.MOV" },
     { src: "http://localhost:9000/ui-videos/Catalog1.mp4" },
+    { src: "http://localhost:9000/ui-videos/anasehife2.MOV" },
     { src: "http://localhost:9000/ui-videos/Catalog2.mp4" },
     { src: "http://localhost:9000/ui-videos/Catalog3.mp4" },
     { src: "http://localhost:9000/ui-videos/Catalog4.mp4" },
@@ -111,9 +118,6 @@ export default function ProductCatalog() {
     { image: `${CUSTOMER_EXPERIENCES_BASE_URL}/userlike4.jpg` }
   ];
 
-  // ========================
-  // APİ İSTƏKLƏRİ
-  // ========================
   const fetchProducts = async (isLoadMore = false) => {
     if (isLoadMore) setLoadingMore(true);
     else setLoading(true);
@@ -166,44 +170,6 @@ export default function ProductCatalog() {
     }
   }, [filter, products, hasNext]);
 
-  const hasRestoredScrollRef = useRef(false);
-
-  // ========================
-  // OPTİMALLAŞDIRILMIŞ SCROLL BƏRPASI (deterministik, YALNIZ 1 DƏFƏ)
-  // ========================
-  // DİQQƏT: `history.scrollRestoration = "manual"` etdiyimiz üçün brauzer
-  // artıq scroll mövqeyini özü idarə etmir — bu məsuliyyət tam bizim
-  // üzərimizdədir. Ona görə BURADA HƏR HALDA (savedY olsun-olmasın) scroll
-  // mövqeyini özümüz təyin edirik: ya dəqiq yadda saxlanmış yerə, ya da
-  // (belə bir yer yoxdursa) səhifənin lap yuxarısına. Heç bir vəziyyətdə
-  // ProductDetail-dən "daşınan" köhnə/təsadüfi scroll dəyərinə etibar
-  // etmirik.
-  //
-  // `hasRestoredScrollRef` MÜTLƏQDİR: `products.length` sonradan "daha çox
-  // göstər" düyməsi ilə də dəyişir — əgər qoruma olmasa, istifadəçi
-  // scroll edib məhsul yükləyəndə bu effekt YENİDƏN işə düşüb onu təzədən
-  // köhnə mövqeyə/yuxarıya atardı.
-  useLayoutEffect(() => {
-    if (hasRestoredScrollRef.current) return;
-    hasRestoredScrollRef.current = true;
-
-    try {
-      const savedY = sessionStorage.getItem(CATALOG_SCROLL_KEY);
-      if (savedY && products.length > 0) {
-        window.scrollTo({
-          top: parseInt(savedY, 10),
-          behavior: "instant" as ScrollBehavior
-        });
-      } else {
-        window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
-      }
-    } catch {
-      window.scrollTo(0, 0);
-    } finally {
-      setScrollRestored(true);
-    }
-  }, [products.length]);
-
   const formatPrice = (price: number | null | undefined, currency: string | null | undefined) => {
     if (price == null) return t("catalog.noPrice", "Qiymət yoxdur");
     const safeCurrency = currency || 'AZN';
@@ -229,74 +195,75 @@ export default function ProductCatalog() {
   };
 
   return (
-    <div
-      className={cn(
-        "bg-[#faf9f9] text-[#1b1c1c] antialiased min-h-screen font-sans selection:bg-[#c9c6c5] selection:text-black transition-opacity duration-150",
-        scrollRestored ? "opacity-100" : "opacity-0"
-      )}
-    >
-      {/* ============================================ */}
-      {/* 1. HERO SECTION & HEADER                     */}
-      {/* ============================================ */}
-      <section className="relative h-[100dvh] w-full overflow-hidden flex flex-col">
+    <div className="bg-[#faf9f9] text-[#1b1c1c] antialiased min-h-screen font-sans selection:bg-[#c9c6c5] selection:text-black">
+      
+    <section className="relative h-[100dvh] w-full overflow-hidden flex flex-col bg-[#1b1c1c]">
         <header className="absolute top-0 w-full z-50 py-5 px-6 md:px-16 flex justify-center items-center bg-gradient-to-b from-black/40 to-transparent">
           <div className="absolute left-1/2 -translate-x-1/2">
              <img src="/logo.png" alt="Ai Atelye" className="h-10 md:h-14 drop-shadow-md" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
           </div>
         </header>
 
-        <div className="absolute inset-0 z-0">
+        {/* --- VİDEO BÖLMƏSİ (YENİLƏNMİŞ) --- */}
+        <div className="absolute inset-0 z-0 flex items-center justify-center overflow-hidden">
+          {/* 1. Desktop üçün Bulanık Arxa Plan (Qıraqdakı qara boşluqları doldurmaq üçün) */}
+          <video 
+            autoPlay 
+            loop 
+            muted 
+            playsInline 
+            className="absolute w-full h-full object-cover opacity-40 blur-2xl hidden md:block scale-110"
+          >
+            <source src="http://localhost:9000/ui-videos/anasehife2.MOV" type="video/mp4" />
+          </video>
+         
+
+          {/* 2. Əsas Video */}
           <video
             autoPlay
             loop
-            muted
+            muted={isHeroMuted}
             playsInline
-            className="w-full h-full object-cover"
+            // Mobildə 'cover' (tam doldurur), Desktopda 'contain' (kəsilmədən tam göstərir)
+            className="relative z-10 w-full h-full object-cover md:object-contain"
           >
-            <source src="http://localhost:9000/ui-videos/anasehife.mp4" type="video/mp4" />
+            <source src="http://localhost:9000/ui-videos/anasehife2.MOV" type="video/mp4" />
           </video>
-          <div className="absolute inset-0 bg-black/10" />
+          
+          {/* Yüngül qaraltı (Mətnlər və logo yaxşı oxunsun deyə) */}
+          <div className="absolute inset-0 bg-black/10 z-20" />
         </div>
+        {/* --- VİDEO BÖLMƏSİNİN SONU --- */}
+
+        <button
+          onClick={() => setIsHeroMuted(!isHeroMuted)}
+          className="absolute bottom-6 right-6 md:bottom-10 md:right-10 z-40 p-3 md:p-3.5 bg-black/30 hover:bg-black/50 text-white rounded-full backdrop-blur-md border border-white/20 transition-all duration-300"
+          aria-label={isHeroMuted ? "Səsi aç" : "Səsi bağla"}
+        >
+          {isHeroMuted ? <VolumeX className="w-5 h-5 md:w-6 md:h-6" /> : <Volume2 className="w-5 h-5 md:w-6 md:h-6" />}
+        </button>
 
         <motion.div 
-          initial={{ opacity: 0, y: 30 }}
+          initial={skipSectionAnim ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2, delay: 0.2 }}
-          className="relative z-10 mt-auto mb-16 md:mb-24 text-center px-6"
+          transition={{ duration: skipSectionAnim ? 0 : 1.2, delay: skipSectionAnim ? 0 : 0.2 }}
+          className="relative z-30 mt-auto mb-16 md:mb-24 text-center px-6"
         >
           <button 
             onClick={() => { document.getElementById('catalog')?.scrollIntoView({ behavior: 'smooth' }); }}
             className="bg-white text-[#1b1c1c] px-10 md:px-14 py-4 text-[11px] md:text-[12px] uppercase tracking-[0.25em] font-medium hover:bg-[#e9c176] hover:text-white transition-colors duration-500"
           >
-            {t("catalog.heroCta", "KOLLEKSİYANI KƏŞF ET")}
+            {t("catalog.heroCta", lang === "az" ? "KOLLEKSİYANI KƏŞF ET" : "DISCOVER THE COLLECTION")}
           </button>
         </motion.div>
       </section>
 
-      {/* ============================================ */}
-      {/* 2. REELS VİDEOLARI                           */}
-      {/* ============================================ */}
       <section className="py-20 md:py-28 bg-[#faf9f9]">
-        <div className="px-5 md:px-20 mb-12 md:mb-16 flex justify-between items-end max-w-[1440px] mx-auto">
-          <div>
-            <h2 className="font-serif text-[clamp(1.5rem,4vw,2.5rem)] text-[#1b1c1c] mb-2 uppercase tracking-wider leading-[1.1]">
-              {t("catalog.reelsTitle", "Atelye Hekayələri")}
-            </h2>
-            <p className="text-[15px] md:text-[16px] text-[#5e5e5d] font-light tracking-wide">
-              {t("catalog.reelsSubtitle", "Hər bir parçanın arxasındakı ruh.")}
-            </p>
-          </div>
-        </div>
-
         <div className="flex overflow-x-auto hide-scrollbar gap-5 md:gap-8 px-5 md:px-20 snap-x snap-mandatory max-w-[1440px] mx-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           {reels.map((reel, idx) => (
             <div key={idx} className="flex-none w-[240px] md:w-72 snap-start">
               <div className="aspect-[9/16] relative overflow-hidden bg-[#e9e8e8] shadow-sm">
                 <video
-                  // ✅ DÜZƏLİŞ: callback ref bir dəyər return etməməlidir (TS2322).
-                  // Əvvəlki `el => videoRefs.current[idx] = el` assignment-in
-                  // nəticəsini (HTMLVideoElement | null) qaytarırdı; indi
-                  // gövdəni {} ilə bağlayaraq return dəyərini `void` edirik.
                   ref={(el) => { videoRefs.current[idx] = el; }}
                   src={`${reel.src}#t=0.1`}
                   controls
@@ -311,26 +278,8 @@ export default function ProductCatalog() {
         </div>
       </section>
 
-      {/* ============================================ */}
-      {/* 3. MASTER CATALOG MƏHSULLAR                  */}
-      {/* ============================================ */}
       <section id="catalog" className="bg-[#f4f3f3] py-20 md:py-28">
         <div className="max-w-[1440px] mx-auto px-5 md:px-20 space-y-10 md:space-y-14">
-
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.8 }}
-            className="max-w-3xl"
-          >
-            <p className="text-[11px] uppercase tracking-[0.25em] font-medium text-[#5e5e5d] mb-5">
-              {t("catalog.sectionLabel", "KOLLEKSİYA")}
-            </p>
-            <h2 className="font-serif text-[clamp(2rem,6vw,3.5rem)] leading-[1.1] mb-6 text-[#1b1c1c] tracking-[-0.01em]">
-              {t("catalog.tagline", "Minimalist dizayn və ənənəvi sənətkarlığın möhtəşəm vəhdəti.")}
-            </h2>
-          </motion.div>
 
           <div className="space-y-6 md:space-y-8">
             <div className="relative w-full md:max-w-md">
@@ -375,51 +324,54 @@ export default function ProductCatalog() {
           ) : (
             <div>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-y-10 md:gap-y-16 gap-x-3 sm:gap-x-5 md:gap-x-8">
-                {products.map((product, index) => (
-                  <motion.div 
-                    key={product.id} 
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-60px" }}
-                    transition={{ duration: 0.6, delay: (index % 4) * 0.06 }}
-                    onClick={() => {
-                      try {
-                        sessionStorage.setItem(CATALOG_SCROLL_KEY, String(window.scrollY));
-                      } catch {
-                        // sükutla keç
-                      }
-                      navigate(`/product/${product.id}`);
-                    }}
-                    className="group cursor-pointer flex flex-col"
-                  >
-                    <div className="relative aspect-[3/4] overflow-hidden bg-[#efeded] mb-4 md:mb-5">
-                      <img
-                        src={product.primaryImageUrl || 'https://via.placeholder.com/800x1066?text=No+Image'} 
-                        alt={product.modelName}
-                        loading="lazy"
-                        className="w-full h-full object-cover transition-transform duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.04]"
-                      />
-                    </div>
-
-                    <div className="text-center md:text-left px-0.5 md:px-1 flex flex-col flex-grow">
-                      <p className="text-[8px] md:text-[9px] uppercase tracking-[0.25em] text-[#9ca3af] mb-1.5 font-medium">
-                        Ai ATELYE
-                      </p>
-                      <h3 className="font-serif text-[13px] sm:text-[15px] md:text-[17px] leading-[1.25] mb-2 md:mb-2.5 text-[#1b1c1c] group-hover:text-[#5e5e5d] transition-colors duration-300 line-clamp-2 md:line-clamp-1 tracking-tight">
-                        {product.modelName}
-                      </h3>
-
-                      <div className="mt-auto flex flex-col md:flex-row md:items-center md:justify-between space-y-1 md:space-y-0">
-                        <span className="text-[12px] sm:text-[13px] md:text-[15px] font-light text-[#5e5e5d] tracking-wide">
-                          {formatPrice(product.basePrice, product.currency)}
-                        </span>
-                        <span className="text-[7px] md:text-[8px] uppercase tracking-[0.2em] text-[#5e5e5d] bg-[#e0dfde] px-2 py-[3px] self-center md:self-start font-medium">
-                          {translateModelType(product.modelType)}
-                        </span>
+                {products.map((product, index) => {
+                  const skipProductAnim = isRestored.current && index < restoredCount.current;
+                  
+                  return (
+                    <motion.div 
+                      key={product.id} 
+                      initial={skipProductAnim ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+                      whileInView={skipProductAnim ? undefined : { opacity: 1, y: 0 }}
+                      animate={skipProductAnim ? { opacity: 1, y: 0 } : undefined}
+                      viewport={skipProductAnim ? undefined : { once: true, margin: "-60px" }}
+                      transition={skipProductAnim ? { duration: 0 } : { duration: 0.6, delay: (index % 4) * 0.06 }}
+                      onClick={() => {
+                        try {
+                          sessionStorage.setItem(CATALOG_SCROLL_KEY, String(window.scrollY));
+                        } catch (e) {}
+                        navigate(`/product/${product.id}`);
+                      }}
+                      className="group cursor-pointer flex flex-col"
+                    >
+                      <div className="relative aspect-[3/4] overflow-hidden bg-[#efeded] mb-4 md:mb-5">
+                        <img
+                          src={product.primaryImageUrl || 'https://via.placeholder.com/800x1066?text=No+Image'} 
+                          alt={product.modelName}
+                          loading="lazy"
+                          className="w-full h-full object-cover transition-transform duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.04]"
+                        />
                       </div>
-                    </div>
-                  </motion.div>
-                ))}
+
+                      <div className="text-center md:text-left px-0.5 md:px-1 flex flex-col flex-grow">
+                        <p className="text-[8px] md:text-[9px] uppercase tracking-[0.25em] text-[#9ca3af] mb-1.5 font-medium">
+                          Ai ATELYE
+                        </p>
+                        <h3 className="font-serif text-[13px] sm:text-[15px] md:text-[17px] leading-[1.25] mb-2 md:mb-2.5 text-[#1b1c1c] group-hover:text-[#5e5e5d] transition-colors duration-300 line-clamp-2 md:line-clamp-1 tracking-tight">
+                          {product.modelName}
+                        </h3>
+
+                        <div className="mt-auto flex flex-col md:flex-row md:items-center md:justify-between space-y-1 md:space-y-0">
+                          <span className="text-[12px] sm:text-[13px] md:text-[15px] font-light text-[#5e5e5d] tracking-wide">
+                            {formatPrice(product.basePrice, product.currency)}
+                          </span>
+                          <span className="text-[7px] md:text-[8px] uppercase tracking-[0.2em] text-[#5e5e5d] bg-[#e0dfde] px-2 py-[3px] self-center md:self-start font-medium">
+                            {translateModelType(product.modelType)}
+                          </span>
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                })}
               </div>
 
               {hasNext && (
@@ -439,13 +391,10 @@ export default function ProductCatalog() {
         </div>
       </section>
 
-      {/* ============================================ */}
-      {/* 4. REAL MÜŞTƏRİ RƏYLƏRİ                      */}
-      {/* ============================================ */}
       <section className="py-20 md:py-28 bg-[#faf9f9]">
         <div className="px-5 md:px-20 text-center mb-12 md:mb-16 max-w-[1440px] mx-auto">
           <h2 className="font-serif text-[clamp(1.25rem,3vw,1.75rem)] text-[#1b1c1c] mb-3 tracking-tight">
-            {t("catalog.reviewsTitle", "Müştəri Təcrübələri")}
+            {t("catalog.reviewsTitle", lang === "az" ? "Müştəri Təcrübələri" : "Customer Experiences")}
           </h2>
           <div className="flex justify-center gap-0.5">
             {[...Array(5)].map((_, i) => (
@@ -458,10 +407,11 @@ export default function ProductCatalog() {
           {reviews.map((review, idx) => (
             <motion.div 
               key={idx}
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: idx * 0.1 }}
+              initial={skipSectionAnim ? { opacity: 1, x: 0 } : { opacity: 0, x: 20 }}
+              whileInView={skipSectionAnim ? undefined : { opacity: 1, x: 0 }}
+              animate={skipSectionAnim ? { opacity: 1, x: 0 } : undefined}
+              viewport={skipSectionAnim ? undefined : { once: true }}
+              transition={skipSectionAnim ? { duration: 0 } : { delay: idx * 0.1 }}
               className="flex-none w-[260px] md:w-[300px] overflow-hidden rounded-md shadow-sm"
             >
               <div className="w-full aspect-[4/5] bg-[#f4f3f3] relative group">
@@ -477,9 +427,6 @@ export default function ProductCatalog() {
         </div>
       </section>
 
-      {/* ============================================ */}
-      {/* 5. BRAND DƏYƏRLƏRİ                           */}
-      {/* ============================================ */}
       <section className="py-20 md:py-28 border-t border-[#e9e8e8] bg-white">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-14 px-5 md:px-20 text-center max-w-[1440px] mx-auto">
           {pillarsData.map((pillar, i) => {
@@ -487,10 +434,11 @@ export default function ProductCatalog() {
             return (
               <motion.div 
                 key={i}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ delay: i * 0.12, duration: 0.7 }}
+                initial={skipSectionAnim ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
+                whileInView={skipSectionAnim ? undefined : { opacity: 1, y: 0 }}
+                animate={skipSectionAnim ? { opacity: 1, y: 0 } : undefined}
+                viewport={skipSectionAnim ? undefined : { once: true, margin: "-60px" }}
+                transition={skipSectionAnim ? { duration: 0 } : { delay: i * 0.12, duration: 0.7 }}
                 className="space-y-5"
               >
                 <div className="w-11 h-11 bg-[#1b1c1c] rounded-full flex items-center justify-center mx-auto">
@@ -511,3 +459,4 @@ export default function ProductCatalog() {
     </div>
   );
 }
+

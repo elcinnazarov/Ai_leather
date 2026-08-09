@@ -118,8 +118,8 @@ export default function ProductDetail() {
   // — nəticədə məhsulun ƏVVƏLİ deyil, təsadüfi bir aşağı nöqtəsi görünürdü.
   // useLayoutEffect seçilib ki, bu, brauzer ekranı boyamazdan ƏVVƏL,
   // sinxron şəkildə baş versin — flaş/görünən sıçrayış olmasın.
-  useLayoutEffect(() => {
-    window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+useEffect(() => {
+    window.scrollTo(0, 0); // Məhsula daxil olanda ən yuxarıdan başlasın
   }, [id]);
   
   const { t } = useTranslation();
