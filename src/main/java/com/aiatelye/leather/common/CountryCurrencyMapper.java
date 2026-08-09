@@ -4,7 +4,7 @@ import com.aiatelye.leather.dao.enums.Enums;
 
 public class CountryCurrencyMapper {
     private CountryCurrencyMapper() {} // Obyekt yaradılmasının qarşısını alırıq
-
+// ölkere esasen valuta teyin edirem
     // 1. Sifariş və Çatdırılma (Enum) üçün
     public static Enums.Currency getCurrencyForCountry(Enums.Country country) {
         if (country == null) return Enums.Currency.USD;

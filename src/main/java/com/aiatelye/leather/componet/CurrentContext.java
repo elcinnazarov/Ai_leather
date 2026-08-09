@@ -7,8 +7,12 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import org.springframework.beans.factory.annotation.Value;
 @Component
 public class CurrentContext {
+
+    @Value("${jwt.secret}")
+    private String jwtSecret;
     public Long getCurrentUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -34,7 +38,7 @@ public class CurrentContext {
 
     private Long extractUserIdFromToken(String token) {
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(Keys.hmacShaKeyFor("supersecretkeythatshouldbeatleast32characterslong".getBytes()))
+                .setSigningKey(Keys.hmacShaKeyFor(jwtSecret.getBytes()))
                 .build()
                 .parseClaimsJws(token)
                 .getBody();

@@ -3,6 +3,7 @@ package com.aiatelye.leather.dto.admin.shiping;
 import com.aiatelye.leather.dao.enums.Enums;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Builder;
 import lombok.Data;
 
@@ -18,7 +19,7 @@ public class CreateShippingLocationRequest {
     private String cityName; // null = country default
 
     @NotNull
-    @Positive
+    @PositiveOrZero
     private BigDecimal fee;
 
     @NotNull

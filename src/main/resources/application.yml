@@ -101,6 +101,8 @@ app:
   geoip:
     database-path: classpath:GeoLite2-Country.mmdb
 
+jwt:
+  secret: ${JWT_SECRET_KEY}
 
 cache:
   redis:

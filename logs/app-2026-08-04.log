@@ -1,0 +1,154 @@
+2026-08-04 00:04:51.573 [http-nio-8080-exec-1] INFO  c.a.l.c.catalog.ProductController - GET /api/products - page: 0, filter: ProductFilterRequest(modelType=null, search=, page=0, size=12)
+2026-08-04 00:04:52.153 [http-nio-8080-exec-1] INFO  c.a.l.s.c.ProductCatalogService - Fetching product catalog - page: 0, currency: USD
+2026-08-04 00:04:52.447 [http-nio-8080-exec-1] INFO  c.a.l.c.ProductCatalogCacheRepository - Initial page cache hit for USD
+2026-08-04 00:04:53.939 [http-nio-8080-exec-8] INFO  c.a.l.c.catalog.ProductController - GET /api/products/13/available-leathers
+2026-08-04 00:04:53.940 [http-nio-8080-exec-6] INFO  c.a.l.c.catalog.ProductController - GET /api/products/13 - Product detail requested
+2026-08-04 00:04:53.942 [http-nio-8080-exec-8] INFO  c.a.l.s.c.ProductCatalogService - Fetching available leathers for product: 13
+2026-08-04 00:04:53.947 [http-nio-8080-exec-6] INFO  c.a.l.c.ProductCatalogCacheRepository - Product detail cache hit: product:detail:13:USD
+2026-08-04 00:04:53.947 [http-nio-8080-exec-6] INFO  c.a.l.s.c.ProductCatalogService - Cache hit: Returning product 13 for USD
+2026-08-04 00:04:53.972 [http-nio-8080-exec-10] INFO  c.a.l.c.catalog.ProductController - GET /api/products/13 - Product detail requested
+2026-08-04 00:04:53.975 [http-nio-8080-exec-10] INFO  c.a.l.c.ProductCatalogCacheRepository - Product detail cache hit: product:detail:13:USD
+2026-08-04 00:04:53.975 [http-nio-8080-exec-10] INFO  c.a.l.s.c.ProductCatalogService - Cache hit: Returning product 13 for USD
+2026-08-04 00:04:54.323 [http-nio-8080-exec-8] INFO  c.a.l.cache.LeatherCacheRepository - Cached 2 leathers for product: 13
+2026-08-04 00:04:54.323 [http-nio-8080-exec-8] INFO  c.a.l.s.c.ProductCatalogService - Found and cached 2 leathers for product: 13
+2026-08-04 00:04:54.351 [http-nio-8080-exec-9] INFO  c.a.l.c.catalog.ProductController - GET /api/products/13/available-leathers
+2026-08-04 00:04:54.351 [http-nio-8080-exec-9] INFO  c.a.l.s.c.ProductCatalogService - Fetching available leathers for product: 13
+2026-08-04 00:04:54.366 [http-nio-8080-exec-9] INFO  c.a.l.cache.LeatherCacheRepository - Cache hit for leathers: 13
+2026-08-04 00:04:54.368 [http-nio-8080-exec-9] INFO  c.a.l.s.c.ProductCatalogService - Returning cached leathers for product: 13
+2026-08-04 00:04:56.606 [http-nio-8080-exec-7] INFO  c.a.l.c.catalog.ProductController - GET /api/products - page: 0, filter: ProductFilterRequest(modelType=null, search=, page=0, size=12)
+2026-08-04 00:04:56.616 [http-nio-8080-exec-7] INFO  c.a.l.s.c.ProductCatalogService - Fetching product catalog - page: 0, currency: USD
+2026-08-04 00:04:56.626 [http-nio-8080-exec-7] INFO  c.a.l.c.ProductCatalogCacheRepository - Initial page cache hit for USD
+2026-08-04 00:04:59.678 [http-nio-8080-exec-5] INFO  c.a.l.c.catalog.ProductController - GET /api/products/8/available-leathers
+2026-08-04 00:04:59.679 [http-nio-8080-exec-6] INFO  c.a.l.c.catalog.ProductController - GET /api/products/8 - Product detail requested
+2026-08-04 00:04:59.692 [http-nio-8080-exec-5] INFO  c.a.l.s.c.ProductCatalogService - Fetching available leathers for product: 8
+2026-08-04 00:04:59.699 [http-nio-8080-exec-6] INFO  c.a.l.c.ProductCatalogCacheRepository - Product detail cache hit: product:detail:8:USD
+2026-08-04 00:04:59.699 [http-nio-8080-exec-6] INFO  c.a.l.s.c.ProductCatalogService - Cache hit: Returning product 8 for USD
+2026-08-04 00:04:59.891 [http-nio-8080-exec-10] INFO  c.a.l.c.catalog.ProductController - GET /api/products/8 - Product detail requested
+2026-08-04 00:04:59.923 [http-nio-8080-exec-10] INFO  c.a.l.c.ProductCatalogCacheRepository - Product detail cache hit: product:detail:8:USD
+2026-08-04 00:04:59.926 [http-nio-8080-exec-10] INFO  c.a.l.s.c.ProductCatalogService - Cache hit: Returning product 8 for USD
+2026-08-04 00:04:59.943 [http-nio-8080-exec-5] INFO  c.a.l.cache.LeatherCacheRepository - Cached 4 leathers for product: 8
+2026-08-04 00:04:59.943 [http-nio-8080-exec-5] INFO  c.a.l.s.c.ProductCatalogService - Found and cached 4 leathers for product: 8
+2026-08-04 00:04:59.993 [http-nio-8080-exec-8] INFO  c.a.l.c.catalog.ProductController - GET /api/products/8/available-leathers
+2026-08-04 00:04:59.994 [http-nio-8080-exec-8] INFO  c.a.l.s.c.ProductCatalogService - Fetching available leathers for product: 8
+2026-08-04 00:05:00.000 [http-nio-8080-exec-8] INFO  c.a.l.cache.LeatherCacheRepository - Cache hit for leathers: 8
+2026-08-04 00:05:00.000 [http-nio-8080-exec-8] INFO  c.a.l.s.c.ProductCatalogService - Returning cached leathers for product: 8
+2026-08-04 00:05:01.589 [http-nio-8080-exec-9] INFO  c.a.l.c.catalog.ProductController - GET /api/products - page: 0, filter: ProductFilterRequest(modelType=null, search=, page=0, size=12)
+2026-08-04 00:05:01.657 [http-nio-8080-exec-9] INFO  c.a.l.s.c.ProductCatalogService - Fetching product catalog - page: 0, currency: USD
+2026-08-04 00:05:01.791 [http-nio-8080-exec-9] INFO  c.a.l.c.ProductCatalogCacheRepository - Initial page cache hit for USD
+2026-08-04 00:05:03.390 [http-nio-8080-exec-6] INFO  c.a.l.c.catalog.ProductController - GET /api/products/1 - Product detail requested
+2026-08-04 00:05:03.406 [http-nio-8080-exec-2] INFO  c.a.l.c.catalog.ProductController - GET /api/products/1/available-leathers
+2026-08-04 00:05:03.505 [http-nio-8080-exec-2] INFO  c.a.l.s.c.ProductCatalogService - Fetching available leathers for product: 1
+2026-08-04 00:05:03.595 [http-nio-8080-exec-6] INFO  c.a.l.c.ProductCatalogCacheRepository - Product detail cache hit: product:detail:1:USD
+2026-08-04 00:05:03.595 [http-nio-8080-exec-6] INFO  c.a.l.s.c.ProductCatalogService - Cache hit: Returning product 1 for USD
+2026-08-04 00:05:03.641 [http-nio-8080-exec-10] INFO  c.a.l.c.catalog.ProductController - GET /api/products/1 - Product detail requested
+2026-08-04 00:05:03.876 [http-nio-8080-exec-10] INFO  c.a.l.c.ProductCatalogCacheRepository - Product detail cache hit: product:detail:1:USD
+2026-08-04 00:05:03.876 [http-nio-8080-exec-10] INFO  c.a.l.s.c.ProductCatalogService - Cache hit: Returning product 1 for USD
+2026-08-04 00:05:04.186 [http-nio-8080-exec-2] INFO  c.a.l.cache.LeatherCacheRepository - Cached 4 leathers for product: 1
+2026-08-04 00:05:04.187 [http-nio-8080-exec-2] INFO  c.a.l.s.c.ProductCatalogService - Found and cached 4 leathers for product: 1
+2026-08-04 00:05:04.308 [http-nio-8080-exec-5] INFO  c.a.l.c.catalog.ProductController - GET /api/products/1/available-leathers
+2026-08-04 00:05:04.309 [http-nio-8080-exec-5] INFO  c.a.l.s.c.ProductCatalogService - Fetching available leathers for product: 1
+2026-08-04 00:05:04.457 [http-nio-8080-exec-5] INFO  c.a.l.cache.LeatherCacheRepository - Cache hit for leathers: 1
+2026-08-04 00:05:04.467 [http-nio-8080-exec-5] INFO  c.a.l.s.c.ProductCatalogService - Returning cached leathers for product: 1
+2026-08-04 00:05:05.428 [http-nio-8080-exec-8] INFO  c.a.l.c.catalog.ProductController - GET /api/products - page: 0, filter: ProductFilterRequest(modelType=null, search=, page=0, size=12)
+2026-08-04 00:05:05.546 [http-nio-8080-exec-8] INFO  c.a.l.s.c.ProductCatalogService - Fetching product catalog - page: 0, currency: USD
+2026-08-04 00:05:05.696 [http-nio-8080-exec-8] INFO  c.a.l.c.ProductCatalogCacheRepository - Initial page cache hit for USD
+2026-08-04 00:05:11.872 [http-nio-8080-exec-9] INFO  c.a.l.c.catalog.ProductController - GET /api/products/13 - Product detail requested
+2026-08-04 00:05:11.887 [http-nio-8080-exec-3] INFO  c.a.l.c.catalog.ProductController - GET /api/products/13/available-leathers
+2026-08-04 00:05:11.905 [http-nio-8080-exec-3] INFO  c.a.l.s.c.ProductCatalogService - Fetching available leathers for product: 13
+2026-08-04 00:05:11.916 [http-nio-8080-exec-3] INFO  c.a.l.cache.LeatherCacheRepository - Cache hit for leathers: 13
+2026-08-04 00:05:11.916 [http-nio-8080-exec-3] INFO  c.a.l.s.c.ProductCatalogService - Returning cached leathers for product: 13
+2026-08-04 00:05:11.918 [http-nio-8080-exec-9] INFO  c.a.l.c.ProductCatalogCacheRepository - Product detail cache hit: product:detail:13:USD
+2026-08-04 00:05:11.919 [http-nio-8080-exec-9] INFO  c.a.l.s.c.ProductCatalogService - Cache hit: Returning product 13 for USD
+2026-08-04 00:05:11.954 [http-nio-8080-exec-4] INFO  c.a.l.c.catalog.ProductController - GET /api/products/13/available-leathers
+2026-08-04 00:05:11.955 [http-nio-8080-exec-4] INFO  c.a.l.s.c.ProductCatalogService - Fetching available leathers for product: 13
+2026-08-04 00:05:11.958 [http-nio-8080-exec-7] INFO  c.a.l.c.catalog.ProductController - GET /api/products/13 - Product detail requested
+2026-08-04 00:05:11.991 [http-nio-8080-exec-4] INFO  c.a.l.cache.LeatherCacheRepository - Cache hit for leathers: 13
+2026-08-04 00:05:11.992 [http-nio-8080-exec-7] INFO  c.a.l.c.ProductCatalogCacheRepository - Product detail cache hit: product:detail:13:USD
+2026-08-04 00:05:11.992 [http-nio-8080-exec-7] INFO  c.a.l.s.c.ProductCatalogService - Cache hit: Returning product 13 for USD
+2026-08-04 00:05:11.992 [http-nio-8080-exec-4] INFO  c.a.l.s.c.ProductCatalogService - Returning cached leathers for product: 13
+2026-08-04 00:05:13.803 [http-nio-8080-exec-1] INFO  c.a.l.c.catalog.ProductController - GET /api/products - page: 0, filter: ProductFilterRequest(modelType=null, search=, page=0, size=12)
+2026-08-04 00:05:13.854 [http-nio-8080-exec-1] INFO  c.a.l.s.c.ProductCatalogService - Fetching product catalog - page: 0, currency: USD
+2026-08-04 00:05:13.861 [http-nio-8080-exec-1] INFO  c.a.l.c.ProductCatalogCacheRepository - Initial page cache hit for USD
+2026-08-04 00:06:09.373 [http-nio-8080-exec-2] INFO  c.a.l.c.order.CartController - POST /api/cart/preview - 1 items, currency: USD
+2026-08-04 00:06:09.409 [http-nio-8080-exec-2] INFO  c.a.l.s.Order.CartPreviewService - Cart preview requested with 1 items, currency: USD
+2026-08-04 00:06:10.589 [http-nio-8080-exec-2] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:8:grade:3:AZN
+2026-08-04 00:06:11.804 [http-nio-8080-exec-5] INFO  c.a.l.c.order.CartController - POST /api/cart/preview - 1 items, currency: AZN
+2026-08-04 00:06:11.809 [http-nio-8080-exec-3] INFO  c.a.l.c.order.CartController - POST /api/cart/preview - 1 items, currency: AZN
+2026-08-04 00:06:11.837 [http-nio-8080-exec-3] INFO  c.a.l.s.Order.CartPreviewService - Cart preview requested with 1 items, currency: AZN
+2026-08-04 00:06:11.837 [http-nio-8080-exec-5] INFO  c.a.l.s.Order.CartPreviewService - Cart preview requested with 1 items, currency: AZN
+2026-08-04 00:06:11.913 [http-nio-8080-exec-5] INFO  c.a.l.cache.PriceCacheRepository - Price cache hit: price:product:8:grade:3:AZN
+2026-08-04 00:06:11.913 [http-nio-8080-exec-5] WARN  c.a.l.s.Order.CartPreviewService - Price mismatch for product 8: seen=100, current=150.00
+2026-08-04 00:06:12.355 [http-nio-8080-exec-3] INFO  c.a.l.cache.PriceCacheRepository - Price cache hit: price:product:8:grade:3:AZN
+2026-08-04 00:06:12.355 [http-nio-8080-exec-3] WARN  c.a.l.s.Order.CartPreviewService - Price mismatch for product 8: seen=100, current=150.00
+2026-08-04 00:11:20.340 [http-nio-8080-exec-6] INFO  c.a.l.c.catalog.ProductController - GET /api/products - page: 0, filter: ProductFilterRequest(modelType=null, search=, page=0, size=12)
+2026-08-04 00:11:20.491 [http-nio-8080-exec-6] INFO  c.a.l.s.c.ProductCatalogService - Fetching product catalog - page: 0, currency: USD
+2026-08-04 00:11:20.770 [http-nio-8080-exec-6] INFO  c.a.l.c.ProductCatalogCacheRepository - Initial page cache hit for USD
+2026-08-04 00:11:58.798 [http-nio-8080-exec-5] INFO  c.a.l.c.catalog.ProductController - GET /api/products/5/available-leathers
+2026-08-04 00:11:58.798 [http-nio-8080-exec-9] INFO  c.a.l.c.catalog.ProductController - GET /api/products/5 - Product detail requested
+2026-08-04 00:11:58.827 [http-nio-8080-exec-5] INFO  c.a.l.s.c.ProductCatalogService - Fetching available leathers for product: 5
+2026-08-04 00:11:58.865 [http-nio-8080-exec-9] INFO  c.a.l.c.ProductCatalogCacheRepository - Product detail cache hit: product:detail:5:USD
+2026-08-04 00:11:58.865 [http-nio-8080-exec-9] INFO  c.a.l.s.c.ProductCatalogService - Cache hit: Returning product 5 for USD
+2026-08-04 00:11:58.971 [http-nio-8080-exec-4] INFO  c.a.l.c.catalog.ProductController - GET /api/products/5 - Product detail requested
+2026-08-04 00:11:58.976 [http-nio-8080-exec-4] INFO  c.a.l.c.ProductCatalogCacheRepository - Product detail cache hit: product:detail:5:USD
+2026-08-04 00:11:58.976 [http-nio-8080-exec-4] INFO  c.a.l.s.c.ProductCatalogService - Cache hit: Returning product 5 for USD
+2026-08-04 00:11:59.614 [http-nio-8080-exec-5] INFO  c.a.l.cache.LeatherCacheRepository - Cached 4 leathers for product: 5
+2026-08-04 00:11:59.614 [http-nio-8080-exec-5] INFO  c.a.l.s.c.ProductCatalogService - Found and cached 4 leathers for product: 5
+2026-08-04 00:11:59.678 [http-nio-8080-exec-7] INFO  c.a.l.c.catalog.ProductController - GET /api/products/5/available-leathers
+2026-08-04 00:11:59.712 [http-nio-8080-exec-7] INFO  c.a.l.s.c.ProductCatalogService - Fetching available leathers for product: 5
+2026-08-04 00:11:59.890 [http-nio-8080-exec-7] INFO  c.a.l.cache.LeatherCacheRepository - Cache hit for leathers: 5
+2026-08-04 00:11:59.893 [http-nio-8080-exec-7] INFO  c.a.l.s.c.ProductCatalogService - Returning cached leathers for product: 5
+2026-08-04 00:12:02.293 [http-nio-8080-exec-1] INFO  c.a.l.c.catalog.ProductController - GET /api/products - page: 0, filter: ProductFilterRequest(modelType=null, search=, page=0, size=12)
+2026-08-04 00:12:02.302 [http-nio-8080-exec-1] INFO  c.a.l.s.c.ProductCatalogService - Fetching product catalog - page: 0, currency: USD
+2026-08-04 00:12:02.305 [http-nio-8080-exec-1] INFO  c.a.l.c.ProductCatalogCacheRepository - Initial page cache hit for USD
+2026-08-04 00:12:10.151 [http-nio-8080-exec-8] INFO  c.a.l.c.order.OrderController - GET /api/orders/me - User: 13, page: 0
+2026-08-04 00:12:11.355 [http-nio-8080-exec-3] INFO  c.a.l.c.order.OrderController - GET /api/orders/me - User: 13, page: 0
+2026-08-04 00:12:38.516 [http-nio-8080-exec-2] INFO  c.a.l.c.catalog.ProductController - GET /api/products - page: 0, filter: ProductFilterRequest(modelType=null, search=, page=0, size=12)
+2026-08-04 00:12:38.520 [http-nio-8080-exec-2] INFO  c.a.l.s.c.ProductCatalogService - Fetching product catalog - page: 0, currency: USD
+2026-08-04 00:12:38.537 [http-nio-8080-exec-2] INFO  c.a.l.c.ProductCatalogCacheRepository - Initial page cache hit for USD
+2026-08-04 00:12:47.638 [http-nio-8080-exec-9] INFO  c.a.l.c.order.OrderController - GET /api/orders/me - User: 13, page: 0
+2026-08-04 00:12:47.707 [http-nio-8080-exec-4] INFO  c.a.l.c.order.OrderController - GET /api/orders/me - User: 13, page: 0
+2026-08-04 00:12:54.877 [http-nio-8080-exec-5] INFO  c.a.l.c.catalog.ProductController - GET /api/products - page: 0, filter: ProductFilterRequest(modelType=null, search=, page=0, size=12)
+2026-08-04 00:12:54.968 [http-nio-8080-exec-5] INFO  c.a.l.s.c.ProductCatalogService - Fetching product catalog - page: 0, currency: USD
+2026-08-04 00:12:55.063 [http-nio-8080-exec-5] INFO  c.a.l.c.ProductCatalogCacheRepository - Initial page cache hit for USD
+2026-08-04 00:20:04.486 [http-nio-8080-exec-8] INFO  c.a.l.c.catalog.ProductController - GET /api/products/14/available-leathers
+2026-08-04 00:20:04.486 [http-nio-8080-exec-4] INFO  c.a.l.c.catalog.ProductController - GET /api/products/14 - Product detail requested
+2026-08-04 00:20:04.589 [http-nio-8080-exec-8] INFO  c.a.l.s.c.ProductCatalogService - Fetching available leathers for product: 14
+2026-08-04 00:20:05.758 [http-nio-8080-exec-4] INFO  c.a.l.c.ProductCatalogCacheRepository - Product detail cached with key: product:detail:14:USD
+2026-08-04 00:20:05.843 [http-nio-8080-exec-5] INFO  c.a.l.c.catalog.ProductController - GET /api/products/14 - Product detail requested
+2026-08-04 00:20:05.857 [http-nio-8080-exec-5] INFO  c.a.l.c.ProductCatalogCacheRepository - Product detail cache hit: product:detail:14:USD
+2026-08-04 00:20:05.858 [http-nio-8080-exec-5] INFO  c.a.l.s.c.ProductCatalogService - Cache hit: Returning product 14 for USD
+2026-08-04 00:20:05.987 [http-nio-8080-exec-8] WARN  c.a.l.s.c.ProductCatalogService - No leathers found for product: 14. Skipping cache to prevent empty cache pollution.
+2026-08-04 00:20:06.035 [http-nio-8080-exec-1] INFO  c.a.l.c.catalog.ProductController - GET /api/products/14/available-leathers
+2026-08-04 00:20:06.036 [http-nio-8080-exec-1] INFO  c.a.l.s.c.ProductCatalogService - Fetching available leathers for product: 14
+2026-08-04 00:20:06.163 [http-nio-8080-exec-1] WARN  c.a.l.s.c.ProductCatalogService - No leathers found for product: 14. Skipping cache to prevent empty cache pollution.
+2026-08-04 00:20:07.783 [http-nio-8080-exec-7] INFO  c.a.l.c.catalog.ProductController - GET /api/products - page: 0, filter: ProductFilterRequest(modelType=null, search=, page=0, size=12)
+2026-08-04 00:20:07.901 [http-nio-8080-exec-7] INFO  c.a.l.s.c.ProductCatalogService - Fetching product catalog - page: 0, currency: USD
+2026-08-04 00:20:08.471 [http-nio-8080-exec-7] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:13:grade:1:AZN
+2026-08-04 00:20:08.495 [http-nio-8080-exec-7] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:8:grade:3:AZN
+2026-08-04 00:20:08.529 [http-nio-8080-exec-7] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:5:grade:2:AZN
+2026-08-04 00:20:08.552 [http-nio-8080-exec-7] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:1:grade:1:AZN
+2026-08-04 00:20:08.563 [http-nio-8080-exec-7] INFO  c.a.l.c.ProductCatalogCacheRepository - Initial page cached for USD: 6 products
+2026-08-04 00:20:10.805 [http-nio-8080-exec-6] INFO  c.a.l.c.catalog.ProductController - GET /api/products/5 - Product detail requested
+2026-08-04 00:20:10.807 [http-nio-8080-exec-10] INFO  c.a.l.c.catalog.ProductController - GET /api/products/5/available-leathers
+2026-08-04 00:20:10.814 [http-nio-8080-exec-10] INFO  c.a.l.s.c.ProductCatalogService - Fetching available leathers for product: 5
+2026-08-04 00:20:10.817 [http-nio-8080-exec-6] INFO  c.a.l.c.ProductCatalogCacheRepository - Product detail cache hit: product:detail:5:USD
+2026-08-04 00:20:10.818 [http-nio-8080-exec-6] INFO  c.a.l.s.c.ProductCatalogService - Cache hit: Returning product 5 for USD
+2026-08-04 00:20:10.818 [http-nio-8080-exec-10] INFO  c.a.l.cache.LeatherCacheRepository - Cache hit for leathers: 5
+2026-08-04 00:20:10.820 [http-nio-8080-exec-10] INFO  c.a.l.s.c.ProductCatalogService - Returning cached leathers for product: 5
+2026-08-04 00:20:10.852 [http-nio-8080-exec-2] INFO  c.a.l.c.catalog.ProductController - GET /api/products/5/available-leathers
+2026-08-04 00:20:10.852 [http-nio-8080-exec-3] INFO  c.a.l.c.catalog.ProductController - GET /api/products/5 - Product detail requested
+2026-08-04 00:20:10.852 [http-nio-8080-exec-2] INFO  c.a.l.s.c.ProductCatalogService - Fetching available leathers for product: 5
+2026-08-04 00:20:10.870 [http-nio-8080-exec-3] INFO  c.a.l.c.ProductCatalogCacheRepository - Product detail cache hit: product:detail:5:USD
+2026-08-04 00:20:10.870 [http-nio-8080-exec-3] INFO  c.a.l.s.c.ProductCatalogService - Cache hit: Returning product 5 for USD
+2026-08-04 00:20:10.870 [http-nio-8080-exec-2] INFO  c.a.l.cache.LeatherCacheRepository - Cache hit for leathers: 5
+2026-08-04 00:20:10.871 [http-nio-8080-exec-2] INFO  c.a.l.s.c.ProductCatalogService - Returning cached leathers for product: 5
+2026-08-04 00:20:12.369 [http-nio-8080-exec-9] INFO  c.a.l.c.catalog.ProductController - GET /api/products - page: 0, filter: ProductFilterRequest(modelType=null, search=, page=0, size=12)
+2026-08-04 00:20:12.558 [http-nio-8080-exec-9] INFO  c.a.l.s.c.ProductCatalogService - Fetching product catalog - page: 0, currency: USD
+2026-08-04 00:20:12.649 [http-nio-8080-exec-9] INFO  c.a.l.c.ProductCatalogCacheRepository - Initial page cache hit for USD
+2026-08-04 00:22:22.450 [org.springframework.amqp.rabbit.RabbitListenerEndpointContainer#0-2] INFO  o.s.a.r.l.SimpleMessageListenerContainer - Waiting for workers to finish.
+2026-08-04 00:22:23.129 [org.springframework.amqp.rabbit.RabbitListenerEndpointContainer#0-2] INFO  o.s.a.r.l.SimpleMessageListenerContainer - Successfully waited for workers to finish.
+2026-08-04 00:22:23.151 [SpringApplicationShutdownHook] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-08-04 00:22:23.215 [tomcat-shutdown] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-08-04 00:22:23.651 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-08-04 00:22:23.712 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-08-04 00:22:23.723 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
