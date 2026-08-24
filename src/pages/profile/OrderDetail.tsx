@@ -7,7 +7,7 @@ import { ArrowLeft, FileText, MapPin } from "lucide-react";
 import { useCurrencyStore } from "../../store/useCurrencyStore";
 import { useTranslation } from "react-i18next";
 import { useAITranslation } from "../../lib/hooks/useAITranslation";
-
+import CheckoutPaymentButton from "../../payment/handlePaymentRedirect";
 function OrderItemInfo({ item, symbol }: any) {
   const dynModelName = useAITranslation(item.productModelName);
   const dynLeatherName = useAITranslation(item.leatherName);
@@ -213,11 +213,20 @@ export default function OrderDetail() {
                 </span>
               </div>
 
-              <div className="bg-[#f9f9f9] p-4 text-center">
-                <span className={`font-sans text-[10px] uppercase tracking-widest font-black ${order.paymentStatus === 'PAID' ? 'text-emerald-700' : 'text-[#271310]'}`}>
+             <div className="bg-[#f9f9f9] p-4 text-center">
+                <span className={`font-sans text-[10px] uppercase tracking-widest font-black ${order.paymentStatus === 'SUCCESS' ? 'text-emerald-700' : 'text-[#271310]'}`}>
                   {t("orders.payment", "Payment")}: {order.paymentStatus}
                 </span>
               </div>
+
+              {/* === BURA ƏLAVƏ OLUNUR === */}
+              {order.status === OrderStatus.PENDING && order.paymentStatus !== 'SUCCESS' && (
+                <div className="mt-6 border-t border-[#d3c3c0] pt-6 flex justify-center w-full">
+                  <CheckoutPaymentButton orderId={parseInt(id!)} />
+                </div>
+              )}
+              {/* ======================== */}
+
             </section>
 
             {/* Delivery Info */}

@@ -97,7 +97,7 @@ export default function ProductCatalog() {
 
   const reels = [
     { src: "http://localhost:9000/ui-videos/Catalog1.mp4" },
-    { src: "http://localhost:9000/ui-videos/anasehife2.MOV" },
+
     { src: "http://localhost:9000/ui-videos/Catalog2.mp4" },
     { src: "http://localhost:9000/ui-videos/Catalog3.mp4" },
     { src: "http://localhost:9000/ui-videos/Catalog4.mp4" },

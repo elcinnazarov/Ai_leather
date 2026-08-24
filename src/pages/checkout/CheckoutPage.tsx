@@ -9,6 +9,7 @@ import { useOrders } from "../../lib/hooks/useOrders";
 import { useAITranslation } from "../../lib/hooks/useAITranslation";
 import { OrderType, Country } from "../../types/order";
 import { useTranslation } from "react-i18next";
+import { paymentService } from "../../services/paymentService";
 import { getCurrencySymbol, getCurrencyForCountry } from "../../lib/currencyMapper";
 import {
   Loader2,
@@ -122,6 +123,7 @@ export default function CheckoutPage() {
 
   const [previewData, setPreviewData] = useState<any | null>(null);
   const [loading, setLoading] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showCountryWarning, setShowCountryWarning] = useState(false);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
@@ -328,8 +330,26 @@ export default function CheckoutPage() {
           renderImageUrl: item.finalImageUrl || item.renderImageUrl
         }))
       };
+// 1. Sifarişi yaradırıq
+      const createdOrder = await createOrder(orderRequest);
 
-      await createOrder(orderRequest);
+      // 2. Əgər sifariş uğurla yarandısa (ID qayıtdısa), Payriff-ə müraciət edirik
+      if (createdOrder && createdOrder.orderId) {
+        setIsRedirecting(true); // Yönləndirmə animasiyasını yandırırıq
+        
+        const checkoutData = await paymentService.initiateCheckout(createdOrder.orderId);
+        
+        // 3. Link gəldisə müştərini ora atırıq
+        if (checkoutData && checkoutData.paymentUrl) {
+          window.location.href = checkoutData.paymentUrl;
+        } else {
+          alert(t("checkout.payment_error", "Ödəniş linki yaradıla bilmədi. Zəhmət olmasa arxivdən təkrar cəhd edin."));
+          setIsRedirecting(false);
+        }
+      } else {
+         // Əgər ID qayıtmırsa, adi qaydada uğur səhifəsinə/arxivə atsın
+         navigate("/profile/orders");
+      }
     } catch (error: any) {
       console.error("Checkout failed:", error);
     }
@@ -677,27 +697,30 @@ export default function CheckoutPage() {
 
               {/* Submit */}
               <div className="pt-4">
-                <button
-                  type="submit"
-                  disabled={!previewData?.valid || creating}
-                  className="w-full bg-[#271310] text-white py-5 rounded-md font-sans font-bold text-[11px] uppercase tracking-[0.25em] hover:bg-[#3e2723] active:scale-[0.99] transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100 flex items-center justify-center gap-3 shadow-lg shadow-[#271310]/20"
-                >
-                  {creating ? (
-                    <>
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                      {t("checkout.submitting", "Göndərilir...")}
-                    </>
-                  ) : (
-                    <>
-                      <Check className="w-4 h-4" strokeWidth={2.5} />
-                      {t("checkout.submit", "Sifarişi təsdiqlə")}
-                    </>
-                  )}
+  <button
+    type="submit"
+    disabled={!previewData?.valid || creating || isRedirecting}
+    className="w-full bg-[#271310] text-white py-5 rounded-md font-sans font-bold text-[11px] uppercase tracking-[0.25em] hover:bg-[#3e2723] active:scale-[0.99] transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100 flex items-center justify-center gap-3 shadow-lg shadow-[#271310]/20"
+  >
+      {creating || isRedirecting ? (
+      <>
+        <Loader2 className="w-4 h-4 animate-spin" />
+        {isRedirecting 
+          ? t("checkout.redirecting", "Ödənişə Yönləndirilir...") 
+          : t("checkout.submitting", "Sifariş Yaradılır...")}
+           </>
+           ) : (
+            <>
+           {React.createElement(Lock as any, { className: "w-4 h-4", strokeWidth: 2.5 })}
+                  {t("checkout.submit_and_pay", "Sifarişi Təsdiqlə və Ödə")}
+            </>
+               )}
                 </button>
-                <p className="text-center mt-4 font-sans text-[10px] text-[#a89890] uppercase tracking-wider">
-                  {t("checkout.encrypted", "Bütün məlumatlar şifrələnir")}
-                </p>
-              </div>
+                  <p className="text-center mt-4 font-sans text-[10px] text-[#a89890] uppercase tracking-wider flex items-center justify-center gap-1">
+                {t("checkout.encrypted", "TƏHLÜKƏSİZ ÖDƏNİŞ")} • 
+              <span className="font-bold text-[#271310]">PAYRIFF</span>
+        </p>
+       </div>
             </form>
           </motion.div>
 
