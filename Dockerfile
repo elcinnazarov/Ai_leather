@@ -1,12 +1,13 @@
-FROM eclipse-temurin:17-jdk-alpine AS build
+# 1. Mərhələ: Gradle ilə JAR yığılması
+FROM eclipse-temurin:21-jdk-alpine AS build
 WORKDIR /app
 COPY . .
-# Gradle ilə JAR faylını hazırlayırıq
-RUN ./gradlew clean build -x test
+RUN chmod +x ./gradlew
+RUN ./gradlew clean bootJar -x test
 
-# Mərhələ 2: Tətbiqi işə salmaq (Run)
-FROM eclipse-temurin:17-jre-alpine
+# 2. Mərhələ: Yüngül Java mühitində işə salınması
+FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
-# Yuxarıdakı mərhələdən yaranan JAR-ı kopyalayırıq
 COPY --from=build /app/build/libs/*.jar app.jar
-ENTRYPOINT ["java", "-jar", "app.jar"]
+EXPOSE 8080
+ENTRYPOINT ["java", "-Dspring.profiles.active=prod", "-jar", "app.jar"]
