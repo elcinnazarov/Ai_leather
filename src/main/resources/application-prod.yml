@@ -14,17 +14,16 @@ spring:
 
     hikari:
       minimum-idle: 3
-      maximum-pool-size: 6
+      maximum-pool-size: 8
       idle-timeout: 30000
-      max-lifetime: 2000000
-      connection-timeout: 60000
+      max-lifetime: 1800000
+      connection-timeout: 30000
 
   jpa:
-    show-sql: true
-    open-in-view: true
+    show-sql: false
+    open-in-view: false
     hibernate:
-      ddl-auto: update
-
+      ddl-auto: validate
 
   servlet:
     multipart:
@@ -33,8 +32,8 @@ spring:
       max-request-size: 30MB
 
   rabbitmq:
-    host: localhost
-    port: 5672
+    host: ${RABBITMQ_HOST}
+    port: ${RABBITMQ_PORT}
     username: ${RABBITMQ_username}
     password: ${RABBITMQ_password}
     listener:
@@ -51,6 +50,7 @@ spring:
       port: ${REDIS_PORT}
       password: ${REDIS_PASSWORD}
       timeout: 6000ms
+
   app:
     frontend-url: ${FRONTEND_URL}
     currency:
@@ -69,6 +69,7 @@ spring:
           auth: true
           starttls:
             enable: true
+
   google:
     client:
       id: ${GOOGLE_CLIENT_ID}
@@ -78,7 +79,7 @@ server:
 
 logging:
   level:
-    root: info
+    root: INFO
 
 springdoc:
   api-docs:
@@ -101,9 +102,11 @@ minio:
 
 ai:
   callback:
-    secret: ${AI_CALLBACK_SECRET:my-super-secret-key-12345}
+    secret: ${AI_CALLBACK_SECRET}
 
 app:
+  backend-url: ${BACKEND_URL}
+  frontend-url: ${FRONTEND_URL}
   geoip:
     database-path: classpath:GeoLite2-Country.mmdb
 
@@ -114,7 +117,7 @@ currency:
 
 jwt:
   secret: ${JWT_SECRET_KEY}
-# ✅ DÜZGÜN (Kodunuzla 100% tam uyğun olan):
+
 payriff:
   base-url: https://api.payriff.com/api/v3
   merchant-id: ${PAYRIFF_MERCHANT_ID}
@@ -144,4 +147,3 @@ cache:
         ttl: 300
       popular:
         ttl: 3600
-

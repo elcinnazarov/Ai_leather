@@ -37,7 +37,7 @@ public class PasswordResetService {
                 log.warn("Şifrə sıfırlama tələbi mövcud olmayan email üçün: {}", request.getEmail());
                 return ResponseEntity.ok()
                         .header("Content-Type", "application/json")
-                        .body("{\"message\":\"Əgər email qeydiyyatdan keçibsə, şifrə sıfırlama linki göndərildi\"}");
+                        .body("{\"message\":\"If this email is registered, a password reset link has been sent.\"}");
             }
 
             // Köhnə aktiv tokenləri ləğv et
@@ -60,7 +60,7 @@ public class PasswordResetService {
 
             return ResponseEntity.ok()
                     .header("Content-Type", "application/json")
-                    .body("{\"message\":\"Şifrə sıfırlama təlimatları email ünvanına göndərildi\",\"devToken\":\"" + token + "\"}");
+                    .body("{\"message\":\"Password reset instructions have been sent to your email address.\",\"devToken\":\"" + token + "\"}");
 
         } catch (Exception e) {
             log.error("Şifrə sıfırlama xətası: {}", e.getMessage());
@@ -77,7 +77,7 @@ public class PasswordResetService {
 
             if (resetToken == null || resetToken.isUsed() || resetToken.getExpiryDate().isBefore(LocalDateTime.now())) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body("{\"error\":\"Token etibarsızdır və ya vaxtı keçib\"}");
+                        .body("{\"error\":\"The token is invalid or has expired.\"}");
             }
 
             // Birbaşa token-dən user obyektini alırıq
@@ -97,7 +97,7 @@ public class PasswordResetService {
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("{\"error\":\"" + e.getMessage() + "\"}");
+                    .body("{\"message\":\"Password has been successfully updated.\"}");
         }
     }
 }

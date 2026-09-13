@@ -15,8 +15,9 @@ import java.util.Map;
 @Component
 public class JwtTokenUtil {
 
-    private static final String SECRET = "supersecretkeythatshouldbeatleast32characterslong";
-    private static final long EXPIRATION = 100L * 60 * 60 * 24 * 14; // 14 gün
+    @Value("${jwt.secret}")
+    private String secretKeyString;
+    private static final long EXPIRATION = 1000L * 60 * 60 * 24 * 30; // 30 gün
 
     public String generateToken(String email, UserRole role, User user) {
         return Jwts.builder()
@@ -25,7 +26,7 @@ public class JwtTokenUtil {
                 .claim("userId", user.getId()) // ID-ni tokene qoyuruq!
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION))
-                .signWith(Keys.hmacShaKeyFor(SECRET.getBytes()))
+                .signWith(Keys.hmacShaKeyFor(secretKeyString.getBytes()))
                 .compact();
     }
 }

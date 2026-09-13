@@ -87,8 +87,15 @@ public class OrderService {
                     Order order = Order.builder()
                             .orderNumber(orderNumberGenerator.generate())
                             .user(user)
+                            .customerName(request.getCustomerName()) // ✅ Sifarişdəki real Ad və Soyad
                             .customerEmail(user.getEmail())
                             .customerPhone(request.getCustomerPhone())
+                            .countryCode(request.getCountryCode()) // ✅ "TR"
+                            .countryName(request.getCountryName()) // ✅ "Turkey"
+                            .country(request.getCountry())         // ✅ BAZAYA YAZILIR (İtmir)
+                            .cityName(request.getCityName())       // ✅ BAZAYA YAZILIR (İtmir)
+                            .postalCode(request.getPostalCode())   // ✅ BAZAYA YAZILIR
+                            .deliveryAddress(request.getDeliveryAddress())
                             .orderType(request.getOrderType())
                             .status(Enums.OrderStatus.PENDING)
                             .paymentStatus(Enums.PaymentStatus.WAITING)
@@ -96,7 +103,7 @@ public class OrderService {
                                     ? Enums.DesignProcessStatus.GENERATING
                                     : null)
                             .currency(request.getCurrency())
-                            .deliveryAddress(formatAddressWithPostalCode(request.getDeliveryAddress(), request.getPostalCode()))
+
                             .notes(request.getNotes())
                             .build();
 

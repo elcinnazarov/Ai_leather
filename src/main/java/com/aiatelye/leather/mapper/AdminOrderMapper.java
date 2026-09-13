@@ -15,16 +15,34 @@ import java.util.List;
 public interface AdminOrderMapper {
 
 
-    @Mapping(target = "customerName", source = "user.name")
+    @Mapping(target = "customerName", source = "customerName")
     @Mapping(target = "customerEmail", source = "user.email")
     @Mapping(target = "itemCount", expression = "java(order.getOrderItems().size())")
     AdminOrderListResponse toListResponse(Order order);
 
-
-    @Mapping(target = "customer", source = "user")
+    // =========================================================================
+    // 2. SİFARİŞİN DETALLARI (AdminOrderDetailResponse)
+    // =========================================================================
+    @Mapping(target = "customer", expression = "java(mapCustomerInfo(order))") // ✅ XƏTANIN HƏLLİ
     @Mapping(target = "items", source = "orderItems")
+    @Mapping(target = "countryCode", source = "countryCode") // ✅ "TR", "AZ", "DE"
+    @Mapping(target = "countryName", source = "countryName") // ✅ "Turkey", "Azerbaijan", "Germany"
     @Mapping(target = "payment", source = "payment")
     AdminOrderDetailResponse toDetailResponse(Order order);
+
+    // ✅ Müştəri məlumatlarını təhlükəsiz quran köməkçi metod:
+    default AdminOrderDetailResponse.CustomerInfo mapCustomerInfo(Order order) {
+        if (order == null) return null;
+
+        return AdminOrderDetailResponse.CustomerInfo.builder()
+                .id(order.getUser() != null ? order.getUser().getId() : null)
+                .name(order.getCustomerName() != null ? order.getCustomerName() : (order.getUser() != null ? order.getUser().getName() : null))
+                .email(order.getCustomerEmail() != null ? order.getCustomerEmail() : (order.getUser() != null ? order.getUser().getEmail() : null))
+                .phone(order.getCustomerPhone() != null ? order.getCustomerPhone() : (order.getUser() != null ? order.getUser().getWhatsappNumber() : null))
+                .build();
+    }
+
+
 
     @Mapping(target = "id", source = "id")
     @Mapping(target = "name", source = "name")

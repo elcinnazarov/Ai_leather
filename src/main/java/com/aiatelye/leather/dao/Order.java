@@ -38,18 +38,43 @@ import java.util.List;
     
         @Column(name = "final_price", nullable = false)
         private BigDecimal finalPrice; // Dəyişməz qiymət
+
+        @Column(name = "customer_name")
+        private String customerName;
     
         @Column(name = "customer_email")
         private String customerEmail;
     
         @Column(name = "customer_phone")
         private String customerPhone;
+
+        // ✅ Fiziki Çatdırılma Ölkəsi (Kuryer üçün)
+        @Column(name = "country_code", length = 10)
+        private String countryCode; // "TR", "AZ", "US"
+
+        @Column(name = "country_name", length = 100)
+        private String countryName; // "Turkey", "Azerbaijan"
+
+        // ✅ Qiymət və Valyuta Hesablama Zonası (Biznes üçün)
+        @Enumerated(EnumType.STRING)
+        @Column(name = "country", nullable = false)
+        private Enums.Country country; // INTERNATIONAL_OTHER, AZERBAIJAN və s.
+
+        @Column(name = "city_name")
+        private String cityName;
     
         @Column(name = "postal_code", length = 20)
         private String postalCode;
     
         @Column(name = "delivery_address", columnDefinition = "TEXT")
         private String deliveryAddress;
+
+        // ✅ YENİ: Poçt izləmə məlumatları
+        @Column(name = "tracking_number", length = 100)
+        private String trackingNumber;
+
+        @Column(name = "carrier_name", length = 50)
+        private String carrierName;
     
         @Column(name = "notes", columnDefinition = "TEXT")
         private String notes;
@@ -140,3 +165,7 @@ import java.util.List;
     
     
     }
+
+
+
+

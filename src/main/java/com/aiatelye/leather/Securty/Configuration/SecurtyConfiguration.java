@@ -6,6 +6,7 @@ import com.aiatelye.leather.Securty.repository.AuthUserRepository;
 import com.aiatelye.leather.Securty.service.AuthenticaionUserService;
 import com.aiatelye.leather.componet.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -28,7 +29,8 @@ import static com.aiatelye.leather.Securty.model.Enums.UserRole.CUSTOMER;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurtyConfiguration {
-
+    @Value("${jwt.secret}")
+    private String secretKeyString;
     private final AuthenticaionUserService authenticaionUserService;
     private final PasswordConfiguration passwordConfigartion;
     private final JwtTokenUtil jwtTokenUtil;
@@ -73,11 +75,15 @@ public class SecurtyConfiguration {
 
           http
                   .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(PUBLIC_URLS).permitAll()
+                          .requestMatchers(PUBLIC_URLS).permitAll()
+                          .requestMatchers("/api/internal/payriff-callback").permitAll() // ✅ Payriff Webhook üçün AÇIQ
+
                         .requestMatchers(HttpMethod.PUT, "/api/v1/customers/**").hasRole(ADMIN.name())
                         .requestMatchers("/api/admin/**").hasRole(ADMIN.name())
+
                         .requestMatchers("/api/designs/generate").hasRole(CUSTOMER.name())
                         .requestMatchers("/api/orders/**").hasRole(CUSTOMER.name())
+                          .requestMatchers("/api/payments/checkout/**").hasRole(CUSTOMER.name()) // ✅ YENİ: Yalnız CUSTOMER ödəniş edə bilər!
                           .requestMatchers("/api/shipping/public/active-countries").hasRole(CUSTOMER.name())
 
                         .anyRequest().authenticated())
@@ -87,7 +93,7 @@ public class SecurtyConfiguration {
                   .csrf(AbstractHttpConfigurer::disable)
                   .sessionManagement(session ->
                           session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(new JwtTokenVeriflerFilter(),
+                .addFilterBefore(new JwtTokenVeriflerFilter(secretKeyString),
                         UsernamePasswordAuthenticationFilter.class)
                 .addFilter(loginFilter);
 

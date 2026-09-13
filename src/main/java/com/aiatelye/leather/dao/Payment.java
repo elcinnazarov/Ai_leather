@@ -3,6 +3,8 @@ import com.aiatelye.leather.dao.enums.Enums;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import org.springframework.data.annotation.CreatedBy;
 
 import java.math.BigDecimal;
@@ -33,7 +35,9 @@ public class Payment {
     @Column(nullable = false)
     private Enums.PaymentStatus status;
 
-    @Column(name = "raw_response", columnDefinition = "JSONB")
+    // ✅ DÜZƏLİŞ: Bu iki annotasiyanı əlavə edin:
+    @Column(name = "raw_response", columnDefinition = "jsonb")
+    @JdbcTypeCode(SqlTypes.JSON)
     private String rawResponse;
 
     @Column(name = "created_at", nullable = false)

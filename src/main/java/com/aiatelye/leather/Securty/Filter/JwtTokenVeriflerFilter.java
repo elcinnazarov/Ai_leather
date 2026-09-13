@@ -10,16 +10,25 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
+import org.springframework.beans.factory.annotation.Value;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+
 public class JwtTokenVeriflerFilter extends OncePerRequestFilter {
 
+    @Value("${jwt.secret}")
+    private String secretKeyString;
+
+    // ✅ QƏTİ HƏLL: Açarı konstruktordan məcburi qəbul edirik (NULL qalması İMKANSIZDIR)
+    public JwtTokenVeriflerFilter(String secretKeyString) {
+        this.secretKeyString = secretKeyString;
+    }
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
@@ -36,7 +45,7 @@ public class JwtTokenVeriflerFilter extends OncePerRequestFilter {
             String token = authorizationHeader.substring(7);
 
             Jws<Claims> claimsJws = Jwts.parserBuilder()
-                    .setSigningKey(Keys.hmacShaKeyFor("supersecretkeythatshouldbeatleast32characterslong".getBytes()))
+                    .setSigningKey(Keys.hmacShaKeyFor(secretKeyString.getBytes()))
                     .build()
                     .parseClaimsJws(token);
 

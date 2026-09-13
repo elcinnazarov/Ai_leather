@@ -35,7 +35,7 @@ public class PriceCacheRepository {
                 key,
                 price.toString(),
                 ttlMinutes,
-                TimeUnit.HOURS
+                TimeUnit.MINUTES
         );
         log.info("Price cached: {}", key);
     }

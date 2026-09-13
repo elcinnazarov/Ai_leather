@@ -17,9 +17,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.factory.annotation.Value;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -32,6 +36,12 @@ public class PaymentServiceImpl implements PaymentService {
     private final ObjectMapper objectMapper;
     private final PayriffClient payriffClient;
 
+    @Value("${currency.rates.usd-to-azn}")
+    private BigDecimal usdToAznRate;
+
+    @Value("${currency.rates.eur-to-azn}")
+    private BigDecimal eurToAznRate;
+
     @Override
     @Transactional
     public CheckoutResponse checkout(Long orderId, Long userId) {
@@ -40,7 +50,7 @@ public class PaymentServiceImpl implements PaymentService {
                 .orElseThrow(() -> new NotFoundException("Order not found: " + orderId));
 
         // Sahiblik yoxlaması - başqasının order-i üçün ödəniş yarada bilməz
-        if (order.getUser().getId() != userId) {
+        if (!Objects.equals(order.getUser().getId(), userId)) {
             throw new BadRequestException("This order does not belong to you");
         }
 
@@ -54,20 +64,29 @@ public class PaymentServiceImpl implements PaymentService {
             throw new BadRequestException("Order is already paid");
         }
 
+        // ✅ Payriff üçün AZN məbləğinin hesablanması
+        BigDecimal chargedAmountAzn = calculateAznAmount(order.getFinalPrice(), order.getCurrency());
+
+        log.info("Processing checkout for order {}: Original = {} {}, Converted for PayRiff = {} AZN (USD Rate: {}, EUR Rate: {})",
+                order.getId(), order.getFinalPrice(), order.getCurrency(), chargedAmountAzn, usdToAznRate, eurToAznRate);
+
         String callbackUrlWithToken = payriffProperties.getCallbackUrl()
                 + "?token=" + payriffProperties.getCallbackToken();
 
+        // ✅ Payriff-ə hər zaman AZN valyutası və hesablanmış AZN məbləği göndərilir
         PayriffCreateOrderRequest payriffRequest = PayriffCreateOrderRequest.builder()
-                .amount(order.getFinalPrice())
+                .amount(chargedAmountAzn)
                 .language("AZ")
-                .currency(order.getCurrency().name())
+                .currency("AZN") // Payriff yalnız AZN qəbul edir
                 .description("Order #" + order.getOrderNumber())
                 .callbackUrl(callbackUrlWithToken)
                 .cardSave(false)
                 .operation("PURCHASE")
                 .metadata(Map.of(
                         "orderId", String.valueOf(order.getId()),
-                        "orderNumber", order.getOrderNumber()
+                        "orderNumber", order.getOrderNumber(),
+                        "originalAmount", order.getFinalPrice().toString(),
+                        "originalCurrency", order.getCurrency().name()
                 ))
                 .build();
 
@@ -88,8 +107,8 @@ public class PaymentServiceImpl implements PaymentService {
 
         payment.setProvider("PAYRIFF");
         payment.setProviderPaymentId(payload.getOrderId());
-        payment.setAmount(order.getFinalPrice());
-        payment.setCurrency(order.getCurrency());
+        payment.setAmount(chargedAmountAzn); // Kartdan çıxılacaq real AZN məbləği
+        payment.setCurrency(Enums.Currency.AZN);
         payment.setStatus(Enums.PaymentStatus.WAITING);
         payment.setRawResponse(toJson(response));
         payment.setCreatedAt(payment.getCreatedAt() != null ? payment.getCreatedAt() : LocalDateTime.now());
@@ -99,7 +118,8 @@ public class PaymentServiceImpl implements PaymentService {
         order.setPayment(payment);
         orderRepository.save(order);
 
-        log.info("PayRiff checkout created: orderId={}, providerOrderId={}", order.getId(), payload.getOrderId());
+        log.info("PayRiff checkout created: orderId={}, providerOrderId={}, chargedAzn={}",
+                order.getId(), payload.getOrderId(), chargedAmountAzn);
 
         return CheckoutResponse.builder()
                 .orderId(order.getId())
@@ -123,18 +143,34 @@ public class PaymentServiceImpl implements PaymentService {
 
         Order order = payment.getOrder();
 
-        // Artıq son nəticə yazılıbsa, təkrar emal etmə (callback bir neçə dəfə gələ bilər)
+        // 1. Idempotency: Əgər sifariş artıq SUCCESS olubsa, təkrar emal etmə
         if (payment.getStatus() == Enums.PaymentStatus.SUCCESS) {
             log.info("Callback ignored, payment already SUCCESS. orderId={}", order.getId());
             return;
         }
 
-        payment.setRawResponse(toJson(callbackPayload));
+        // 2. İKİQAT TƏSDİQ (Double Check): Payriff serverinə birbaşa GET /orders/{orderId} sorğusu atırıq
+        PayriffResponse<PayriffOrderInfoPayload> confirmedResponse =
+                payriffClient.getOrderInformation(payment.getProviderPaymentId());
 
-        String status = callbackPayload.getStatus() == null ? "" : callbackPayload.getStatus().toUpperCase();
+        if (!confirmedResponse.isSuccess() || confirmedResponse.getPayload() == null) {
+            log.error("PayRiff order verification failed for orderId={}", callbackPayload.getOrderId());
+            throw new PaymentFailedException("Ödəniş Payriff tərəfindən təsdiqlənmədi");
+        }
 
-        switch (status) {
-            case "APPROVED", "PREAUTH_APPROVED" -> {
+        PayriffOrderInfoPayload infoPayload = confirmedResponse.getPayload();
+
+        // Rəsmi təsdiq cavabını audit üçün saxlayırıq
+        payment.setRawResponse(toJson(confirmedResponse));
+
+        // Təsdiqlənmiş statusu alırıq (Payriff-in "paymentStatus" sahəsi)
+        String verifiedStatus = infoPayload.getPaymentStatus() != null
+                ? infoPayload.getPaymentStatus().toUpperCase()
+                : "";
+
+        // 3. ENUM XƏRİTƏLƏNMƏSİ VƏ BİZNES MƏNTİQİ
+        switch (verifiedStatus) {
+            case "PAID", "APPROVED", "PREAUTH_APPROVED" -> {
                 payment.setStatus(Enums.PaymentStatus.SUCCESS);
                 payment.setConfirmedAt(LocalDateTime.now());
 
@@ -143,28 +179,43 @@ public class PaymentServiceImpl implements PaymentService {
                     order.setStatus(Enums.OrderStatus.PAID);
                     order.setPaidAt(LocalDateTime.now());
                 }
-                log.info("Payment SUCCESS for order {}", order.getId());
+                log.info("Payment SUCCESS confirmed directly by PayRiff for order {}", order.getId());
             }
             case "DECLINED", "EXPIRED" -> {
                 payment.setStatus(Enums.PaymentStatus.FAILED);
                 order.setPaymentStatus(Enums.PaymentStatus.FAILED);
-                log.info("Payment FAILED for order {} (status={})", order.getId(), status);
+                log.info("Payment FAILED confirmed for order {} (status={})", order.getId(), verifiedStatus);
             }
             case "CANCELED" -> {
                 payment.setStatus(Enums.PaymentStatus.CANCELLED);
                 order.setPaymentStatus(Enums.PaymentStatus.CANCELLED);
-                log.info("Payment CANCELLED for order {}", order.getId());
+                log.info("Payment CANCELLED confirmed for order {}", order.getId());
             }
             case "REFUNDED", "REVERSE", "PARTIAL_REFUND" -> {
                 payment.setStatus(Enums.PaymentStatus.REFUNDED);
                 order.setPaymentStatus(Enums.PaymentStatus.REFUNDED);
-                log.info("Payment REFUNDED for order {}", order.getId());
+                log.info("Payment REFUNDED confirmed for order {}", order.getId());
             }
-            default -> log.warn("Unknown PayRiff callback status '{}' for order {}", status, order.getId());
+            default -> log.warn("Unknown PayRiff verified status '{}' for order {}", verifiedStatus, order.getId());
         }
 
         paymentRepository.save(payment);
         orderRepository.save(order);
+    }
+
+    // 🛠️ Məzənnəyə uyğun AZN məbləğini hesablayan köməkçi metod
+    private BigDecimal calculateAznAmount(BigDecimal amount, Enums.Currency currency) {
+        if (amount == null) {
+            return BigDecimal.ZERO;
+        }
+
+        if (currency == Enums.Currency.USD) {
+            return amount.multiply(usdToAznRate).setScale(2, RoundingMode.HALF_UP);
+        } else if (currency == Enums.Currency.EUR) {
+            return amount.multiply(eurToAznRate).setScale(2, RoundingMode.HALF_UP);
+        } else {
+            return amount.setScale(2, RoundingMode.HALF_UP); // Artıq AZN-dir
+        }
     }
 
     private String toJson(Object obj) {

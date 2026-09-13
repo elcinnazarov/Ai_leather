@@ -1,5 +1,6 @@
 package com.aiatelye.leather.controller.admin;
 
+import com.aiatelye.leather.cache.ProductCatalogCacheRepository;
 import com.aiatelye.leather.dto.admin.price.manuel.ListCreateManualPricesRequest;
 import com.aiatelye.leather.dto.admin.price.manuel.ListDeleteManualPricesRequest;
 import com.aiatelye.leather.dto.admin.price.manuel.ListManuelPricesResponse;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class AdminProductPriceManuelController {
 
-
+    private final ProductCatalogCacheRepository productCatalogCacheRepository;
         private final ManualPriceService manualPriceService;
 
         @PostMapping("/{productId}/manual-prices")
@@ -28,6 +29,9 @@ public class AdminProductPriceManuelController {
             log.info("POST /api/admin/products/{}/manual-prices", productId);
 
             ListManuelPricesResponse response = manualPriceService.createManualPrices(productId, request);
+            //Kataloq keşini təmizləyirik ki, yeni qiymət dərhal ana səhifədə görünsün
+            productCatalogCacheRepository.invalidateAllInitialPages();
+            productCatalogCacheRepository.invalidateProductDetail(productId);
             return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(response));
         }
 
@@ -51,6 +55,10 @@ public class AdminProductPriceManuelController {
         log.info("PUT /api/admin/products/{}/manual-prices", productId);
 
         ListManuelPricesResponse response = manualPriceService.updateManualPrices(productId, request);
+
+        // ✅ 3. Yenilənəndə də kataloq keşini təmizləyirik
+        productCatalogCacheRepository.invalidateAllInitialPages();
+        productCatalogCacheRepository.invalidateProductDetail(productId);
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
@@ -63,6 +71,9 @@ public class AdminProductPriceManuelController {
         log.info("DELETE /api/admin/products/{}/manual-prices", productId);
 
         ListManuelPricesResponse response = manualPriceService.deleteManualPrices(productId, request);
+        // ✅ 4. Silinəndə də kataloq keşini təmizləyirik
+        productCatalogCacheRepository.invalidateAllInitialPages();
+        productCatalogCacheRepository.invalidateProductDetail(productId);
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 

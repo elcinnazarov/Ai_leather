@@ -23,6 +23,9 @@ public class OrderDetailResponse {
     private String customerPhone;
     private String deliveryAddress;
     private String notes;
+    // ✅ YENİ ƏLAVƏ EDİLMƏLİDİR:
+    private String trackingNumber;
+    private String carrierName;
 
     private BigDecimal subTotal;
     private BigDecimal shippingFee;

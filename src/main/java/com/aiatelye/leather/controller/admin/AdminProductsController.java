@@ -1,5 +1,6 @@
 package com.aiatelye.leather.controller.admin;
 
+import com.aiatelye.leather.cache.ProductCatalogCacheRepository;
 import com.aiatelye.leather.dto.admin.product.*;
 import com.aiatelye.leather.dto.defalutResponse.ApiResponse;
 import com.aiatelye.leather.dao.enums.Enums;
@@ -30,7 +31,7 @@ import java.util.List;
 @RequestMapping("/api/admin/products")
 public class AdminProductsController {
 
-
+    private  final ProductCatalogCacheRepository productCatalogCacheRepository;
     private final AdminProductModelService adminProductModelService;
     private final AdminServiceImpl adminService;
     // ==========================================
@@ -96,6 +97,7 @@ public class AdminProductsController {
             @RequestParam Enums.AvailabilityStatus status) {
 
         ProductModelResponse response = adminService.updateProductModelStatus(productId, status);
+        productCatalogCacheRepository.invalidateAllInitialPages();
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 

@@ -23,12 +23,21 @@ public class AdminOrderDetailResponse {
     private BigDecimal subTotal;
     private  BigDecimal shippingFee;
     private Enums.Currency currency;
-
-    // Əlaqə məlumatları
+    private String countryCode;  // ✅ "TR", "AZ", "DE"
+    private String countryName;  // ✅ "Turkey", "Azerbaijan", "Germany"
+    // ✅ Çatdırılma və Ünvan məlumatları (İtmir)
+    private Enums.Country country;
+    private String cityName;
+    private String postalCode;
+    private String deliveryAddress;
     private String customerEmail;
     private String customerPhone;
-    private String deliveryAddress;
     private String notes;
+
+    // ✅ Poçt İzləmə Kodu (Admin paneldə görünməsi üçün)
+    private String trackingNumber;
+    private String carrierName;
+
 
     // Statuslar
     private Enums.OrderStatus status;

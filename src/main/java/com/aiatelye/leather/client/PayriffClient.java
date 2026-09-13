@@ -2,6 +2,7 @@ package com.aiatelye.leather.client;
 
 import com.aiatelye.leather.config.PayriffProperties;
 import com.aiatelye.leather.dto.payment.PayriffCreateOrderRequest;
+import com.aiatelye.leather.dto.payment.PayriffOrderInfoPayload;
 import com.aiatelye.leather.dto.payment.PayriffOrderPayload;
 import com.aiatelye.leather.dto.payment.PayriffResponse;
 import com.aiatelye.leather.error.Exception.PaymentFailedException;
@@ -40,6 +41,23 @@ public class PayriffClient {
         } catch (RestClientResponseException e) {
             log.error("PayRiff API error: status={}, body={}", e.getStatusCode(), e.getResponseBodyAsString());
             throw new PaymentFailedException("PayRiff API error: " + e.getStatusCode());
+        }
+    }
+
+    /**
+     * Payriff V3 API - Ödənişin statusunu və tranzaksiya detallarını birbaşa Payriff serverindən yoxlayır
+     * GET /api/v3/orders/{orderId}
+     */
+    public PayriffResponse<PayriffOrderInfoPayload> getOrderInformation(String payriffOrderId) {
+        try {
+            return restClient.get()
+                    .uri(payriffProperties.getBaseUrl() + "/orders/" + payriffOrderId)
+                    .header("Authorization", payriffProperties.getSecretKey())
+                    .retrieve()
+                    .body(new ParameterizedTypeReference<PayriffResponse<PayriffOrderInfoPayload>>() {});
+        } catch (RestClientResponseException e) {
+            log.error("PayRiff getOrderInformation error: status={}, body={}", e.getStatusCode(), e.getResponseBodyAsString());
+            throw new PaymentFailedException("PayRiff status təsdiqləmə xətası: " + e.getStatusCode());
         }
     }
 }

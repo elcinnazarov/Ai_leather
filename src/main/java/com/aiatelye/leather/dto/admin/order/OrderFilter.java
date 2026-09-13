@@ -3,6 +3,7 @@ package com.aiatelye.leather.dto.admin.order;
 import com.aiatelye.leather.dao.enums.Enums;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -26,8 +27,10 @@ public class OrderFilter {
     private String customerName;
 
     @PastOrPresent(message = "tart date cannot be in the future")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate from;
 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate to;
 
     @PositiveOrZero(message = "Minimum amount cannot be negative")

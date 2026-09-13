@@ -4,6 +4,7 @@ import com.aiatelye.leather.dao.enums.Enums;
 import com.aiatelye.leather.validators.ValidPostalCodeByCountry;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
@@ -14,10 +15,23 @@ import java.util.List;
 @Builder
 @ValidPostalCodeByCountry
 public class CreateOrderRequest {
+
+    // ✅ YENİ: Müştərinin Ad və Soyadı mütləq daxil edilməlidir
+    @NotBlank(message = "Customer full name must be entered")
+    private String customerName;
+
     @NotNull(message = "Order type must be selected")
     private Enums.OrderType orderType;
 
-    @NotNull(message = "Country must be selected")
+
+    // ✅ YENİ: Müştərinin faktiki seçdiyi ölkə (məs: "TR", "DE", "PL")
+    @NotBlank(message = "Country code must be selected")
+    private String countryCode;
+
+    private String countryName; // "Turkey", "Germany"
+
+    // ✅ Qiymət və Valyuta Zonası (məs: INTERNATIONAL_OTHER, AZERBAIJAN, USA)
+    @NotNull(message = "Country zone must be selected")
     private Enums.Country country;
 
     private String cityName; // null = country default
