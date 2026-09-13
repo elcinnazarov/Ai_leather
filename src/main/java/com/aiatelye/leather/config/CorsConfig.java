@@ -9,17 +9,16 @@ public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/api/**")
-                // React-in işlədiyi portları bura yazırıq (Vite üçün 5173, CRA üçün 3000)
+                // Yalnız lokal React (Vite və CRA) portlarına icazə verir
                 .allowedOrigins("http://localhost:5173", "http://localhost:3000")
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS","PATCH")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
                 .allowedHeaders("*")
-                // ƏN VACİB HİSSƏ: React-in bu başlıqları oxumasına və göndərməsinə icazə veririk
                 .exposedHeaders(
                         "Authorization",
                         "X-Currency",
                         "Accept-Language",
-                        "X-Currency-Symbol", // Frontend-in axtardığı yeni başlıq
-                        "X-Region"           // Frontend-in axtardığı yeni başlıq
+                        "X-Currency-Symbol",
+                        "X-Region"
                 )
                 .allowCredentials(true);
     }

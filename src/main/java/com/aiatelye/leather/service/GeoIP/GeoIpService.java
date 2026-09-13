@@ -21,10 +21,12 @@ public class GeoIpService {
         if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getRemoteAddr();
         }
-        // Localhost/Docker test üçün (ABŞ IP-si simulyasiyası)
+
+        // Lokal testlərdə localhost IP-si gəldikdə xarici ölkə (məs: ABŞ) simulyasiyası edir
         if ("0:0:0:0:0:0:0:1".equals(ip) || "127.0.0.1".equals(ip)) {
             return "8.8.8.8";
         }
+
         if (ip != null && ip.contains(",")) {
             ip = ip.split(",")[0].trim();
         }
@@ -36,7 +38,7 @@ public class GeoIpService {
             return databaseReader.country(InetAddress.getByName(ipAddress))
                     .getCountry().getIsoCode();
         } catch (Exception e) {
-            return null; // Xəta olarsa USD-yə düşəcək
+            return null; // Xəta olarsa default valyutaya düşəcək
         }
     }
 }
