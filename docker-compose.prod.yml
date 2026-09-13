@@ -96,9 +96,11 @@ services:
   # SPRING BOOT BACKEND
   # =========================
   backend:
+
     build:
       context: ./backend
       dockerfile: Dockerfile
+    image: aiatelye-backend:1.0.0 # 👈 Həmişə sabit və dəqiq versiya!
     container_name: aiatelye-backend
     restart: unless-stopped
     # ✅ ƏLAVƏ EDİLDİ: Bütün .env açarlarını (Payriff, URLs, Mail) birbaşa Spring Boot-a ötürür

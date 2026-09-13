@@ -2,24 +2,31 @@ package com.aiatelye.leather.config;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
+import org.springframework.beans.factory.annotation.Value;
 @Configuration
 public class CorsConfig implements WebMvcConfigurer {
+
+    @Value("${app.frontend-url:https://e1000leather.com}")
+    private String frontendUrl;
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/api/**")
-                // React-in işlədiyi portları bura yazırıq (Vite üçün 5173, CRA üçün 3000)
-                .allowedOrigins("http://localhost:5173", "http://localhost:3000")
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS","PATCH")
+                .allowedOrigins(
+                        "http://localhost:5173",
+                        "http://localhost:3000",
+                        "https://e1000leather.com",
+                        "https://www.e1000leather.com",
+                        frontendUrl
+                )
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
                 .allowedHeaders("*")
-                // ƏN VACİB HİSSƏ: React-in bu başlıqları oxumasına və göndərməsinə icazə veririk
                 .exposedHeaders(
                         "Authorization",
                         "X-Currency",
                         "Accept-Language",
-                        "X-Currency-Symbol", // Frontend-in axtardığı yeni başlıq
-                        "X-Region"           // Frontend-in axtardığı yeni başlıq
+                        "X-Currency-Symbol",
+                        "X-Region"
                 )
                 .allowCredentials(true);
     }
