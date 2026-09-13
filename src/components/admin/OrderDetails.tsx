@@ -17,20 +17,22 @@ import {
   Tag,
   RefreshCw,
   X,
-  ZoomIn
+  ZoomIn,
+  Globe
 } from "lucide-react";
 import { 
   AdminOrderDetailResponse, 
   OrderStatus, 
   PaymentStatus, 
-  DesignProcessStatus,
-  OrderType,
-  Currency
-} from "../types";
-import { orderService } from "../services/orderService";
-import { cn } from "../lib/utils";
+  DesignProcessStatus, 
+  OrderType, 
+  Currency, 
+  Country 
+} from "../../types";
+import { orderService } from "../../services/orderService";
+import { cn } from "../../lib/utils";
 import { toast } from "react-hot-toast";
-
+import InvoiceGenerator from "./InvoiceGenerator";
 interface OrderDetailsProps {
   orderId: number;
   onBack: () => void;
@@ -43,7 +45,7 @@ export default function OrderDetails({ orderId, onBack }: OrderDetailsProps) {
   const [newStatus, setNewStatus] = useState<OrderStatus | "">("");
   const [notes, setNotes] = useState("");
   
-  // --- YENİ: Dəri şəkli lightbox state ---
+  // --- Dəri şəkli lightbox state ---
   const [activeLeatherImage, setActiveLeatherImage] = useState<string | null>(null);
   const [activeLeatherName, setActiveLeatherName] = useState<string>("");
 
@@ -51,7 +53,7 @@ export default function OrderDetails({ orderId, onBack }: OrderDetailsProps) {
     fetchOrderDetail();
   }, [orderId]);
 
-  // --- YENİ: ESC ilə modal bağlama + scroll bloklama ---
+  // --- ESC ilə modal bağlama + scroll bloklama ---
   useEffect(() => {
     if (activeLeatherImage) {
       document.body.style.overflow = "hidden";
@@ -74,6 +76,7 @@ export default function OrderDetails({ orderId, onBack }: OrderDetailsProps) {
       setNewStatus(data.status);
     } catch (error) {
       console.error("Failed to fetch order details:", error);
+      toast.error("Failed to load order details");
     } finally {
       setLoading(false);
     }
@@ -99,7 +102,6 @@ export default function OrderDetails({ orderId, onBack }: OrderDetailsProps) {
     }
   };
 
-  // --- YENİ: Modal aç/bağla ---
   const openLeatherModal = (url: string, name: string) => {
     setActiveLeatherImage(url);
     setActiveLeatherName(name);
@@ -133,22 +135,20 @@ export default function OrderDetails({ orderId, onBack }: OrderDetailsProps) {
   if (!order) return null;
 
   return (
-    <div className="max-w-7xl mx-auto pb-32 animate-in fade-in duration-500">
-      {/* === YENİ: LEATHER LIGHTBOX MODAL === */}
+    <div className="max-w-7xl mx-auto pb-32 animate-in fade-in duration-500 font-sans">
+      
+      {/* === LEATHER LIGHTBOX MODAL === */}
       {activeLeatherImage && (
         <div 
           className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8 animate-in fade-in zoom-in-95 duration-200"
           onClick={closeLeatherModal}
         >
-          {/* Backdrop */}
           <div className="absolute inset-0 bg-[#111c2d]/80 backdrop-blur-md" />
           
-          {/* Modal Content */}
           <div 
             className="relative z-10 w-full max-w-3xl bg-white rounded-[2.5rem] shadow-2xl overflow-hidden border border-[#c7c4d8]/20 animate-in zoom-in-95 slide-in-from-bottom-4 duration-300"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Header */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-[#c7c4d8]/10 bg-[#f9f9ff]">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 bg-[#3525cd] rounded-xl flex items-center justify-center text-white">
@@ -167,7 +167,6 @@ export default function OrderDetails({ orderId, onBack }: OrderDetailsProps) {
               </button>
             </div>
 
-            {/* Image */}
             <div className="relative bg-[#f0f3ff] p-6 md:p-10 flex items-center justify-center">
               <img
                 src={activeLeatherImage}
@@ -176,7 +175,6 @@ export default function OrderDetails({ orderId, onBack }: OrderDetailsProps) {
               />
             </div>
 
-            {/* Footer hint */}
             <div className="px-6 py-3 bg-white border-t border-[#c7c4d8]/10 flex items-center justify-center gap-2">
               <p className="text-[10px] font-bold text-[#777587] uppercase tracking-widest">
                 Press ESC or click outside to close
@@ -186,11 +184,12 @@ export default function OrderDetails({ orderId, onBack }: OrderDetailsProps) {
         </div>
       )}
 
+      {/* Navigation & Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
         <div className="space-y-2">
           <button
             onClick={onBack}
-            className="flex items-center gap-2 text-[#777587] hover:text-[#3525cd] transition-colors text-xs font-bold uppercase tracking-widest mb-2"
+            className="flex items-center gap-2 text-[#777587] hover:text-[#3525cd] transition-colors text-xs font-bold uppercase tracking-widest mb-2 cursor-pointer"
           >
             <ChevronLeft className="w-4 h-4" />
             Order List / Details
@@ -201,23 +200,32 @@ export default function OrderDetails({ orderId, onBack }: OrderDetailsProps) {
             </h3>
             <span className={cn(
               "px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest shadow-sm",
-              order.status === OrderStatus.COMPLETED ? "bg-green-100 text-green-800" : "bg-[#f0f3ff] text-[#3525cd]"
+              order.status === OrderStatus.COMPLETED ? "bg-green-100 text-green-800" :
+              order.status === OrderStatus.PAID ? "bg-blue-100 text-blue-800" :
+              order.status === OrderStatus.CANCELLED ? "bg-red-100 text-red-800" :
+              "bg-[#f0f3ff] text-[#3525cd]"
             )}>
               {order.status}
             </span>
           </div>
         </div>
-        <div className="flex items-center gap-3">
+
+        {/* ✅ Sağ Hissə: Tarix və İnvoys Düyməsi */}
+        <div className="flex items-center gap-4">
           <div className="text-right hidden md:block">
             <p className="text-[10px] font-black text-[#777587] uppercase tracking-widest">Placed On</p>
             <p className="font-bold text-[#111c2d]">{new Date(order.createdAt).toLocaleString()}</p>
           </div>
+
+          {/* İnvoys Generasiya Komponenti */}
+          <InvoiceGenerator order={order} />
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Left Column: Order Info & Items */}
+        {/* Left Column: Order Info & Items (8 cols) */}
         <div className="lg:col-span-8 space-y-8">
+          
           {/* Order Summary Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="bg-white p-6 rounded-3xl border border-[#c7c4d8]/15 shadow-sm">
@@ -231,6 +239,7 @@ export default function OrderDetails({ orderId, onBack }: OrderDetailsProps) {
                 {order.finalPrice.toLocaleString()} {order.currency}
               </p>
             </div>
+            
             <div className="bg-white p-6 rounded-3xl border border-[#c7c4d8]/15 shadow-sm">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 bg-[#f0f3ff] rounded-xl flex items-center justify-center text-[#3525cd]">
@@ -245,6 +254,7 @@ export default function OrderDetails({ orderId, onBack }: OrderDetailsProps) {
                 {order.paymentStatus}
               </p>
             </div>
+            
             <div className="bg-white p-6 rounded-3xl border border-[#c7c4d8]/15 shadow-sm">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 bg-[#f0f3ff] rounded-xl flex items-center justify-center text-[#3525cd]">
@@ -272,7 +282,7 @@ export default function OrderDetails({ orderId, onBack }: OrderDetailsProps) {
                   <div className="w-full sm:w-32 h-32 rounded-2xl overflow-hidden bg-[#f0f3ff] shadow-sm border border-[#c7c4d8]/10 flex-shrink-0">
                     <img 
                       src={item.renderImageUrl || "https://picsum.photos/seed/product/200/200"} 
-                      alt={item.productModelName}
+                      alt={item.productModelName} 
                       className="w-full h-full object-cover"
                     />
                   </div>
@@ -287,16 +297,16 @@ export default function OrderDetails({ orderId, onBack }: OrderDetailsProps) {
                           </span>
                         </div>
                         
-                        {/* === DƏRİ ŞƏKLİ — MODERN + CLICKABLE === */}
-                      {item.leatherImageUrl && (
-  <div 
-    className="group flex items-center gap-3 mt-4 bg-[#f0f3ff] p-2.5 pr-5 rounded-xl border border-[#3525cd]/10 w-fit cursor-pointer hover:bg-[#3525cd]/5 hover:border-[#3525cd]/30 hover:shadow-md transition-all active:scale-95"
-    onClick={() => {
-      if (item.leatherImageUrl) {
-        openLeatherModal(item.leatherImageUrl, item.leatherName);
-      }
-    }}
-  >
+                        {/* Selected Leather Preview */}
+                        {item.leatherImageUrl && (
+                          <div 
+                            className="group flex items-center gap-3 mt-4 bg-[#f0f3ff] p-2.5 pr-5 rounded-xl border border-[#3525cd]/10 w-fit cursor-pointer hover:bg-[#3525cd]/5 hover:border-[#3525cd]/30 hover:shadow-md transition-all active:scale-95"
+                            onClick={() => {
+                              if (item.leatherImageUrl) {
+                                openLeatherModal(item.leatherImageUrl, item.leatherName);
+                              }
+                            }}
+                          >
                             <div className="relative">
                               <img
                                 src={item.leatherImageUrl}
@@ -329,6 +339,7 @@ export default function OrderDetails({ orderId, onBack }: OrderDetailsProps) {
                 </div>
               ))}
             </div>
+            
             <div className="bg-[#f9f9ff] p-8 space-y-3">
               <div className="flex justify-between text-sm">
                 <span className="font-bold text-[#777587] uppercase tracking-widest">Subtotal</span>
@@ -348,8 +359,9 @@ export default function OrderDetails({ orderId, onBack }: OrderDetailsProps) {
           </div>
         </div>
 
-        {/* Right Column: Customer & Status Management */}
+        {/* Right Column: Customer, Delivery, Shipment & Status Management */}
         <div className="lg:col-span-4 space-y-6">
+          
           {/* Status Management */}
           <section className="bg-white p-8 rounded-[2.5rem] border border-[#c7c4d8]/15 shadow-sm space-y-6">
             <div className="flex items-center gap-3">
@@ -365,7 +377,7 @@ export default function OrderDetails({ orderId, onBack }: OrderDetailsProps) {
                 <select 
                   value={newStatus}
                   onChange={(e) => setNewStatus(e.target.value as OrderStatus)}
-                  className="w-full px-4 py-3 bg-[#f9f9ff] border border-[#c7c4d8]/20 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-[#3525cd]/20 focus:border-[#3525cd] transition-all"
+                  className="w-full px-4 py-3 bg-[#f9f9ff] border border-[#c7c4d8]/20 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-[#3525cd]/20 focus:border-[#3525cd] transition-all cursor-pointer"
                 >
                   {Object.values(OrderStatus).map(s => (
                     <option key={s} value={s}>{s}</option>
@@ -386,77 +398,101 @@ export default function OrderDetails({ orderId, onBack }: OrderDetailsProps) {
               <button 
                 onClick={handleUpdateStatus}
                 disabled={updating || newStatus === order.status}
-                className="w-full bg-[#3525cd] text-white py-4 rounded-2xl font-bold hover:bg-[#2a1da3] transition-all active:scale-95 shadow-lg disabled:opacity-50 disabled:scale-100"
+                className="w-full bg-[#3525cd] text-white py-4 rounded-2xl font-bold hover:bg-[#2a1da3] transition-all active:scale-95 shadow-lg disabled:opacity-50 disabled:scale-100 cursor-pointer"
               >
                 {updating ? "Updating..." : "Update Status"}
               </button>
             </div>
           </section>
 
-          {/* Customer Info */}
+          {/* Customer & Delivery Info Section */}
           <section className="bg-white p-8 rounded-[2.5rem] border border-[#c7c4d8]/15 shadow-sm space-y-6">
             <div className="flex items-center gap-3">
               <User className="w-5 h-5 text-[#3525cd]" />
               <h4 className="text-[10px] uppercase font-black tracking-widest text-[#777587]">
-                Customer Information
+                Customer & Delivery Information
               </h4>
             </div>
             
-            <div className="space-y-4">
+            <div className="space-y-5">
+              {/* Full Name */}
               <div className="flex items-start gap-4">
                 <div className="w-10 h-10 bg-[#f0f3ff] rounded-xl flex items-center justify-center text-[#3525cd] shrink-0">
                   <User className="w-5 h-5" />
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-[#777587] uppercase tracking-wider">Full Name</p>
-                  <p className="font-bold text-[#111c2d]">{order.customer.name}</p>
+                  <p className="text-[10px] font-bold text-[#777587] uppercase tracking-wider">Full Name</p>
+                  <p className="font-bold text-[#111c2d]">{order.customer?.name || "Customer"}</p>
                 </div>
               </div>
 
+              {/* Email Address */}
               <div className="flex items-start gap-4">
                 <div className="w-10 h-10 bg-[#f0f3ff] rounded-xl flex items-center justify-center text-[#3525cd] shrink-0">
                   <Mail className="w-5 h-5" />
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-[#777587] uppercase tracking-wider">Email Address</p>
-                  <p className="font-bold text-[#111c2d]">{order.customer.email}</p>
+                  <p className="text-[10px] font-bold text-[#777587] uppercase tracking-wider">Email Address</p>
+                  <p className="font-bold text-[#111c2d]">{order.customerEmail || order.customer?.email}</p>
                 </div>
               </div>
 
+              {/* Phone Number */}
               <div className="flex items-start gap-4">
                 <div className="w-10 h-10 bg-[#f0f3ff] rounded-xl flex items-center justify-center text-[#3525cd] shrink-0">
                   <Phone className="w-5 h-5" />
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-[#777587] uppercase tracking-wider">Phone Number</p>
-                  <p className="font-bold text-[#111c2d]">{order.customer.phone || "Not provided"}</p>
+                  <p className="text-[10px] font-bold text-[#777587] uppercase tracking-wider">Phone Number</p>
+                  <p className="font-bold text-[#111c2d]">{order.customerPhone || order.customer?.phone || "Not provided"}</p>
                 </div>
               </div>
 
+              {/* ✅ ÖLKƏ (Ad, Kod, Enum) VƏ ŞƏHƏR BLOKU (Valyutasız, Sırf 3 Ölkə Sahəsi) */}
+              {(order.countryName || order.countryCode || order.cityName || order.country) && (
+                <div className="flex items-start gap-4 bg-[#f9f9ff] p-4 rounded-2xl border border-[#c7c4d8]/15">
+                  <div className="w-10 h-10 bg-white border border-[#c7c4d8]/20 rounded-xl flex items-center justify-center text-[#3525cd] shrink-0 shadow-sm">
+                    <Globe className="w-5 h-5" />
+                  </div>
+                  <div className="flex-1 space-y-2">
+                    <div>
+                      <p className="text-[10px] font-bold text-[#777587] uppercase tracking-wider">Destination</p>
+                      <p className="font-bold text-[#111c2d] text-sm">
+                        {order.countryName || "Country"}
+                        {order.countryCode ? ` (${order.countryCode})` : ""}
+                        {order.cityName ? `, ${order.cityName}` : ""}
+                      </p>
+                    </div>
+
+                    {/* ✅ Enum Country & Poçt Kodu */}
+                    <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-[#c7c4d8]/10">
+                      {order.country && (
+                        <span className="bg-white border border-[#c7c4d8]/20 text-[#111c2d] px-2.5 py-0.5 rounded-lg text-[10px] font-bold uppercase tracking-wider">
+                          Enum: <span className="text-[#3525cd] font-black">{String(order.country)}</span>
+                        </span>
+                      )}
+                      {order.postalCode && (
+                        <span className="text-[#777587] text-[11px] font-medium">
+                          Postal Code: <span className="font-bold text-[#111c2d]">{order.postalCode}</span>
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Delivery Address */}
               <div className="flex items-start gap-4">
                 <div className="w-10 h-10 bg-[#f0f3ff] rounded-xl flex items-center justify-center text-[#3525cd] shrink-0">
                   <MapPin className="w-5 h-5" />
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-[#777587] uppercase tracking-wider">Delivery Address</p>
-                  <p className="font-bold text-[#111c2d] text-sm leading-relaxed">{order.deliveryAddress}</p>
-                  
-                </div>
-              </div>
-            </div>
-          </section>
-{/* Delivery Address bloku (bu səndə onsuz da var) */}
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 bg-[#f0f3ff] rounded-xl flex items-center justify-center text-[#3525cd] shrink-0">
-                  <MapPin className="w-5 h-5" />
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-[#777587] uppercase tracking-wider">Delivery Address</p>
+                  <p className="text-[10px] font-bold text-[#777587] uppercase tracking-wider">Delivery Address</p>
                   <p className="font-bold text-[#111c2d] text-sm leading-relaxed">{order.deliveryAddress}</p>
                 </div>
               </div>
 
-              {/* === MÜŞTƏRİ QEYDİ BURA ƏLAVƏ EDİLİR === */}
+              {/* Customer Note */}
               {order.notes && (
                 <div className="flex items-start gap-4 mt-6 pt-6 border-t border-[#c7c4d8]/10">
                   <div className="w-10 h-10 bg-[#f0f3ff] rounded-xl flex items-center justify-center text-[#3525cd] shrink-0">
@@ -470,7 +506,32 @@ export default function OrderDetails({ orderId, onBack }: OrderDetailsProps) {
                   </div>
                 </div>
               )}
-              {/* ======================================= */}
+            </div>
+          </section>
+
+          {/* Shipment Tracking Card */}
+          {(order.trackingNumber || order.carrierName) && (
+            <section className="bg-white p-8 rounded-[2.5rem] border border-[#c7c4d8]/15 shadow-sm space-y-4">
+              <div className="flex items-center gap-3">
+                <Truck className="w-5 h-5 text-[#3525cd]" />
+                <h4 className="text-[10px] uppercase font-black tracking-widest text-[#777587]">
+                  Shipment Tracking
+                </h4>
+              </div>
+              
+              <div className="space-y-3">
+                <div className="flex justify-between items-center text-xs">
+                  <span className="font-bold text-[#777587] uppercase">Carrier</span>
+                  <span className="font-bold text-[#111c2d]">{order.carrierName || "Azərpoçt / Courier"}</span>
+                </div>
+                <div className="flex justify-between items-center text-xs">
+                  <span className="font-bold text-[#777587] uppercase">Tracking Number</span>
+                  <span className="font-mono font-bold text-[#3525cd]">{order.trackingNumber}</span>
+                </div>
+              </div>
+            </section>
+          )}
+
           {/* Payment Detail */}
           {order.payment && (
             <section className="bg-white p-8 rounded-[2.5rem] border border-[#c7c4d8]/15 shadow-sm space-y-6">
@@ -509,7 +570,7 @@ export default function OrderDetails({ orderId, onBack }: OrderDetailsProps) {
             </section>
           )}
 
-          {/* Additional Info */}
+          {/* Order Timeline */}
           <section className="bg-[#111c2d] p-8 rounded-[2.5rem] shadow-xl text-white space-y-6">
             <div className="flex items-center gap-3">
               <FileText className="w-5 h-5 text-[#3525cd]" />
@@ -541,6 +602,7 @@ export default function OrderDetails({ orderId, onBack }: OrderDetailsProps) {
               </div>
             </div>
           </section>
+
         </div>
       </div>
     </div>

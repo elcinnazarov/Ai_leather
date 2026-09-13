@@ -389,9 +389,25 @@ export interface AdminOrderDetailResponse {
   subTotal: number;
   shippingFee: number;
   currency: Currency;
-  customerEmail: string;
-  customerPhone: string;
+  
+// ✅ Real Ölkə Adı və Kodu (Enum olmayan):
+  countryCode?: string;
+  countryName?: string;
+ // ✅ Çatdırılma və Ünvan məlumatları:
+  country?: Country | string;
+  cityName?: string;
+  postalCode?: string;
   deliveryAddress: string;
+  customerEmail?: string;
+  customerPhone?: string;
+
+
+  // ✅ Poçt İzləmə Kodu:
+  trackingNumber?: string;
+  carrierName?: string;
+
+
+
   notes: string;
   status: OrderStatus;
   paymentStatus: PaymentStatus;

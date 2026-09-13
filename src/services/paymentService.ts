@@ -1,5 +1,5 @@
-import axios from 'axios';
 
+import api from "./api";
 // Backend-dən gələcək cavabın strukturu (Sənin CheckoutResponse DTO-na uyğun)
 export interface CheckoutResponse {
   orderId: number;
@@ -8,12 +8,9 @@ export interface CheckoutResponse {
 }
 
 export const paymentService = {
-  // Sifarişin ID-sini göndərib Payriff linkini alan funksiya
-  initiateCheckout: async (orderId: number): Promise<CheckoutResponse> => {
-    // Sənin PaymentController-dəki endpointin: POST /api/payments/checkout/{orderId}
-    const response = await axios.post(`/api/payments/checkout/${orderId}`);
-    
-    // ApiResponse<CheckoutResponse> qaytardığın üçün data.data kimi götürürük
-    return response.data.data; 
+  initiateCheckout: async (orderId: number) => {
+    // api.post() istifadə etdikdə avtomatik olaraq :8080 portuna və JWT tokenlə göndərir:
+    const response = await api.post(`/api/payments/checkout/${orderId}`);
+    return response.data?.data || response.data;
   }
 };

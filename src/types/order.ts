@@ -143,6 +143,10 @@ export interface OrderDetailResponse {
   paidAt: string | null;
   completedAt: string | null;
   items: OrderItemResponse[];
+  // ✅ YENİ ƏLAVƏ:
+  trackingNumber?: string | null;
+  carrierName?: string | null;
+
 }
 
 export interface OrderFilter {

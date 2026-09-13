@@ -1,57 +1,75 @@
 import axios from 'axios';
-import { toast } from 'react-hot-toast'; // Sənin istifadə etdiyin toast kitabxanası
+import { toast } from 'react-hot-toast';
 import { useAuthStore } from '../store/useAuthStore';
 
 const api = axios.create({
-  baseURL: 'http://localhost:8080/api', // Sənin backend ünvanın
-  // ... digər ayarlar
+  // ✅ baseURL sadəcə server portu olmalıdır (beləliklə /api/orders və /api/payments tam düzgün birləşir):
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8080',
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
 
-// XƏTALARI QARŞILAYAN SÜZGƏC (RESPONSE INTERCEPTOR)
+// =========================================================================
+// 1. TOKEN ƏLAVƏ EDƏN SÜZGƏC (REQUEST INTERCEPTOR) — ƏSAS ÇATIŞMAYAN HİSSƏ!
+// =========================================================================
+api.interceptors.request.use(
+  (config) => {
+    // Tokeni authStore-dan və ya localStorage-dən götürürük:
+    const token = useAuthStore.getState().token || localStorage.getItem('token');
+    
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+// =========================================================================
+// 2. XƏTALARI QARŞILAYAN SÜZGƏC (RESPONSE INTERCEPTOR)
+// =========================================================================
 api.interceptors.response.use(
   (response) => {
-    // Əgər response.data = { success, data, message } strukturundadırsa
+    // Əgər backend ApiResponse { success, data, message } qaytarırsa
     if (response.data && response.data.success !== undefined) {
-      return response.data; // unwrap et
+      return response.data; // data zərfini unwrap edirik
     }
     return response;
   },
   (error) => {
-    // 1. Backend-dən cavab gəlməyibsə (Server çökübsə)
+    // A) Server çökübsə və ya internet yoxdursa
     if (!error.response) {
-      toast.error("Sistemlə əlaqə kəsildi. Zəhmət olmasa yoxlayın.");
+      toast.error("Serverlə əlaqə kəsildi. Zəhmət olmasa backend-in işlədiyini yoxlayın.", { id: 'network-error' });
       return Promise.reject(error);
     }
 
     const status = error.response.status;
 
-    // 2. TOKEN ÖLÜB VƏ YA YOXDUR (401) / İCAZƏ YOXDUR (403)
-    if (status === 401 || status === 403) {
+    // B) 401 UNAUTHORIZED: Həqiqətən istifadəçinin tokeninin vaxtı bitibsə
+    if (status === 401) {
       const authStore = useAuthStore.getState();
       
-      // Əgər istifadəçi doğrudan da login idisə, amma tokeni vaxtını keçibsə
       if (authStore.isAuthenticated) {
-         // Tək və peşəkar bir mesaj veririk (Dalbadal spamın qarşısını alır)
-         toast.error("Sessiya müddəti bitdi. Təhlükəsizlik üçün yenidən daxil olun.", {
-           id: 'session-expired', // Bu ID eyni mesajın eyni anda 3 dəfə çıxmasının qarşısını alır!
-           duration: 4000,
-         });
-         
-         // İstifadəçini sistemdən çıxarırıq (Local Storage təmizlənir)
-         authStore.logout(); 
-         
-         // Auth səhifəsinə yönləndiririk
-         window.location.href = '/auth';
+        toast.error("Sessiya müddəti bitdi. Zəhmət olmasa yenidən daxil olun.", {
+          id: 'session-expired',
+          duration: 4000,
+        });
+        
+        authStore.logout();
+        window.location.href = '/auth';
       }
-      
-      // Başqa heç bir xəta mesajı göstərmədən səssizcə rədd et
-      return Promise.reject(error); 
+      return Promise.reject(error);
     }
 
-    // 3. DİGƏR XƏTALAR (500, 400 və s.) ÜÇÜN DAHA PEŞƏKAR MESAJ
-    const errorMessage = error.response.data?.message || "Sistemdə müvəqqəti problem var.";
-    
-    // Eyni xətanın spam olmasının qarşısını almaq üçün ID veririk
+    // C) 403 FORBIDDEN: İcazə yoxdur (İstifadəçini logout ETMİRİK, sadəcə xəbərdarlıq edirik)
+    if (status === 403) {
+      toast.error("Bu əməliyyatı yerinə yetirmək üçün icazəniz yoxdur.", { id: 'forbidden-error' });
+      return Promise.reject(error);
+    }
+
+    // D) DİGƏR XƏTALAR (400, 500 və s.)
+    const errorMessage = error.response.data?.message || error.response.data?.error || "Xəta baş verdi.";
     toast.error(errorMessage, { id: 'global-error' });
 
     return Promise.reject(error);

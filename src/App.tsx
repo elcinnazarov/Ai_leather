@@ -11,7 +11,7 @@ import { Toaster, toast } from "react-hot-toast";
 import { useAuthStore } from "./store/useAuthStore";
 
 // Components & Layouts
-import AdminLayout from "./components/AdminLayout";
+import AdminLayout from "./components/admin/AdminLayout";
 import ShopLayout from "./components/bar/ShopLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import CartDrawer from "./components/CartDrawer";
@@ -44,8 +44,8 @@ import AdminLeatherForm from "./pages/auth/admin/AdminLeatherForm";
 // Import əlavə et (digər importların yanına)
 import AdminShippingCountries from './pages/auth/admin/AdminShippingCountries';
 // === KÖHNƏ ADMİN KOMPONENTLƏRİ ===
-import OrderList from "./components/OrderList";
-import OrderDetails from "./components/OrderDetails";
+import OrderList from "./components/admin/OrderList";
+import OrderDetails from "./components/admin/OrderDetails";
 import PricingRuleList from "./components/PricingRuleList";
 import PricingRuleForm from "./components/PricingRuleForm";
 import GlobalPriceList from "./components/GlobalPriceList";

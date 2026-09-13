@@ -8,14 +8,12 @@ import {
   LogOut,
   Bell,
   Search,
-  Tag,
-  TrendingUp,
   Truck,
   Globe,
   Menu, // Mobil menyu açmaq üçün
   X     // Mobil menyu bağlamaq üçün
 } from "lucide-react";
-import { cn } from "../lib/utils";
+import { cn } from "../../lib/utils";
 
 export default function AdminLayout() {
   const location = useLocation();
@@ -31,8 +29,6 @@ export default function AdminLayout() {
     { id: "/admin/leathers", label: "Dəri İnventarı", icon: <Package className="w-5 h-5" /> },
     { id: "/admin/products", label: "Məhsul Modelləri", icon: <LayoutDashboard className="w-5 h-5" /> },
     { id: "/admin/orders", label: "Müştəri Sifarişləri", icon: <ShoppingBag className="w-5 h-5" /> },
-    { id: "/admin/price_master", label: "Əsas Qiymətlər", icon: <Tag className="w-5 h-5" /> },
-    { id: "/admin/pricing", label: "Qiymət Qaydaları", icon: <TrendingUp className="w-5 h-5" /> },
     { id: "/admin/shipping", label: "Çatdırılma Yolları", icon: <Truck className="w-5 h-5" /> },
     { id: "/admin/shipping-countries", label: "Çatdırılma Ölkələri", icon: <Globe className="w-5 h-5" /> },
     { id: "/admin/settings", label: "Tənzimləmələr", icon: <Settings className="w-5 h-5" /> },

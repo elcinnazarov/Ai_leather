@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
 import { useCartStore } from "../../store/useCartStore";
 import { cartService } from "../../services/cartService";
-import { shippingService } from "../../services/shippingService";  // ← YENİ IMPORT
+import { shippingService } from "../../services/shippingService";
 import { useOrders } from "../../lib/hooks/useOrders";
 import { useAITranslation } from "../../lib/hooks/useAITranslation";
 import { OrderType, Country } from "../../types/order";
@@ -22,14 +22,18 @@ import {
   Phone,
   CreditCard,
   AlertCircle,
-  Package
+  Package,
+  Lock,
+  ArrowRightLeft
 } from "lucide-react";
-import { useCurrencyStore } from "../../store/useCurrencyStore";
 import { ALL_COUNTRIES } from "../../constants/countries";
 
-// ============================================
-// AZƏRBAYCAN ŞƏHƏRLƏRİ
-// ============================================
+// Məzənnə sabitləri (Backend ilə 1:1 eyni)
+const EXCHANGE_RATES: Record<string, number> = {
+  USD: 1.70,
+  EUR: 1.9765,
+};
+
 const AZ_CITIES = [
   "Bakı", "Sumqayıt", "Gəncə", "Xırdalan", "Mingəçevir", "Şirvan", "Naxçıvan",
   "Lənkəran", "Şəki", "Quba", "Qəbələ", "Şamaxı", "Zaqatala", "Masallı",
@@ -37,10 +41,8 @@ const AZ_CITIES = [
   "Füzuli", "Şuşa", "Xankəndi", "Laçın", "Kəlbəcər", "Zəngilan", "Qubadlı"
 ];
 
-// ============================================
-// CHECKOUT ITEM KOMPONENTİ
-// ============================================
 function CheckoutItem({ item, localSymbol }: { item: any; localSymbol: string }) {
+  const { t } = useTranslation();
   const dynModelName = useAITranslation(item.productModelName);
   const dynLeatherName = useAITranslation(item.leatherName);
 
@@ -69,10 +71,10 @@ function CheckoutItem({ item, localSymbol }: { item: any; localSymbol: string })
         </p>
         <div className="flex justify-between items-baseline border-b border-dashed border-[#d8cfcb] pb-2">
           <span className="font-sans text-[11px] text-[#8b7a72] uppercase tracking-wider">
-            qty {item.quantity}
+            {t("checkout.qty", "QTY")} {item.quantity}
           </span>
           <span className="font-sans text-sm font-semibold text-[#271310] tabular-nums">
-            {localSymbol} {item.totalPrice.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+            {localSymbol} {item.totalPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </span>
         </div>
       </div>
@@ -80,13 +82,10 @@ function CheckoutItem({ item, localSymbol }: { item: any; localSymbol: string })
   );
 }
 
-// ============================================
-// SKELETON LOADER
-// ============================================
 function CheckoutSkeleton() {
   return (
     <div className="space-y-8">
-      {[1, 2].map((i) => (
+      {Array.from({ length: 2 }).map((_, i: number) => (
         <div key={i} className="flex gap-5 animate-pulse">
           <div className="w-24 h-32 bg-[#ede8e5] rounded-sm flex-shrink-0" />
           <div className="flex-1 space-y-3 py-2">
@@ -110,15 +109,11 @@ function CheckoutSkeleton() {
   );
 }
 
-// ============================================
-// ƏSAS CHECKOUT KOMPONENTİ
-// ============================================
 export default function CheckoutPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
   const cartItems = useCartStore((s) => s.items);
-  const { currency: storeCurrency } = useCurrencyStore();
   const { createOrder, creating } = useOrders();
 
   const [previewData, setPreviewData] = useState<any | null>(null);
@@ -128,10 +123,10 @@ export default function CheckoutPage() {
   const [showCountryWarning, setShowCountryWarning] = useState(false);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
 
-  // ← YENİ: Backend-dən gələn aktiv ölkələr (default olaraq bütün ölkələr — fallback)
- const [activeCountries, setActiveCountries] = useState<typeof ALL_COUNTRIES>([]);
+  const [activeCountries, setActiveCountries] = useState<typeof ALL_COUNTRIES>([]);
 
   const [formData, setFormData] = useState({
+    customerName: "",
     uiCountryCode: "AZ",
     backendCountryEnum: Country.AZERBAIJAN,
     cityName: "",
@@ -149,28 +144,34 @@ export default function CheckoutPage() {
   const displayCurrency = previewData?.currency || activeCurrency;
   const displaySymbol = useMemo(() => getCurrencySymbol(displayCurrency), [displayCurrency]);
 
-  // YENİ VƏ POSTMAN DATASINA 100% UYĞUNLAŞDIRILMIŞ VERSİYA
+  const availableCountries = useMemo(() => {
+    return activeCountries.length > 0 ? activeCountries : ALL_COUNTRIES;
+  }, [activeCountries]);
+
+  const finalTotal = previewData?.totalAmount || 0;
+
+  // ✅ AZN qarşılığının hesablanması (Yalnız USD və ya EUR olduqda)
+  const approxAznTotal = useMemo(() => {
+    if (displayCurrency === "AZN" || !finalTotal) return null;
+    const rate = EXCHANGE_RATES[displayCurrency] || 1.70;
+    return (finalTotal * rate).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }, [finalTotal, displayCurrency]);
+
   useEffect(() => {
- const fetchActiveCountries = async () => {
+    const fetchActiveCountries = async () => {
       try {
-        // 1. Datanı çəkirik
         const backendData = await shippingService.getActiveCountries();
-        
-        // ZİREH: Əgər cavab undefined gələrsə və ya massiv deyilsə, boş qəbul et
         const safeData = Array.isArray(backendData) ? backendData : [];
 
         if (safeData.length === 0) {
-          console.warn("Backend-dən heç bir aktiv ölkə gəlmədi və ya data boşdur.");
           setActiveCountries([]);
           return; 
         }
 
-        // 2. Kodları çıxarırıq (məs: "TR", "US")
         const activeCodesFromBackend = safeData.map((item: any) => 
           String(item.countryCode || item.country || "").toUpperCase()
         );
 
-        // 3. 82 ölkəni süzürük
         const perfectlyFilteredCountries = ALL_COUNTRIES.filter(c => 
           c.code && activeCodesFromBackend.includes(c.code.toUpperCase())
         );
@@ -193,11 +194,9 @@ export default function CheckoutPage() {
             }
             return prev; 
           });
-          
         } else {
           setActiveCountries([]); 
         }
-
       } catch (error) {
         console.error("Aktiv ölkələr çəkilərkən xəta baş verdi:", error);
         setActiveCountries([]);
@@ -205,9 +204,8 @@ export default function CheckoutPage() {
     };
     
     fetchActiveCountries();
-  }, []); // Səhifə yalnız bir dəfə açılanda işləyir
+  }, []);
 
-  // Cart preview fetch
   useEffect(() => {
     if (cartItems.length === 0) return;
 
@@ -244,8 +242,9 @@ export default function CheckoutPage() {
       const newData = { ...prev, [name]: value };
 
       if (name === "uiCountryCode") {
-        // ← DƏYİŞİLİB: ALL_COUNTRIES əvəzinə activeCountries istifadə edilir
-        const selectedCountryData = activeCountries.find((c) => c.code === value);
+        const selectedCountryData =
+          activeCountries.find((c) => c.code === value) ||
+          ALL_COUNTRIES.find((c) => c.code === value);
 
         if (selectedCountryData) {
           newData.backendCountryEnum = selectedCountryData.enum;
@@ -274,6 +273,10 @@ export default function CheckoutPage() {
 
   const validateForm = useCallback(() => {
     const newErrors: Record<string, string> = {};
+
+    if (!formData.customerName?.trim()) {
+      newErrors.customerName = t("checkout.validation.required_name", "Ad və soyad daxil edilməlidir");
+    }
 
     if (!formData.cityName?.trim()) {
       newErrors.cityName = t("checkout.validation.required_city", "Şəhər seçilməlidir");
@@ -310,8 +313,15 @@ export default function CheckoutPage() {
       const idempotencyKey = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}`;
       const fullPhoneNumber = `${formData.phoneCode} ${formData.phoneNumber}`.trim();
 
+      const selectedCountryObj =
+        activeCountries.find((c) => c.code === formData.uiCountryCode) ||
+        ALL_COUNTRIES.find((c) => c.code === formData.uiCountryCode);
+
       const orderRequest = {
+        customerName: formData.customerName.trim(),
         orderType: OrderType.READY_PRODUCT,
+        countryCode: formData.uiCountryCode,
+        countryName: selectedCountryObj?.name || formData.uiCountryCode,
         country: formData.backendCountryEnum,
         cityName: formData.cityName || undefined,
         postalCode: formData.postalCode || undefined,
@@ -330,16 +340,14 @@ export default function CheckoutPage() {
           renderImageUrl: item.finalImageUrl || item.renderImageUrl
         }))
       };
-// 1. Sifarişi yaradırıq
+
       const createdOrder = await createOrder(orderRequest);
 
-      // 2. Əgər sifariş uğurla yarandısa (ID qayıtdısa), Payriff-ə müraciət edirik
       if (createdOrder && createdOrder.orderId) {
-        setIsRedirecting(true); // Yönləndirmə animasiyasını yandırırıq
+        setIsRedirecting(true);
         
         const checkoutData = await paymentService.initiateCheckout(createdOrder.orderId);
         
-        // 3. Link gəldisə müştərini ora atırıq
         if (checkoutData && checkoutData.paymentUrl) {
           window.location.href = checkoutData.paymentUrl;
         } else {
@@ -347,15 +355,13 @@ export default function CheckoutPage() {
           setIsRedirecting(false);
         }
       } else {
-         // Əgər ID qayıtmırsa, adi qaydada uğur səhifəsinə/arxivə atsın
-         navigate("/profile/orders");
+        navigate("/profile/orders");
       }
     } catch (error: any) {
       console.error("Checkout failed:", error);
     }
   };
 
-  // Empty cart state
   if (cartItems.length === 0) {
     return (
       <div className="min-h-[80vh] flex flex-col items-center justify-center bg-[#faf9f8] px-6">
@@ -376,7 +382,7 @@ export default function CheckoutPage() {
           </p>
           <button
             onClick={() => navigate("/")}
-            className="inline-flex items-center gap-2 text-xs font-sans uppercase tracking-[0.2em] text-[#271310] border-b border-[#271310] pb-1 hover:text-[#5a3d35] hover:border-[#5a3d35] transition-colors"
+            className="inline-flex items-center gap-2 text-xs font-sans uppercase tracking-[0.2em] text-[#271310] border-b border-[#271310] pb-1 hover:text-[#5a3d35] hover:border-[#5a3d35] transition-colors cursor-pointer"
           >
             <Package className="w-3 h-3" />
             {t("cart.continue_shopping", "Alış-verişə davam et")}
@@ -385,8 +391,6 @@ export default function CheckoutPage() {
       </div>
     );
   }
-
-  const finalTotal = previewData?.totalAmount || 0;
 
   return (
     <div className="min-h-screen bg-[#faf9f8] text-[#1a1c1c] selection:bg-[#fadcd2] selection:text-[#271310]">
@@ -446,7 +450,8 @@ export default function CheckoutPage() {
             </AnimatePresence>
 
             <form onSubmit={handleCheckout} className="space-y-10" noValidate>
-              {/* Country & City */}
+              
+              {/* Delivery Info Section */}
               <section>
                 <div className="flex items-center gap-2 mb-6">
                   <MapPin className="w-4 h-4 text-[#8b7a72]" strokeWidth={1.5} />
@@ -455,8 +460,41 @@ export default function CheckoutPage() {
                   </h3>
                 </div>
 
+                {/* Ad və Soyad Girişi */}
+                <div className="mb-8">
+                  <label className="block text-[10px] font-sans uppercase tracking-[0.15em] text-[#8b7a72] mb-2">
+                    {t("checkout.full_name", "Ad və Soyad")} *
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      name="customerName"
+                      value={formData.customerName}
+                      onChange={handleInputChange}
+                      onBlur={() => handleBlur("customerName")}
+                      placeholder={t("checkout.placeholders.name", "Məsələn: Əli Məmmədov")}
+                      className={`w-full bg-white border rounded-md py-3.5 px-4 text-[13px] text-[#271310] placeholder:text-[#c4bbb5] focus:outline-none focus:ring-2 focus:ring-[#271310]/10 focus:border-[#271310] transition-all font-sans ${
+                        errors.customerName && touched.customerName ? "border-red-400" : "border-[#e0d8d4]"
+                      }`}
+                    />
+                  </div>
+                  <AnimatePresence>
+                    {errors.customerName && touched.customerName && (
+                      <motion.span
+                        initial={{ opacity: 0, y: -4 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -4 }}
+                        className="text-red-500 text-[11px] mt-1.5 block font-sans flex items-center gap-1"
+                      >
+                        <AlertCircle className="w-3 h-3" />
+                        {errors.customerName}
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+                </div>
+
+                {/* Country & City */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8">
-                  {/* Country */}
                   <div className="relative">
                     <label className="block text-[10px] font-sans uppercase tracking-[0.15em] text-[#8b7a72] mb-2">
                       {t("checkout.country", "Ölkə")} *
@@ -468,8 +506,7 @@ export default function CheckoutPage() {
                         onChange={handleInputChange}
                         className="w-full appearance-none bg-white border border-[#e0d8d4] rounded-md py-3.5 pl-4 pr-12 text-[13px] text-[#271310] focus:outline-none focus:ring-2 focus:ring-[#271310]/10 focus:border-[#271310] transition-all cursor-pointer font-sans"
                       >
-                        {/* ← DƏYİŞİLİB: ALL_COUNTRIES əvəzinə activeCountries */}
-                        {activeCountries.map((c) => (
+                        {availableCountries.map((c) => (
                           <option key={c.code} value={c.code}>
                             {t(`countries.${c.name.toLowerCase().replace(/ /g, "_")}`, c.name)}
                           </option>
@@ -479,7 +516,6 @@ export default function CheckoutPage() {
                     </div>
                   </div>
 
-                  {/* City */}
                   <div className="relative">
                     <label className="block text-[10px] font-sans uppercase tracking-[0.15em] text-[#8b7a72] mb-2">
                       {t("checkout.city", "Şəhər")} *
@@ -539,7 +575,6 @@ export default function CheckoutPage() {
               {/* Postal & Phone */}
               <section>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8">
-                  {/* Postal Code */}
                   <div className="relative">
                     <label className="block text-[10px] font-sans uppercase tracking-[0.15em] text-[#8b7a72] mb-2">
                       {t("checkout.postalCode", "Poçt indeksi")}{" "}
@@ -576,7 +611,6 @@ export default function CheckoutPage() {
                     </AnimatePresence>
                   </div>
 
-                  {/* Phone */}
                   <div className="relative">
                     <label className="block text-[10px] font-sans uppercase tracking-[0.15em] text-[#8b7a72] mb-2">
                       {t("checkout.phone", "Telefon")} *
@@ -593,7 +627,6 @@ export default function CheckoutPage() {
                           onChange={handleInputChange}
                           className="w-full h-full appearance-none bg-transparent py-3.5 pl-4 pr-8 text-[12px] text-[#271310] focus:outline-none cursor-pointer font-sans"
                         >
-                          {/* Telefon kodları bütün ölkələr üçün qalır (daha geniş çeşid) */}
                           {ALL_COUNTRIES.map((c) => (
                             <option key={`phone-${c.code}`} value={c.phoneCode}>
                               {c.code} {c.phoneCode}
@@ -661,7 +694,7 @@ export default function CheckoutPage() {
               </section>
 
               {/* Notes */}
-             <section>
+              <section>
                 <div className="flex justify-between items-end mb-2">
                   <label className="block text-[10px] font-sans uppercase tracking-[0.15em] text-[#8b7a72]">
                     {t("checkout.notes", "Qeydlər")}
@@ -671,7 +704,6 @@ export default function CheckoutPage() {
                   </span>
                 </div>
 
-                {/* YENİ: İstifadəçi üçün təlimat qutusu */}
                 <div className="mb-3 flex items-start gap-2 bg-[#f5f0ed]/50 p-3 rounded border border-[#e8e0dd]">
                   <Info className="w-3.5 h-3.5 text-[#8b7a72] mt-0.5 flex-shrink-0" />
                   <p className="text-[11px] font-sans text-[#5a4a42] leading-relaxed">
@@ -686,7 +718,7 @@ export default function CheckoutPage() {
                   name="notes"
                   value={formData.notes}
                   onChange={handleInputChange}
-                  rows={4} // Rahat yazılması üçün 3-dən 4-ə qaldırıldı
+                  rows={4}
                   placeholder={t(
                     "checkout.placeholders.notes",
                     "Yerləşdirmə detalları və digər xüsusi istəkləriniz..."
@@ -695,32 +727,45 @@ export default function CheckoutPage() {
                 />
               </section>
 
-              {/* Submit */}
-              <div className="pt-4">
-  <button
-    type="submit"
-    disabled={!previewData?.valid || creating || isRedirecting}
-    className="w-full bg-[#271310] text-white py-5 rounded-md font-sans font-bold text-[11px] uppercase tracking-[0.25em] hover:bg-[#3e2723] active:scale-[0.99] transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100 flex items-center justify-center gap-3 shadow-lg shadow-[#271310]/20"
-  >
-      {creating || isRedirecting ? (
-      <>
-        <Loader2 className="w-4 h-4 animate-spin" />
-        {isRedirecting 
-          ? t("checkout.redirecting", "Ödənişə Yönləndirilir...") 
-          : t("checkout.submitting", "Sifariş Yaradılır...")}
-           </>
-           ) : (
-            <>
-           {React.createElement(Lock as any, { className: "w-4 h-4", strokeWidth: 2.5 })}
-                  {t("checkout.submit_and_pay", "Sifarişi Təsdiqlə və Ödə")}
-            </>
-               )}
+              {/* Submit & QIRMIZI VALYUTA BİLDİRİŞİ */}
+              <div className="pt-4 space-y-3">
+                {/* 🔴 SOL TƏRƏF: Düymənin dərhal üstündəki Qırmızı Valyuta Bildirişi */}
+                {approxAznTotal && (
+                  <div className="p-3.5 bg-red-50/80 border border-red-200/80 rounded-md flex items-start gap-2.5 text-red-700 font-sans">
+                    <ArrowRightLeft className="w-4 h-4 flex-shrink-0 mt-0.5 text-red-600" />
+                    <div className="text-[11px] leading-relaxed">
+                      <span className="font-bold tracking-wider">
+                        {finalTotal.toFixed(2)} {displayCurrency} ➔ ~{approxAznTotal} AZN.
+                      </span>{" "}
+                      <span>{t("checkout.currency_conversion_note", "Ödəniş AZN ilə icra olunacaq. Bankınız konvertasiyanı avtomatik edəcək.")}</span>
+                    </div>
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={!previewData?.valid || creating || isRedirecting}
+                  className="w-full bg-[#271310] text-white py-5 rounded-md font-sans font-bold text-[11px] uppercase tracking-[0.25em] hover:bg-[#3e2723] active:scale-[0.99] transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100 flex items-center justify-center gap-3 shadow-lg shadow-[#271310]/20 cursor-pointer"
+                >
+                  {creating || isRedirecting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      {isRedirecting 
+                        ? t("checkout.redirecting", "Ödənişə Yönləndirilir...") 
+                        : t("checkout.submitting", "Sifariş Yaradılır...")}
+                    </>
+                  ) : (
+                    <>
+                      <Lock className="w-4 h-4" strokeWidth={2.5} />
+                      {t("checkout.submit_and_pay", "Sifarişi Təsdiqlə və Ödə")}
+                    </>
+                  )}
                 </button>
-                  <p className="text-center mt-4 font-sans text-[10px] text-[#a89890] uppercase tracking-wider flex items-center justify-center gap-1">
-                {t("checkout.encrypted", "TƏHLÜKƏSİZ ÖDƏNİŞ")} • 
-              <span className="font-bold text-[#271310]">PAYRIFF</span>
-        </p>
-       </div>
+                <p className="text-center mt-4 font-sans text-[10px] text-[#a89890] uppercase tracking-wider flex items-center justify-center gap-1">
+                  {t("checkout.encrypted", "TƏHLÜKƏSİZ ÖDƏNİŞ")} • 
+                  <span className="font-bold text-[#271310]">PAYRIFF</span>
+                </p>
+              </div>
             </form>
           </motion.div>
 
@@ -756,12 +801,13 @@ export default function CheckoutPage() {
                       <div className="pt-8 border-t border-[#e8e0dd] space-y-4">
                         <div className="flex justify-between items-center text-sm">
                           <span className="font-sans text-[#8b7a72]">
-                            {t("checkout.subtotal", "Məbləğ")}
+                            {t("checkout.subtotal", "Subtotal")}
                           </span>
                           <span className="font-sans text-[#271310] tabular-nums">
                             {displaySymbol}{" "}
                             {(previewData?.totalAmount || 0).toLocaleString(undefined, {
-                              minimumFractionDigits: 2
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2
                             })}
                           </span>
                         </div>
@@ -769,21 +815,35 @@ export default function CheckoutPage() {
                         <div className="flex justify-between items-center text-sm">
                           <span className="font-sans text-[#8b7a72] flex items-center gap-2">
                             <Truck className="w-3.5 h-3.5" strokeWidth={1.5} />
-                            {t("checkout.shipping", "Çatdırılma")}
+                            {t("checkout.shipping_estimated", "Shipping (Estimated)")}
                           </span>
                           <span className="font-sans text-[11px] font-semibold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full">
-                            {t("checkout.free_shipping", "Pulsuz")}
+                            {t("checkout.free_shipping", "PULSUZ")}
                           </span>
                         </div>
 
-                        <div className="flex justify-between items-end pt-6 border-t-2 border-[#271310]">
-                          <span className="font-sans font-bold text-[11px] uppercase tracking-[0.2em] text-[#271310]">
-                            {t("checkout.total", "Yekun")}
-                          </span>
-                          <span className="font-serif text-3xl text-[#271310] tabular-nums">
-                            <span className="text-lg font-sans font-medium pr-1">{displaySymbol}</span>
-                            {finalTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}
-                          </span>
+                        <div className="pt-6 border-t-2 border-[#271310]">
+                          <div className="flex justify-between items-end">
+                            <span className="font-sans font-bold text-[11px] uppercase tracking-[0.2em] text-[#271310]">
+                              {t("checkout.final_settlement", "FINAL SETTLEMENT")}
+                            </span>
+                            <span className="font-serif text-3xl text-[#271310] tabular-nums">
+                              <span className="text-lg font-sans font-medium pr-1">{displaySymbol}</span>
+                              {finalTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            </span>
+                          </div>
+
+                          {/* 🔴 SAĞ TƏRƏF: Yekun məbləğin altındakı Qırmızı Valyuta Bildirişi */}
+                          {approxAznTotal && (
+                            <div className="mt-3 p-2.5 bg-red-50/90 border border-red-200/90 rounded text-red-700 font-sans text-right">
+                              <p className="text-xs font-bold tracking-wider">
+                                {displayCurrency} ➔ AZN: ~{approxAznTotal} ₼
+                              </p>
+                              <p className="text-[10px] text-red-600/90 mt-0.5">
+                                {t("checkout.currency_conversion_note", "Ödəniş AZN ilə icra olunacaq. Bankınız konvertasiyanı avtomatik edəcək.")}
+                              </p>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -796,14 +856,14 @@ export default function CheckoutPage() {
                     <div className="flex items-center gap-1.5">
                       <Truck className="w-3.5 h-3.5" strokeWidth={1.5} />
                       <span className="text-[10px] font-sans uppercase tracking-wider">
-                        {t("checkout.fast_delivery", "Sürətli çatdırılma")}
+                        {t("checkout.fast_delivery", "SÜRƏTLİ ÇATDIRILMA")}
                       </span>
                     </div>
                     <div className="w-px h-3 bg-[#d8cfcb]" />
                     <div className="flex items-center gap-1.5">
                       <Check className="w-3.5 h-3.5" strokeWidth={1.5} />
                       <span className="text-[10px] font-sans uppercase tracking-wider">
-                        {t("checkout.quality_guarantee", "Keyfiyyət zəmanəti")}
+                        {t("checkout.quality_guarantee", "KEYFİYYƏT ZƏMANƏTİ")}
                       </span>
                     </div>
                   </div>
