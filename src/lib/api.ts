@@ -3,13 +3,12 @@ import toast from 'react-hot-toast';
 import i18n from '../i18n';
 import { useCurrencyStore } from '../store/useCurrencyStore';
 
-const BASE_URL = 'http://localhost:8080/api';
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "/api";
 
 export const api = axios.create({
-  baseURL: BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  baseURL: API_BASE_URL,
+  withCredentials: true,
 });
 
 // 2. Zəka Mühərrikimiz (Request Interceptor) - Başlıqları avtomatik qoşur

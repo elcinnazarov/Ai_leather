@@ -7,6 +7,9 @@ import { Search, Loader2, Star, Hammer, BadgeCheck, Clock, Volume2, VolumeX } fr
 import { cn } from "../lib/utils";
 import { motion } from "framer-motion";
 
+// ✅ Media bazası: Lokalda localhost:9000, canlıda https://e1000leather.com
+const MEDIA_BASE = import.meta.env.VITE_MEDIA_BASE_URL || "";
+
 export default function ProductCatalog() {
   const { t, i18n } = useTranslation();
   const lang = (i18n.language?.split("-")[0] || "az") as "az" | "en";
@@ -57,12 +60,9 @@ export default function ProductCatalog() {
     }
 
     if (products.length > 0) {
-      // Brauzer ilk frame-i ekrana çəkməzdən əvvəl sinxron olaraq aşağı atırıq:
       window.scrollTo({ top: initialScrollY, behavior: "instant" });
       sessionStorage.removeItem(CATALOG_SCROLL_KEY);
       scrollDoneRef.current = true;
-      
-      // Artıq lazımi yerdəyik, səhifəni görünən edirik:
       setIsReadyToDisplay(true);
     }
   }, [products.length, initialScrollY, isRestoring]);
@@ -78,7 +78,6 @@ export default function ProductCatalog() {
     }
 
     try {
-      // Əgər istifadəçi artıq 24 məhsul yükləyibsə, səhifə 12-yə qısalmasın deyə həmin sayda çəkirik
       const queryFilter = {
         ...filter,
         size: Math.max(filter.size || 12, products.length || 12)
@@ -165,21 +164,24 @@ export default function ProductCatalog() {
     });
   };
 
+  // ✅ DİNAMİK VİDEOLAR (MinIO / Canlı Uyğunluğu):
   const reels = [
-    { src: "http://localhost:9000/ui-videos/Catalog1.mp4" },
-    { src: "http://localhost:9000/ui-videos/Catalog2.mp4" },
-    { src: "http://localhost:9000/ui-videos/Catalog3.mp4" },
-    { src: "http://localhost:9000/ui-videos/Catalog4.mp4" },
-    { src: "http://localhost:9000/ui-videos/Catalog5.mp4" }
+    { src: `${MEDIA_BASE}/ui-videos/Catalog1.mp4` },
+    { src: `${MEDIA_BASE}/ui-videos/Catalog2.mp4` },
+    { src: `${MEDIA_BASE}/ui-videos/Catalog3.mp4` },
+    { src: `${MEDIA_BASE}/ui-videos/Catalog4.mp4` },
+    { src: `${MEDIA_BASE}/ui-videos/Catalog5.mp4` }
   ];
 
+  // ✅ BƏRPA OLUNDU: PILLARS MƏLUMATLARI
   const pillarsData = [
     { icon: Hammer, title: t("pillars.handcrafted.title"), desc: t("pillars.handcrafted.desc") },
     { icon: BadgeCheck, title: t("pillars.fullGrain.title"), desc: t("pillars.fullGrain.desc") },
     { icon: Clock, title: t("pillars.madeToLast.title"), desc: t("pillars.madeToLast.desc") }
   ];
 
-  const CUSTOMER_EXPERIENCES_BASE_URL = "http://localhost:9000/customer-experiences";
+  // ✅ BƏRPA OLUNDU VƏ DİNAMİK EDİLDİ: REVIEWS MƏLUMATLARI
+  const CUSTOMER_EXPERIENCES_BASE_URL = `${MEDIA_BASE}/customer-experiences`;
   const reviews = [
     { image: `${CUSTOMER_EXPERIENCES_BASE_URL}/userlike1.jpg` },
     { image: `${CUSTOMER_EXPERIENCES_BASE_URL}/userlike2.jpg` },
@@ -188,12 +190,10 @@ export default function ProductCatalog() {
   ];
 
   return (
-    // ✅ isReadyToDisplay false olarsa (skroll bərpa anında) opacity 0 olur və qara kölgə heç vaxt görünmür
     <div 
       style={{ opacity: isReadyToDisplay ? 1 : 0 }} 
       className="bg-[#faf9f9] text-[#1b1c1c] antialiased min-h-screen font-sans selection:bg-[#c9c6c5] selection:text-black transition-opacity duration-150"
     >
-      
       {/* Hero Video Section */}
       <section className="relative h-[100dvh] w-full overflow-hidden flex flex-col bg-[#1b1c1c]">
         <header className="absolute top-0 w-full z-50 py-5 px-6 md:px-16 flex justify-center items-center bg-gradient-to-b from-black/40 to-transparent">
@@ -210,7 +210,8 @@ export default function ProductCatalog() {
             playsInline 
             className="absolute w-full h-full object-cover opacity-40 blur-2xl hidden md:block scale-110"
           >
-            <source src="http://localhost:9000/ui-videos/anasehife2.MOV" type="video/mp4" />
+            {/* ✅ DİNAMİK URL */}
+            <source src={`${MEDIA_BASE}/ui-videos/anasehife2.MOV`} type="video/mp4" />
           </video>
 
           <video
@@ -220,7 +221,8 @@ export default function ProductCatalog() {
             playsInline
             className="relative z-10 w-full h-full object-cover md:object-contain"
           >
-            <source src="http://localhost:9000/ui-videos/anasehife2.MOV" type="video/mp4" />
+            {/* ✅ DİNAMİK URL */}
+            <source src={`${MEDIA_BASE}/ui-videos/anasehife2.MOV`} type="video/mp4" />
           </video>
           
           <div className="absolute inset-0 bg-black/10 z-20" />
@@ -425,7 +427,6 @@ export default function ProductCatalog() {
           })}
         </div>
       </section>
-
     </div>
   );
 }
