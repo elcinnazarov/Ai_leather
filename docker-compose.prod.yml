@@ -110,6 +110,7 @@ services:
       SPRING_PROFILES_ACTIVE: prod
       DB_HOST: postgres
       DB_PORT: 5432
+      DB_NAME: ${BACKEND_DB_NAME}   # 👈 ƏVƏ EDİLDİ: Backend bu bazanı oxuyacaq
       REDIS_HOST: redis
       REDIS_PORT: 6379
       RABBITMQ_HOST: rabbitmq
@@ -150,7 +151,7 @@ services:
       DB_TYPE: postgresdb
       DB_POSTGRESDB_HOST: postgres
       DB_POSTGRESDB_PORT: 5432
-      DB_POSTGRESDB_DATABASE: ${DB_NAME}
+      DB_POSTGRESDB_DATABASE: ${N8N_DB_NAME}
       DB_POSTGRESDB_USER: ${DB_USERNAME}
       DB_POSTGRESDB_PASSWORD: ${DB_PASSWORD}
       N8N_PORT: 5678
