@@ -24,6 +24,8 @@ public class MinioService {
     private  final MinioClient minioClient;
     @Value("${minio.url}") // YAML-da url yazılıb
     private String minioUrl;
+    @Value("${miniopublic.url}")
+    private String publicUrl;
 
     @Value("${minio.bucket}") // YAML-da bucket yazılıb
     private String bucketName;
@@ -137,7 +139,7 @@ public class MinioService {
     }
 
     private String getFileUrl(String objectPath) {
-        return String.format("%s/%s/%s", minioUrl, bucketName, objectPath);
+        return String.format("%s/%s/%s", publicUrl, bucketName, objectPath);
     }
 
     private String generateFileName(MultipartFile file) {

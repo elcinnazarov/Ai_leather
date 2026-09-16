@@ -89,6 +89,7 @@ springdoc:
 
 minio:
   url: ${MINIO_URL}
+  puclicurl: ${MINIOPUBLIC_URL}
   access-key: ${MINIO_ADMIN}
   secret-key: ${SECRET_ADMIN}
   bucket: ai-atelye-storage

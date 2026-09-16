@@ -29,8 +29,10 @@ public class AIMinioService {
     @Value("${minio.bucket}")
     private String bucketName;
 
-    @Value("${minio.url}")
+    @Value("${minio.puclicurl}")
     private String minioUrl;
+    @Value("${miniopublic.url}")
+    private String publicUrl;
 
     @Value("${minio.folders.ai}")
     private String aiFolder;
@@ -149,7 +151,7 @@ public class AIMinioService {
      */
     private String buildPublicUrl(String objectKey) {
         // Format: http://minio:9000/bucket/ai/designs/789/ai_xxx.png
-        return String.format("%s/%s/%s", minioUrl, bucketName, objectKey);
+        return String.format("%s/%s/%s", publicUrl, bucketName, objectKey);
     }
 
     /**
