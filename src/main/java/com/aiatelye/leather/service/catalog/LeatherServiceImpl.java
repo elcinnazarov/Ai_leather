@@ -173,7 +173,7 @@ public class LeatherServiceImpl implements LeatherService {
 
         return leatherMapper.toLeatherResponse(updated);
     }
-
+       @Transactional
         public LeatherResponse updateLeatherStatus(Long leatherId, Enums.AvailabilityStatus newstatus) {
             log.info("Updating product ID: {} status to: {}", leatherId, newstatus);
 
