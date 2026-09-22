@@ -122,7 +122,7 @@ export default function CheckoutPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showCountryWarning, setShowCountryWarning] = useState(false);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
-
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [activeCountries, setActiveCountries] = useState<typeof ALL_COUNTRIES>([]);
 
   const [formData, setFormData] = useState({
@@ -303,11 +303,35 @@ export default function CheckoutPage() {
     return Object.keys(newErrors).length === 0;
   }, [formData, t]);
 
-  const handleCheckout = async (e: React.FormEvent) => {
+const handleCheckout = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitError(null);
 
-    if (!previewData?.valid || cartItems.length === 0) return;
-    if (!validateForm()) return;
+    // 1. Düymə basılan kimi bütün xanaları "touched" edirik ki, boş qalanlar qırmızı ilə parıldasın:
+    setTouched({
+      customerName: true,
+      cityName: true,
+      postalCode: true,
+      deliveryAddress: true,
+      phoneNumber: true,
+    });
+
+    if (cartItems.length === 0) {
+      setSubmitError(t("cart.empty", "Səbətiniz boşdur"));
+      return;
+    }
+
+    if (!previewData?.valid) {
+      setSubmitError(t("checkout.cart_invalid", "Səbətdəki məhsulların qiyməti hesablanmayıb. Zəhmət olmasa səhifəni yeniləyin."));
+      return;
+    }
+
+    // 2. Əgər forma validasiyadan keçmirsə, xəta mesajını göstər və ən birinci boş xanaya skroll et:
+    if (!validateForm()) {
+      setSubmitError(t("checkout.fill_required_fields", "Zəhmət olmasa tələb olunan bütün xanaları düzgün doldurun."));
+      window.scrollTo({ top: 300, behavior: "smooth" });
+      return;
+    }
 
     try {
       const idempotencyKey = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}`;
@@ -351,7 +375,7 @@ export default function CheckoutPage() {
         if (checkoutData && checkoutData.paymentUrl) {
           window.location.href = checkoutData.paymentUrl;
         } else {
-          alert(t("checkout.payment_error", "Ödəniş linki yaradıla bilmədi. Zəhmət olmasa arxivdən təkrar cəhd edin."));
+          setSubmitError(t("checkout.payment_error", "Ödəniş linki yaradıla bilmədi. Zəhmət olmasa təkrar cəhd edin."));
           setIsRedirecting(false);
         }
       } else {
@@ -359,6 +383,10 @@ export default function CheckoutPage() {
       }
     } catch (error: any) {
       console.error("Checkout failed:", error);
+      // 3. Backend-dən gələn real xətanı istifadəçiyə göstəririk:
+      const backendMessage = error?.response?.data?.message || error?.message || t("checkout.failed", "Sifariş yaradılarkən xəta baş verdi.");
+      setSubmitError(backendMessage);
+      setIsRedirecting(false);
     }
   };
 
@@ -741,7 +769,13 @@ export default function CheckoutPage() {
                     </div>
                   </div>
                 )}
-
+               {/* 🔴 Xəta Bildiriş Qutusu */}
+         {submitError && (
+          <div className="p-4 bg-red-50 border border-red-200 rounded-md flex items-center gap-3 text-red-700 font-sans text-xs">
+       <AlertCircle className="w-4 h-4 flex-shrink-0 text-red-600" />
+       <span>{submitError}</span>
+      </div>
+         )}
                 <button
                   type="submit"
                   disabled={!previewData?.valid || creating || isRedirecting}
