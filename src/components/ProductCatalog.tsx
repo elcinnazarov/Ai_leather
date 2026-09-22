@@ -337,7 +337,7 @@ export default function ProductCatalog() {
 
                       <div className="text-center md:text-left px-0.5 md:px-1 flex flex-col flex-grow">
                         <p className="text-[8px] md:text-[9px] uppercase tracking-[0.25em] text-[#9ca3af] mb-1.5 font-medium">
-                          Ai ATELYE
+                          E1000 HANDMADE
                         </p>
                         <h3 className="font-serif text-[13px] sm:text-[15px] md:text-[17px] leading-[1.25] mb-2 md:mb-2.5 text-[#1b1c1c] group-hover:text-[#5e5e5d] transition-colors duration-300 line-clamp-2 md:line-clamp-1 tracking-tight">
                           {product.modelName}
