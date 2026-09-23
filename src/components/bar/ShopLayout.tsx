@@ -3,7 +3,8 @@ import {
   ShoppingBag, 
   Search, 
   User, 
-  X
+  X,
+  LogOut
 } from "lucide-react";
 import { cn } from "../../lib/utils";
 import { useCartStore } from "../../store/useCartStore";
@@ -66,13 +67,20 @@ export default function ShopLayout({ children, cartCount: propCartCount = 0 }: S
       )}>
         
         <div className="flex items-center gap-8 w-1/3">
+          {/* ✅ YENİ: "MENU" yazısı əlavə olundu (yalnız mobil/tablet-də görünür) ki,
+              istifadəçi bu 3 xəttin naviqasiya+kateqoriyalar açdığını anlasın */}
           <button 
             onClick={() => setIsMenuOpen(true)}
-            className="group flex flex-col justify-center items-start gap-[5px] p-2 cursor-pointer transition-transform active:scale-95"
+            className="group flex items-center gap-2.5 p-2 -ml-2 cursor-pointer transition-transform active:scale-95"
           >
-            <span className="w-6 h-[1.2px] bg-black transition-all duration-300 ease-out group-hover:w-4"></span>
-            <span className="w-4 h-[1.2px] bg-black transition-all duration-300 ease-out group-hover:w-6"></span>
-            <span className="w-6 h-[1.2px] bg-black transition-all duration-300 ease-out group-hover:w-4"></span>
+            <div className="flex flex-col justify-center items-start gap-[5px]">
+              <span className="w-6 h-[1.2px] bg-black transition-all duration-300 ease-out group-hover:w-4"></span>
+              <span className="w-4 h-[1.2px] bg-black transition-all duration-300 ease-out group-hover:w-6"></span>
+              <span className="w-6 h-[1.2px] bg-black transition-all duration-300 ease-out group-hover:w-4"></span>
+            </div>
+            <span className="lg:hidden text-[9px] font-sans font-bold uppercase tracking-[0.2em] text-black/70 group-hover:text-black transition-colors">
+              {t("nav.menu", "Menu")}
+            </span>
           </button>
           
           <div className="hidden lg:flex items-center gap-8">
@@ -120,6 +128,34 @@ export default function ShopLayout({ children, cartCount: propCartCount = 0 }: S
                 <span className="hover:text-black transition-colors cursor-pointer">{currency}</span>
               </>
             )}
+          </div>
+
+          {/* ✅ YENİ: Mobil ekranda (< sm) AZ/EN indi əsas barda görünür,
+              əvvəllər yalnız hamburger menyusunun içində idi */}
+          <div className="flex sm:hidden items-center gap-2 text-[9px] font-sans font-bold tracking-widest uppercase select-none">
+            <button
+              onClick={() => i18n.changeLanguage('az')}
+              className={cn(
+                "transition-colors pb-0.5 border-b",
+                i18n.language === 'az' || i18n.language?.startsWith('az')
+                  ? "text-black border-black"
+                  : "text-black/40 border-transparent"
+              )}
+            >
+              AZ
+            </button>
+            <span className="text-black/20">|</span>
+            <button
+              onClick={() => i18n.changeLanguage('en')}
+              className={cn(
+                "transition-colors pb-0.5 border-b",
+                i18n.language === 'en' || i18n.language?.startsWith('en')
+                  ? "text-black border-black"
+                  : "text-black/40 border-transparent"
+              )}
+            >
+              EN
+            </button>
           </div>
 
           <div className="hidden sm:block">
@@ -253,16 +289,39 @@ export default function ShopLayout({ children, cartCount: propCartCount = 0 }: S
               <div className="w-8 h-[1px] bg-black/20 my-2 animate-in slide-in-from-left fade-in" style={{ animationDelay: "300ms", animationFillMode: "both" }}></div>
               
               {/* Hesab Hissəsi */}
-              <div className="animate-in slide-in-from-left fade-in" style={{ animationDelay: "400ms", animationFillMode: "both" }}>
+              <div className="flex flex-col gap-5 animate-in slide-in-from-left fade-in" style={{ animationDelay: "400ms", animationFillMode: "both" }}>
                 {isAuthenticated ? (
-                  <Link 
-                    to="/profile/orders"
-                    className="flex items-center gap-4 text-xs font-sans font-bold uppercase tracking-widest text-black/70 hover:text-black transition-colors group"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    <User className="w-5 h-5 stroke-[1.5] group-hover:scale-110 transition-transform" />
-                    My Account
-                  </Link>
+                  <>
+                    <Link 
+                      to="/profile/orders"
+                      className="flex items-center gap-4 text-xs font-sans font-bold uppercase tracking-widest text-black/70 hover:text-black transition-colors group"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <User className="w-5 h-5 stroke-[1.5] group-hover:scale-110 transition-transform" />
+                      My Account
+                    </Link>
+                    {user?.role === 'ADMIN' && (
+                      <Link
+                        to="/admin"
+                        className="flex items-center gap-4 text-xs font-sans font-bold uppercase tracking-widest text-black/70 hover:text-black transition-colors group"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        <User className="w-5 h-5 stroke-[1.5] group-hover:scale-110 transition-transform" />
+                        Admin Panel
+                      </Link>
+                    )}
+                    {/* ✅ YENİ: Mobil menyuda çıxış (Sign Out) düyməsi yox idi, əlavə olundu */}
+                    <button
+                      onClick={() => {
+                        logout();
+                        setIsMenuOpen(false);
+                      }}
+                      className="flex items-center gap-4 text-xs font-sans font-bold uppercase tracking-widest text-black/50 hover:text-black transition-colors text-left group"
+                    >
+                      <LogOut className="w-5 h-5 stroke-[1.5] group-hover:scale-110 transition-transform" />
+                      Sign Out
+                    </button>
+                  </>
                 ) : (
                   <Link 
                     to="/auth"

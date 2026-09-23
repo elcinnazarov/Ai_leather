@@ -196,11 +196,8 @@ export default function ProductCatalog() {
     >
       {/* Hero Video Section */}
       <section className="relative h-[100dvh] w-full overflow-hidden flex flex-col bg-[#1b1c1c]">
-        <header className="absolute top-0 w-full z-50 py-5 px-6 md:px-16 flex justify-center items-center bg-gradient-to-b from-black/40 to-transparent">
-          <div className="absolute left-1/2 -translate-x-1/2">
-             <img src="/logo.png" alt="Ai Atelye" className="h-10 md:h-14 drop-shadow-md" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
-          </div>
-        </header>
+        
+    
 
         <div className="absolute inset-0 z-0 flex items-center justify-center overflow-hidden">
           <video 
