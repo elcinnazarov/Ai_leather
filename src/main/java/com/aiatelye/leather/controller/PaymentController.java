@@ -8,8 +8,11 @@ import com.aiatelye.leather.dto.payment.PayriffCallbackPayload;
 import com.aiatelye.leather.service.paymentService.PaymentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
 
 @Slf4j
 @RestController
@@ -56,5 +59,17 @@ public class PaymentController {
         log.info("PayRiff callback received: orderId={}, status={}", payload.getOrderId(), payload.getStatus());
         paymentService.handleCallback(payload);
         return ResponseEntity.ok().build();
+    }
+
+
+    /**
+     * Müştəri 3D Secure-dan sonra sayta qayıtdıqda (GET):
+     * 405 vermir, birbaşa müştərinin sifarişlər səhifəsinə yönləndirir (302 Redirect).
+     */
+    @GetMapping("/api/internal/payriff-callback")
+    public ResponseEntity<Void> handleBrowserReturn() {
+        return ResponseEntity.status(HttpStatus.FOUND)
+                .location(URI.create("https://e1000leather.com/profile/orders"))
+                .build();
     }
 }

@@ -131,15 +131,15 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Transactional
     public void handleCallback(PayriffCallbackPayload callbackPayload) {
-
-        if (callbackPayload.getOrderId() == null) {
+        String resolvedOrderId = callbackPayload.getResolvedOrderId();
+        if (resolvedOrderId == null) {
             log.warn("PayRiff callback received without orderId, ignoring. payload={}", callbackPayload);
             return;
         }
 
-        Payment payment = paymentRepository.findByProviderPaymentId(callbackPayload.getOrderId())
+        Payment payment = paymentRepository.findByProviderPaymentId(resolvedOrderId)
                 .orElseThrow(() -> new NotFoundException(
-                        "Payment not found for PayRiff orderId: " + callbackPayload.getOrderId()));
+                        "Payment not found for PayRiff orderId: " +resolvedOrderId));
 
         Order order = payment.getOrder();
 
@@ -154,7 +154,7 @@ public class PaymentServiceImpl implements PaymentService {
                 payriffClient.getOrderInformation(payment.getProviderPaymentId());
 
         if (!confirmedResponse.isSuccess() || confirmedResponse.getPayload() == null) {
-            log.error("PayRiff order verification failed for orderId={}", callbackPayload.getOrderId());
+            log.error("PayRiff order verification failed for orderId={}", resolvedOrderId);
             throw new PaymentFailedException("Ödəniş Payriff tərəfindən təsdiqlənmədi");
         }
 
