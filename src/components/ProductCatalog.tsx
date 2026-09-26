@@ -208,7 +208,10 @@ export default function ProductCatalog() {
             loop
             muted={isHeroMuted}
             playsInline
-            className="relative z-10 w-full h-full object-cover md:object-contain"
+            // ✅ YENİ: MinIO-ya toxunmadan, sırf CSS ilə — video buferlənənə qədər
+            // qara qutu əvəzinə yumşaq gradient fon görünür (bg-gradient Tailwind class-ı
+            // videonun öz "background" CSS xassəsi kimi işləyir, kadr yüklənən kimi üstünü örtür).
+            className="relative z-10 w-full h-full object-cover md:object-contain bg-gradient-to-br from-[#2c2c2c] to-[#141414]"
           >
             {/* ✅ DİNAMİK URL */}
             <source src={`${MEDIA_BASE}/ui-videos/anasehife2.MOV`} type="video/mp4" />
@@ -243,14 +246,15 @@ export default function ProductCatalog() {
               <div className="aspect-[9/16] relative overflow-hidden bg-[#e9e8e8] shadow-sm">
                 <video
                   ref={(el) => { videoRefs.current[idx] = el; }}
-                  // ✅ DƏYİŞDİ: "#t=0.1" hilə-fraqmenti silindi, preload="none" edildi —
-                  // brauzer artıq istifadəçi klikləməyənə qədər 5 videonun heç birini yükləmir
+                  // ✅ preload="none" olaraq qalır — brauzer klikləməyənə qədər video datasını yükləmir.
+                  // ✅ YENİ: MinIO-ya toxunmadan, sırf CSS gradient — qara qutu əvəzinə
+                  // yumşaq, dizayna uyğun fon. Video oynadılanda ilk kadr avtomatik üstünü örtür.
                   src={reel.src}
                   controls
                   preload="none"
                   playsInline
                   onPlay={() => handleVideoPlay(idx)}
-                  className="w-full h-full object-cover outline-none"
+                  className="w-full h-full object-cover outline-none bg-gradient-to-br from-[#3a3632] to-[#1b1c1c]"
                 />
               </div>
             </div>
