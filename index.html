@@ -1,4 +1,3 @@
-
 <!doctype html>
 
 <html lang="az">
@@ -10,30 +9,57 @@
     <link rel="icon" type="image/png" href="/logo.png" />
     <link rel="apple-touch-icon" href="/logo.png" />
 
-    <!-- 🟢 2. Səhifə başlığı -->
-    <title>E1000 Leather | E1000 Atelier Baku</title>
+    <!-- 🟢 1.1 Google Fonts — preconnect (DNS+TLS əvvəlcədən qurulur, gec qalmanın qarşısı alınır) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <!-- 🟢 3. Google Axtarışı üçün Açıqlama -->
-    <meta name="description" content="E1000 Leather (E1000 Atelier Baku) - Bakıda əl işi premium təbii dəri məhsulları və aksesuarlar." />
+    <!-- 🟢 1.2 Şriftlər indi birbaşa <link> ilə yüklənir (src/index.css-dəki @import BURAYA KÖÇÜRÜLDÜ,
+         çünki CSS @import ardıcıl/bloklayıcıdır, <link> isə paralel yüklənir) -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- 🟢 4. Düzəldilmiş Schema Kodu (Dırnaqlar əlavə edildi) -->
+    <!-- 🟢 2. Səhifə başlığı (İngiliscə — qlobal bazar üçün açar sözlərlə zənginləşdirilib) -->
+    <title>E1000 Leather Atelier | Handmade Genuine Leather Bags, Wallets & Belts – Baku</title>
+
+    <!-- 🟢 3. Google Axtarışı üçün Açıqlama (İngiliscə, çanta+pulqabı+kəmər+aksesuar hamısı daxil) -->
+    <meta name="description" content="E1000 Leather (E1000 Atelier Baku) — 100% genuine, handcrafted leather bags, wallets, belts and accessories. Custom orders and worldwide shipping from Baku, Azerbaijan." />
+
+    <!-- 🟢 4. Open Graph — WhatsApp, Telegram, Facebook-da paylaşılanda zəngin kart çıxması üçün -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="E1000 Leather Atelier | Handmade Genuine Leather Bags, Wallets & Belts" />
+    <meta property="og:description" content="100% genuine, handcrafted leather bags, wallets, belts and accessories, made in Baku. Custom orders and worldwide shipping." />
+    <meta property="og:image" content="https://e1000leather.com/logo.png" />
+    <meta property="og:url" content="https://e1000leather.com/" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="az_AZ" />
+
+    <!-- 🟢 5. Twitter Card (X-də paylaşılanda da eyni zəngin kart çıxsın) -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="E1000 Leather Atelier | Handmade Genuine Leather Goods" />
+    <meta name="twitter:description" content="100% genuine, handcrafted leather bags, wallets, belts and accessories, made in Baku." />
+    <meta name="twitter:image" content="https://e1000leather.com/logo.png" />
+
+    <!-- 🟢 6. Schema Kodu — brend + real sosial hesablar -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "OnlineStore",
       "name": "E1000 Leather",
       "alternateName": [
-        "E1000 Atelier Baku",
-        "E1000 Atelye Baku",
-        "e1000leather",
-        "e1000 atelie baku"
+           "e1000 atelier",
+           "E1000 Atelier",
+           "E1000 Atelier Baku",
+           "E1000 Atelye Baku",
+           "e1000leather",
+           "e1000 atelie baku"
       ],
       "url": "https://e1000leather.com/",
       "logo": "https://e1000leather.com/logo.png",
       "sameAs": [
-        "https://www.instagram.com/e1000_atelier_baku/"
+        "https://www.instagram.com/e1000_atelier_baku/",
+        "https://www.tiktok.com/@e1000atelier",
+        "https://www.youtube.com/@E1000atelier"
       ],
-      "description": "E1000 Leather (E1000 Atelier Baku) - Bakıda əl işi premium təbii dəri məhsulları və aksesuarlar."
+      "description": "E1000 Leather (E1000 Atelier Baku) — 100% genuine, handcrafted leather bags, wallets, belts and accessories, made in Baku, Azerbaijan."
     }
     </script>
   </head>

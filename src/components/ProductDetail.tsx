@@ -2,7 +2,7 @@ import React, { useEffect, useLayoutEffect, useState, useMemo, useCallback } fro
 import { useParams, useNavigate } from "react-router-dom";
 import { productService } from "../services/productService";
 import { ProductDetailResponse, P_AvailableLeatherResponse } from "../types/product";
-import { ArrowLeft, Loader2, ShoppingBag, X } from "lucide-react";
+import { ArrowLeft, Loader2, ShoppingBag, X , AlertCircle } from "lucide-react";
 import { cn } from "../lib/utils";
 import { useCartStore } from "../store/useCartStore";
 import { useAITranslation } from "../lib/hooks/useAITranslation";
@@ -420,22 +420,28 @@ useEffect(() => {
             )}
 
             {selectedMaterial && (
-              <div className="flex items-center gap-3 mb-7 py-3 border-t border-b border-[#e5e5e5]">
-                <div className="w-9 h-9 rounded-full overflow-hidden flex-shrink-0 ring-1 ring-[#e5e5e5]">
-                  <img src={selectedMaterial?.imageUrl} alt="" className="w-full h-full object-cover" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-[12px] font-semibold text-[#111111] truncate uppercase tracking-[0.05em]">{tSelectedMaterialName}</p>
-                  <p className="text-[10px] text-[#767676] uppercase tracking-[0.15em]">
-                    {tSelectedMaterialGrade}
-                  </p>
-                </div>
-                <div className="text-[13px] font-semibold text-[#6f2c3f] whitespace-nowrap">
-                  {displaySymbol}{(currentPrice || 0).toFixed(2)}
-                </div>
-              </div>
-            )}
+  <div className="flex flex-col gap-3 mb-7 py-3 border-t border-b border-[#e5e5e5]">
+    <div className="flex items-center gap-3">
+      <div className="w-9 h-9 rounded-full overflow-hidden flex-shrink-0 ring-1 ring-[#e5e5e5]">
+        <img src={selectedMaterial?.imageUrl} alt="" className="w-full h-full object-cover" />
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="text-[12px] font-semibold text-[#111111] truncate uppercase tracking-[0.05em]">{tSelectedMaterialName}</p>
+        <p className="text-[10px] text-[#767676] uppercase tracking-[0.15em]">
+          {tSelectedMaterialGrade}
+        </p>
+      </div>
+      <div className="text-[13px] font-semibold text-[#6f2c3f] whitespace-nowrap">
+        {displaySymbol}{(currentPrice || 0).toFixed(2)}
+      </div>
+    </div>
 
+    <p className="flex items-center gap-1.5 text-[11px] font-bold text-[#6f2c3f]">
+      <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
+      {t('leather.selectedNotice')}
+    </p>
+  </div>
+)}
             {/* ================= SƏBƏTƏ ƏLAVƏ ET — brend saytı tərzi: tam-künc, iri tracking ================= */}
             <div className="fixed bottom-0 left-0 right-0 p-4 pb-8 bg-white/95 backdrop-blur-lg border-t border-[#e5e5e5] z-50 lg:static lg:bg-transparent lg:border-none lg:p-0 lg:z-auto transition-all duration-500">
               <button 

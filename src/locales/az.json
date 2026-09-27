@@ -63,7 +63,8 @@
       "pebbled": "Qabarıq Tekstura"
     },
     "thickness": "Dəri Qalınlığı",
-    "care": "Qulluq Təlimatı"
+    "care": "Qulluq Təlimatı",
+    "selectedNotice": "Diqqət! Məhsulunuz seçdiyiniz bu dəriyə əsasən hazırlanacaq!"
   },
   "orders": {
     "carrier": "Kuryer / Daşıyıcı",
@@ -262,5 +263,18 @@
       "title": "ÖMÜRLÜK",
       "desc": "Dizaynlarımız və materiallarımız zamana meydan oxumaq üçün seçilib."
     }
+  },
+  "reels": {
+    "prev": "Əvvəlki video",
+    "next": "Növbəti video",
+    "play": "Videonu oynat",
+    "pause": "Videonu dayandır",
+    "mute": "Səsi bağla",
+    "unmute": "Səsi aç",
+    "endTag": "E1000 ATELYE",
+    "endTitle": "Bütün Kolleksiya",
+    "endDesc": "Əl işi premium dəri məhsullarımızı kəşf edin",
+    "endBtn": "Kataloqa Keç"
   }
+  
 }

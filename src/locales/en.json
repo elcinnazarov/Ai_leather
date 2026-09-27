@@ -56,6 +56,7 @@
       "top_grain": "Top Grain Leather",
       "genuine": "Genuine Leather",
       "suede": "Premium Suede"
+     
     },
     "finish": {
       "matte": "Matte Finish",
@@ -63,7 +64,8 @@
       "pebbled": "Pebbled Texture"
     },
     "thickness": "Leather Thickness",
-    "care": "Care Instructions"
+    "care": "Care Instructions",
+       "selectedNotice": "Attention! Your product will be handcrafted based on the leather you selected!"
   },
   "orders": {
     "carrier": "Carrier / Courier",
@@ -262,5 +264,18 @@
       "title": "MADE TO LAST",
       "desc": "Our designs and materials are chosen to defy time."
     }
+  },"reels": {
+    "prev": "Previous video",
+    "next": "Next video",
+    "play": "Play video",
+    "pause": "Pause video",
+    "mute": "Mute",
+    "unmute": "Unmute",
+    "endTag": "E1000 ATELIER",
+    "endTitle": "Full Collection",
+    "endDesc": "Discover our premium handcrafted leather goods",
+    "endBtn": "Explore Catalog"
   }
+
+  
 }
