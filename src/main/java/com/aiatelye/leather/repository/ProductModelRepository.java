@@ -29,6 +29,13 @@ public interface ProductModelRepository extends JpaRepository<ProductModel,Long>
 
     Page<ProductModel> findAll(Specification<ProductModel> spec, Pageable pageable);
 
+
+
+    // Sitemap üçün: yalnız aktiv məhsulların ID + son yenilənmə tarixi
+    @Query("SELECT p.id, p.updatedAt FROM ProductModel p " +
+            "WHERE p.isActive = true AND p.availabilityStatus = 'ACTIVE'")
+    List<Object[]> findAllActiveIdAndUpdatedAt();
+
     /// Ən ucuz qiyməti tap (tək məhsul üçün)
     @Query("SELECT MIN(pgp.price) FROM ProductGradePrice pgp WHERE pgp.productModel.id = :productId")
     BigDecimal findMinPriceByProductId(@Param("productId") Long productId);

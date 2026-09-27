@@ -92,5 +92,7 @@ public interface LeatherRepository extends JpaRepository<Leather,Long> {
 
 
 
-
+    // Yalnız aktiv/mövcud olan dərilərin ID və son dəyişilmə tarixini çəkir
+    @Query("SELECT l.id, l.updatedAt FROM Leather l WHERE l.isActive = true")
+    List<Object[]> findAllActiveIdAndUpdatedAt();
 }
