@@ -57,7 +57,9 @@ public class SecurtyConfiguration {
             "/configuration/**",
             "/webjars/**",
             "/swagger-ui/index.html",
-            "/error"
+            "/error",
+            //sitemap
+            "/api/sitemap.xml"
     };
 
 
