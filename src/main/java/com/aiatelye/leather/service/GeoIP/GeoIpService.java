@@ -37,7 +37,7 @@ public class GeoIpService {
 
         // Localhost və ya Docker daxili şəbəkəsi (172.x.x.x) üçün test simulyasiyası
         if ("0:0:0:0:0:0:0:1".equals(ip) || "127.0.0.1".equals(ip) || (ip != null && ip.startsWith("172."))) {
-            return "8.8.8.8"; // Test üçün ABŞ IP-si
+            return "8.8.8.8"; // ABŞ (US)
         }
 
         return ip;
