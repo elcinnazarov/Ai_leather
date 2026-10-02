@@ -868,7 +868,16 @@ const handleCheckout = async (e: React.FormEvent) => {
                           </div>
 
                           {/* 🔴 SAĞ TƏRƏF: Yekun məbləğin altındakı Qırmızı Valyuta Bildirişi */}
-                         
+                          {approxAznTotal && (
+                            <div className="mt-3 p-2.5 bg-red-50/90 border border-red-200/90 rounded text-red-700 font-sans text-right">
+                              <p className="text-xs font-bold tracking-wider">
+                                {displayCurrency} ➔ AZN: ~{approxAznTotal} ₼
+                              </p>
+                              <p className="text-[10px] text-red-600/90 mt-0.5">
+                                {t("checkout.currency_conversion_note", "Ödəniş AZN ilə icra olunacaq. Bankınız konvertasiyanı avtomatik edəcək.")}
+                              </p>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
