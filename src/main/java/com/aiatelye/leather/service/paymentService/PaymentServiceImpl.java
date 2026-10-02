@@ -64,10 +64,8 @@ public class PaymentServiceImpl implements PaymentService {
             throw new BadRequestException("Order is already paid");
         }
 
-        // 4. ✅ YENİ VALYUTA VƏ DİL MƏNTİQİ:
-        // USD -> Birbaşa USD (çevrilmir), Dil: EN
-        // EUR -> AZN-ə çevrilir, Dil: EN
-        // AZN -> Birbaşa AZN, Dil: AZ
+        // 4. ✅ Bütün valyutaların (USD, EUR, AZN) Payriff üçün AZN məbləğinə çevrilməsi
+        // Və dilin hər kəs üçün "EN" təyin edilməsi
         PaymentChargeDetails chargeDetails = resolveChargeDetails(order.getFinalPrice(), order.getCurrency());
 
         log.info("Processing checkout for order {}: Original = {} {}, Sending to PayRiff = {} {} (Language: {})",
@@ -77,7 +75,7 @@ public class PaymentServiceImpl implements PaymentService {
         String callbackUrlWithToken = payriffProperties.getCallbackUrl()
                 + "?token=" + payriffProperties.getCallbackToken();
 
-        // 5. Metadata xəritəsi (NullPointerException-dan qorumaq üçün HashMap ilə)
+        // 5. Metadata xəritəsi (NullPointerException-dan qorunmuş)
         Map<String, String> metadata = new HashMap<>();
         metadata.put("orderId", String.valueOf(order.getId()));
         metadata.put("orderNumber", String.valueOf(order.getOrderNumber()));
@@ -86,11 +84,11 @@ public class PaymentServiceImpl implements PaymentService {
         metadata.put("chargedAmount", chargeDetails.amount().toString());
         metadata.put("chargedCurrency", chargeDetails.currencyCode());
 
-        // 6. Payriff sorğusunun formalaşdırılması
+        // 6. ✅ Payriff sorğusunun formalaşdırılması: Həmişə AZN və Həmişə EN
         PayriffCreateOrderRequest payriffRequest = PayriffCreateOrderRequest.builder()
                 .amount(chargeDetails.amount())
-                .language(chargeDetails.language())
-                .currency(chargeDetails.currencyCode())
+                .language(chargeDetails.language()) // Həmişə "EN"
+                .currency(chargeDetails.currencyCode()) // Həmişə "AZN"
                 .description("Order #" + order.getOrderNumber())
                 .callbackUrl(callbackUrlWithToken)
                 .cardSave(false)
@@ -109,14 +107,14 @@ public class PaymentServiceImpl implements PaymentService {
 
         PayriffOrderPayload payload = response.getPayload();
 
-        // 7. Payment qeydini yarat və ya yenilə
+        // 7. Payment qeydini yarat və ya yenilə (Kartdan çıxılacaq real məbləğ və valyuta: AZN)
         Payment payment = paymentRepository.findByOrderId(order.getId())
                 .orElseGet(Payment::new);
 
         payment.setProvider("PAYRIFF");
         payment.setProviderPaymentId(payload.getOrderId());
-        payment.setAmount(chargeDetails.amount()); // Real çıxılacaq məbləğ (USD və ya AZN)
-        payment.setCurrency(chargeDetails.targetCurrencyEnum()); // Real çıxılacaq valyuta enum-u
+        payment.setAmount(chargeDetails.amount()); // Real çıxılacaq AZN məbləği
+        payment.setCurrency(chargeDetails.targetCurrencyEnum()); // Enums.Currency.AZN
         payment.setStatus(Enums.PaymentStatus.WAITING);
         payment.setRawResponse(toJson(response));
         payment.setCreatedAt(payment.getCreatedAt() != null ? payment.getCreatedAt() : LocalDateTime.now());
@@ -213,7 +211,7 @@ public class PaymentServiceImpl implements PaymentService {
         orderRepository.save(order);
     }
 
-    // 🛠️ Valyuta, Məbləğ və Dil məntiqini tək yerdə həll edən köməkçi record və metod
+    // 🛠️ Bütün valyutaları AZN-ə hesablayan və dili HƏMİŞƏ "EN" edən köməkçi record və metod
     private record PaymentChargeDetails(
             BigDecimal amount,
             String currencyCode,
@@ -223,23 +221,25 @@ public class PaymentServiceImpl implements PaymentService {
 
     private PaymentChargeDetails resolveChargeDetails(BigDecimal price, Enums.Currency currency) {
         BigDecimal basePrice = price != null ? price : BigDecimal.ZERO;
+        String defaultLanguage = "EN"; // ✅ Bütün ödəniş linkləri İngilis dilində açılır
 
         if (currency == Enums.Currency.USD) {
-            // ✅ USD olduğu kimi qalır, heç bir AZN çevrilməsi yoxdur
+            // ✅ USD -> AZN məzənnəsi ilə vurulur
+            BigDecimal convertedAzn = basePrice.multiply(usdToAznRate).setScale(2, RoundingMode.HALF_UP);
             return new PaymentChargeDetails(
-                    basePrice.setScale(2, RoundingMode.HALF_UP),
-                    "USD",
-                    Enums.Currency.USD,
-                    "EN"
+                    convertedAzn,
+                    "AZN",
+                    Enums.Currency.AZN,
+                    defaultLanguage
             );
         } else if (currency == Enums.Currency.EUR) {
-            // ✅ EURO AZN-ə çevrilir, amma xarici alıcı olduğu üçün dili EN qalır
+            // ✅ EUR -> AZN məzənnəsi ilə vurulur
             BigDecimal convertedAzn = basePrice.multiply(eurToAznRate).setScale(2, RoundingMode.HALF_UP);
             return new PaymentChargeDetails(
                     convertedAzn,
                     "AZN",
                     Enums.Currency.AZN,
-                    "EN"
+                    defaultLanguage
             );
         } else {
             // ✅ Standart AZN
@@ -247,7 +247,7 @@ public class PaymentServiceImpl implements PaymentService {
                     basePrice.setScale(2, RoundingMode.HALF_UP),
                     "AZN",
                     Enums.Currency.AZN,
-                    "AZ"
+                    defaultLanguage
             );
         }
     }
