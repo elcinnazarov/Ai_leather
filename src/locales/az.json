@@ -275,6 +275,41 @@
     "endTitle": "Bütün Kolleksiya",
     "endDesc": "Əl işi premium dəri məhsullarımızı kəşf edin",
     "endBtn": "Kataloqa Keç"
+  },"contactPage": {
+    "title": "Əlaqə",
+    "subtitle": "Sual və xüsusi sifarişləriniz üçün atelyemizlə birbaşa əlaqə saxlayın.",
+    "phoneWhatsapp": "Telefon & WhatsApp",
+    "hours": "Hər gün: 10:00 – 19:00 (Bakı vaxtı ilə)",
+    "writeWhatsapp": "WhatsApp ilə yazın →",
+    "officialEmail": "Rəsmi Email",
+    "emailDesc": "Bütün rəsmi və müştəri sorğuları 24 saat ərzində cavablandırılır.",
+    "atelierAddress": "Atelye Ünvanı",
+    "city": "Bakı şəhəri, Azərbaycan",
+    "addressDesc": "Məhsullarımız yerli sənətkarlıqla əl işi olaraq hazırlanır və qlobal çatdırılır.",
+    "socialChannels": "Sosial Kanallar"
+  },
+  "privacyPolicy": {
+    "title": "Məxfilik və Təhlükəsizlik Siyasəti",
+    "subtitle": "Müştərilərimizin şəxsi məlumatlarının qorunması və ödənişlərin tam təhlükəsizliyi ən ali dəyərimizdir.",
+    "sec1Title": "1. Ümumi Müddəalar",
+    "sec1Text": "E1000 Leather Baku Atelier (e1000leather.com) olaraq biz istifadəçilərimizin məxfiliyinə böyük hörmətlə yanaşırıq. Bu siyasət veb-saytımızdan istifadə edərkən toplanan məlumatların necə idarə olunduğunu və qorunduğunu təmin edir.",
+    "sec2Title": "2. Məlumatların İstifadə Məqsədi",
+    "sec2Text": "Toplanan şəxsi məlumatlar (ad, soyad, telefon, çatdırılma ünvanı və email) yalnız sifarişlərin hazırlanması, çatdırılması və müştəri xidmətləri göstərilməsi üçün istifadə edilir. Məlumatlar heç bir halda üçüncü tərəflərə ötürülmür.",
+    "sec3Title": "3. Onlayn Ödəniş və Bank Kartı Təhlükəsizliyi",
+    "sec3Text": "Saytımızda həyata keçirilən bütün onlayn ödənişlər rəsmi və lisenziyalı ePoint.az ödəniş şlüzü və beynəlxalq bank sistemi vasitəsilə icra edilir.",
+    "sec3Card": "Kart məlumatlarının saxlanılmaması: Müştərinin bank kartı rekvizitləri (16 rəqəmli kart nömrəsi, son istifadə tarixi, CVV/CVC kodu) heç bir halda e1000leather.com serverlərində toplanmır, emal edilmir və saxlanılmır.",
+    "sec3Secure": "3D Secure və PCI-DSS: Bütün əməliyyatlar 256-bit SSL şifrələməsi və 3D Secure (SMS təsdiq) texnologiyası ilə tam qorunur.",
+    "sec4Title": "4. Əlaqə"
+  },
+  "paymentResult": {
+    "successTitle": "Ödəniş Uğurla Tamamlandı",
+    "successDesc": "Təşəkkür edirik! Sifarişiniz qəbul olundu və atelyemizdə hazırlanmaya göndərildi. Qısa zamanda sizinlə əlaqə saxlanılacaq.",
+    "viewOrders": "Sifarişlərimə Bax",
+    "continueShopping": "Alış-verişə Davam Et",
+    "failedTitle": "Ödəniş Baş Tutmadı",
+    "failedDesc": "Bank əməliyyatı təsdiqləmədi və ya ödəniş ləğv edildi. Zəhmət olmasa kart rekvizitlərinizi və balansınızı yoxlayıb yenidən cəhd edin.",
+    "tryAgain": "Sifarişlərə Qayıt",
+    "toHome": "Ana Səhifəyə Qayıt"
   }
   
 }

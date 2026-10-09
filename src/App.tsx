@@ -24,6 +24,9 @@ import LeatherProfile from "./components/LeatherProfile";
 import LeatherGradeCatalog from "./components/LeatherGradeCatalog";
 import LeatherGradeProfile from "./components/LeatherGradeProfile";
 import AboutUs from "./pages/AboutUs";
+import Contact from "./pages/Contact";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+
 
 // Pages - Auth
 import AuthPage from "./pages/auth/AuthPage";
@@ -51,7 +54,8 @@ import PricingRuleForm from "./components/PricingRuleForm";
 import GlobalPriceList from "./components/GlobalPriceList";
 import ShippingLocationList from "./components/ShippingLocationList";
 import ShippingLocationForm from "./components/ShippingLocationForm";
-
+import PaymentSuccess from "./payment/PaymentSuccess";
+import PaymentFailed from "./payment/PaymentFailed";
 // Services
 import { leatherService } from "./services/leatherService";
 import { productService } from "./services/productService";
@@ -184,7 +188,12 @@ function AppRoutes() {
       <Route path="/grades" element={<ShopLayout cartCount={0}><LeatherGradeCatalog /></ShopLayout>} />
       <Route path="/grades/:id" element={<ShopLayout cartCount={0}><LeatherGradeProfile /></ShopLayout>} />
       <Route path="/about" element={<ShopLayout cartCount={0}><AboutUs /></ShopLayout>} />
-
+<Route path="/about" element={<ShopLayout cartCount={0}><AboutUs /></ShopLayout>} />
+<Route path="/payment/success" element={<ShopLayout cartCount={0}><PaymentSuccess /></ShopLayout>} />
+      <Route path="/payment/failed" element={<ShopLayout cartCount={0}><PaymentFailed /></ShopLayout>} />
+      <Route path="/contact" element={<ShopLayout cartCount={0}><Contact /></ShopLayout>} />
+      <Route path="/privacy-policy" element={<ShopLayout cartCount={0}><PrivacyPolicy /></ShopLayout>} />
+      
       <Route element={<ProtectedRoute />}>
         <Route path="/checkout" element={<ShopLayout cartCount={0}><CheckoutPage /></ShopLayout>} />
         <Route path="/profile/orders" element={<ShopLayout cartCount={0}><MyOrders /></ShopLayout>} />

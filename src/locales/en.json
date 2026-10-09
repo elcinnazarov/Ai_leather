@@ -275,7 +275,41 @@
     "endTitle": "Full Collection",
     "endDesc": "Discover our premium handcrafted leather goods",
     "endBtn": "Explore Catalog"
+  },"contactPage": {
+    "title": "Contact Us",
+    "subtitle": "Reach out directly to our atelier for bespoke inquiries, commissions, and customer care.",
+    "phoneWhatsapp": "Phone & WhatsApp",
+    "hours": "Daily: 10:00 – 19:00 (Baku time)",
+    "writeWhatsapp": "Message on WhatsApp →",
+    "officialEmail": "Official Email",
+    "emailDesc": "All official and customer inquiries are responded to within 24 hours.",
+    "atelierAddress": "Atelier Address",
+    "city": "Baku, Azerbaijan",
+    "addressDesc": "All our pieces are handcrafted with local artisanal mastery in Baku and shipped worldwide.",
+    "socialChannels": "Social Channels"
+  },
+  "privacyPolicy": {
+    "title": "Privacy & Security Policy",
+    "subtitle": "Safeguarding your personal data and ensuring seamless payment security is our utmost priority.",
+    "sec1Title": "1. General Provisions",
+    "sec1Text": "At E1000 Leather Baku Atelier (e1000leather.com), we hold our clients' privacy in the highest regard. This policy outlines how information gathered on our website is processed and safeguarded.",
+    "sec2Title": "2. Data Collection and Purpose",
+    "sec2Text": "Personal details collected during checkout or account creation (name, contact number, delivery address, and email) are strictly used for order fulfillment, dispatch, and customer service. Your data is never shared with or sold to third parties.",
+    "sec3Title": "3. Online Payment and Card Security",
+    "sec3Text": "All online payments on our platform are processed securely via the licensed ePoint.az payment gateway and international acquiring banks.",
+    "sec3Card": "Zero Card Storage: Cardholder credentials (16-digit card number, expiration date, CVV/CVC) are processed exclusively on certified banking servers and are never collected or stored on e1000leather.com servers.",
+    "sec3Secure": "3D Secure & PCI-DSS: All transactions are protected by 256-bit SSL encryption and mandatory 3D Secure verification (SMS one-time passcode).",
+    "sec4Title": "4. Contact"
   }
-
+,"paymentResult": {
+    "successTitle": "Payment Completed Successfully",
+    "successDesc": "Thank you! Your bespoke order has been accepted and dispatched to our atelier craftsmen. We will be in touch shortly.",
+    "viewOrders": "View My Orders",
+    "continueShopping": "Continue Shopping",
+    "failedTitle": "Payment Unsuccessful",
+    "failedDesc": "The banking transaction was declined or cancelled. Please review your card details or balance and try again.",
+    "tryAgain": "Return to Orders",
+    "toHome": "Return to Home"
+  }
   
 }

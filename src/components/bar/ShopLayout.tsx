@@ -444,6 +444,7 @@ export default function ShopLayout({ children, cartCount: propCartCount = 0 }: S
               <li><a href="#" className="hover:text-black transition-colors">{t("atelier.theArtisans")}</a></li>
               <li><a href="#" className="hover:text-black transition-colors">{t("atelier.sustainability")}</a></li>
               <li><a href="https://api.whatsapp.com/send/?phone=994777351313&text&type=phone_number&app_absent=0&utm_source=ig" target="_blank" rel="noreferrer" className="hover:text-black transition-colors">{t("atelier.contact")}</a></li>
+              <li><a href="/contact" className="hover:text-black transition-colors">{t("atelier.contact")}</a></li>
             </ul>
           </div>
           
@@ -471,8 +472,10 @@ export default function ShopLayout({ children, cartCount: propCartCount = 0 }: S
               <span className="text-[#5e5e5d]">
                 {region} | {currency}
               </span>
+            
             )}
-            <a href="#" className="hover:text-black transition-colors">Privacy</a>
+            
+           <a href="/privacy-policy" className="hover:text-black transition-colors">Privacy</a>
             <a href="#" className="hover:text-black transition-colors">Terms</a>
             <a href="#" className="hover:text-black transition-colors">Cookies</a>
           </div>

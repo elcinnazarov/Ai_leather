@@ -3,5 +3,5 @@ Allow: /
 Disallow: /api/
 Disallow: /admin
 Disallow: /checkout
-
+Disallow: /payment/
 Sitemap: https://e1000leather.com/sitemap.xml
