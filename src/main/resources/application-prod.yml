@@ -125,7 +125,13 @@ payriff:
   secret-key: ${PAYRIFF_SECRET_KEY}
   callback-token: ${PAYRIFF_CALLBACK_TOKEN}
   callback-url: ${app.backend-url}/api/internal/payriff-callback
-
+# ✅ ePoint.az Konfiqurasiyası (YML formatında)
+epoint:
+  base-url: https://epoint.az/api/1
+  public-key: ${EPOINT_PUBLIC_KEY:i000000001}
+  private-key: ${EPOINT_PRIVATE_KEY:your_epoint_private_key_here}
+  success-redirect-url: https://e1000leather.com/payment/success?status=success
+  error-redirect-url: https://e1000leather.com/payment/failed?status=failed
 cache:
   redis:
     account:
