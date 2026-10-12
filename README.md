@@ -1,20 +1,18 @@
 <div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+<!-- QEYD: src hissəsinə öz layihənin real banner şəklini qoya bilərsən -->
+<img width="1200" height="475" alt="Ai_Leather Banner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
 </div>
 
-# Run and deploy your AI Studio app
+# Ai_Leather (E1000 Leather) - Frontend
 
-This contains everything you need to run your app locally.
+This repository contains the Frontend source code for **Ai_Leather**, an innovative e-commerce platform for handcrafted leather products featuring AI-driven customization.
 
-View your app in AI Studio: https://ai.studio/apps/4001dc1d-0dbf-40d4-9082-cc0c4da9d4a6
+🌐 **Live Website:** [e1000leather.com](https://e1000leather.com)
 
 ## Run Locally
 
-**Prerequisites:**  Node.js
-
+**Prerequisites:** Node.js
 
 1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+   ```bash
+   npm install
