@@ -797,7 +797,7 @@ const handleCheckout = async (e: React.FormEvent) => {
                 </button>
                 <p className="text-center mt-4 font-sans text-[10px] text-[#a89890] uppercase tracking-wider flex items-center justify-center gap-1">
                   {t("checkout.encrypted", "TƏHLÜKƏSİZ ÖDƏNİŞ")} • 
-                  <span className="font-bold text-[#271310]">PAYRIFF</span>
+                  <span className="font-bold text-[#271310]">Epoint.az</span>
                 </p>
               </div>
             </form>
