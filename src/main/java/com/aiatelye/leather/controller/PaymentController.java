@@ -25,6 +25,7 @@ public class PaymentController {
 
     /**
      * Frontend bu endpoint-i çağırır, ePoint ödəniş linkini alır və yönləndirir
+     * bu kodlar Epoint -e mexsusdur. sadece frontede deyisiklik olmasin deye bele etdim
      */
     @PostMapping("/api/payments/checkout/{orderId}")
     public ResponseEntity<ApiResponse<CheckoutResponse>> checkout(@PathVariable Long orderId) {
@@ -39,6 +40,7 @@ public class PaymentController {
      * ePoint Webhook Callback (Server-to-Server)
      * ePoint data və signature parametrlərini form-urlencoded olaraq göndərir.
      * Köhnə URL adını saxlayırıq: /api/internal/payriff-callback
+     * bu kodlar Epoint -e mexsusdur. sadece frontede deyisiklik olmasin deye bele etdim
      */
     @PostMapping(value = "/api/internal/payriff-callback", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE, MediaType.ALL_VALUE})
     public ResponseEntity<Void> callback(@RequestParam("data") String data,
@@ -52,11 +54,39 @@ public class PaymentController {
     /**
      * Müştəri brauzeri bu ünvana gələrsə 405 xətası vermir,
      * avtomatik uğurlu ödəniş səhifəsinə yönləndirir.
+     * bu kodlar Epoint -e mexsusdur. sadece frontede deyisiklik olmasin deye bele etdim
      */
+
     @GetMapping("/api/internal/payriff-callback")
     public ResponseEntity<Void> handleBrowserReturn() {
         return ResponseEntity.status(HttpStatus.FOUND)
                 .location(URI.create("https://e1000leather.com/payment/success?status=success"))
                 .build();
     }
+
+    /**
+     * 2. Apple Pay & Google Pay (Token Widget) ilə Ödəniş
+     */
+    @PostMapping("/api/payments/checkout/widget/{orderId}")
+    public ResponseEntity<ApiResponse<CheckoutResponse>> checkoutWidget(@PathVariable Long orderId) {
+        Long userId = currentContext.getCurrentUserId();
+        CheckoutResponse response = paymentService.checkoutWithWidget(orderId, userId);
+        return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
+    /**
+     * 3. American Express (AMEX) ilə Ödəniş
+     * POST /api/payments/checkout/amex/{orderId}
+     */
+    @PostMapping("/api/payments/checkout/amex/{orderId}")
+    public ResponseEntity<ApiResponse<CheckoutResponse>> checkoutAmex(@PathVariable Long orderId) {
+        Long userId = currentContext.getCurrentUserId();
+        log.info("POST /api/payments/checkout/amex/{} - User: {}", orderId, userId);
+
+        CheckoutResponse response = paymentService.checkoutAmex(orderId, userId);
+        return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
+
+
 }

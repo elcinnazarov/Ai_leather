@@ -32,10 +32,48 @@ public class EpointClient {
         this.objectMapper = objectMapper;
     }
 
+
+    /**
+     * 1. ePoint Ödəniş Sorğusu (Apple Pay və Kart dəstəkli)
+     * POST https://epoint.az/api/1/payment-request
+     */
+    public EpointPaymentResponse createPayment(EpointPaymentRequest request) {
+        request.setPublicKey(properties.getPublicKey());
+        request.setSuccessRedirectUrl(properties.getSuccessRedirectUrl());
+        request.setErrorRedirectUrl(properties.getErrorRedirectUrl());
+
+        try {
+            String jsonPayload = objectMapper.writeValueAsString(request);
+            log.info("ePoint Payment-Request göndərilən JSON: {}", jsonPayload);
+
+            String data = Base64.getEncoder().encodeToString(jsonPayload.getBytes(StandardCharsets.UTF_8));
+            String signature = generateSignature(data);
+
+            MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+            formData.add("data", data);
+            formData.add("signature", signature);
+
+            return restClient.post()
+                    .uri("/payment-request") // 🔹 Rəsmi /payment-request endpoint-i
+                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                    .body(formData)
+                    .retrieve()
+                    .body(EpointPaymentResponse.class);
+
+        } catch (JsonProcessingException e) {
+            log.error("ePoint request JSON serialization error: ", e);
+            throw new PaymentFailedException("Ödəniş sorğusu hazırlana bilmədi");
+        } catch (RestClientResponseException e) {
+            log.error("ePoint API error: status={}, body={}", e.getStatusCode(), e.getResponseBodyAsString());
+            throw new PaymentFailedException("ePoint API xətası: " + e.getStatusCode());
+        }
+    }
+
+
     /**
      * 1. Yeni Ödəniş Yaratma (POST /request)
      */
-    public EpointPaymentResponse createPayment(EpointPaymentRequest request) {
+    /*public EpointPaymentResponse createPayment(EpointPaymentRequest request) {
         request.setPublicKey(properties.getPublicKey());
         request.setSuccessRedirectUrl(properties.getSuccessRedirectUrl());
         request.setErrorRedirectUrl(properties.getErrorRedirectUrl());
@@ -48,7 +86,7 @@ public class EpointClient {
             MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
             formData.add("data", data);
             formData.add("signature", signature);
-
+            log.info("ePoint göndərilən real JSON: {}", jsonPayload);
             return restClient.post()
                     .uri("/request")
                     .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -63,7 +101,8 @@ public class EpointClient {
             log.error("ePoint API error: status={}, body={}", e.getStatusCode(), e.getResponseBodyAsString());
             throw new PaymentFailedException("ePoint API xətası: " + e.getStatusCode());
         }
-    }
+
+    }*/
 
     /**
      * 2. Ödənişin Statusunu Yoxlamaq (POST /get-status)
@@ -133,4 +172,78 @@ public class EpointClient {
             return null;
         }
     }
+
+    /**
+     * Apple Pay və Google Pay üçün Token Widget URL əldə edir
+     * POST https://epoint.az/api/1/token/widget
+     */
+    public EpointWidgetResponse createTokenWidget(EpointPaymentRequest request) {
+        // ✅ DÜZƏLİŞ: Burada mütləq getPublicKey() olmalıdır!
+        request.setPublicKey(properties.getPublicKey());
+        request.setSuccessRedirectUrl(properties.getSuccessRedirectUrl());
+        request.setErrorRedirectUrl(properties.getErrorRedirectUrl());
+
+        try {
+            String jsonPayload = objectMapper.writeValueAsString(request);
+            log.info("ePoint Token Widget JSON: {}", jsonPayload);
+
+            String data = Base64.getEncoder().encodeToString(jsonPayload.getBytes(StandardCharsets.UTF_8));
+            String signature = generateSignature(data);
+
+            MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+            formData.add("data", data);
+            formData.add("signature", signature);
+
+            return restClient.post()
+                    .uri("/token/widget")
+                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                    .body(formData)
+                    .retrieve()
+                    .body(EpointWidgetResponse.class);
+
+        } catch (JsonProcessingException e) {
+            log.error("ePoint Token Widget JSON serialization error: ", e);
+            throw new PaymentFailedException("Token Widget sorğusu hazırlana bilmədi");
+        } catch (RestClientResponseException e) {
+            log.error("ePoint Token Widget API error: status={}, body={}", e.getStatusCode(), e.getResponseBodyAsString());
+            throw new PaymentFailedException("ePoint Token Widget xətası: " + e.getStatusCode());
+        }
+    }
+
+    /**
+     * American Express (AMEX) Kartları üçün Ödəniş
+     * POST https://epoint.az/api/1/amex-request
+     */
+    public EpointPaymentResponse createAmexPayment(EpointPaymentRequest request) {
+        request.setPublicKey(properties.getPublicKey());
+        request.setSuccessRedirectUrl(properties.getSuccessRedirectUrl());
+        request.setErrorRedirectUrl(properties.getErrorRedirectUrl());
+
+        try {
+            String jsonPayload = objectMapper.writeValueAsString(request);
+            log.info("ePoint AMEX Request JSON: {}", jsonPayload);
+
+            String data = Base64.getEncoder().encodeToString(jsonPayload.getBytes(StandardCharsets.UTF_8));
+            String signature = generateSignature(data);
+
+            MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+            formData.add("data", data);
+            formData.add("signature", signature);
+
+            return restClient.post()
+                    .uri("/amex-request") // 🔹 ePoint rəsmi AMEX endpoint-i
+                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                    .body(formData)
+                    .retrieve()
+                    .body(EpointPaymentResponse.class);
+
+        } catch (JsonProcessingException e) {
+            log.error("ePoint AMEX JSON serialization error: ", e);
+            throw new PaymentFailedException("AMEX sorğusu hazırlana bilmədi");
+        } catch (RestClientResponseException e) {
+            log.error("ePoint AMEX API error: status={}, body={}", e.getStatusCode(), e.getResponseBodyAsString());
+            throw new PaymentFailedException("ePoint AMEX API xətası: " + e.getStatusCode());
+        }
+    }
+
 }

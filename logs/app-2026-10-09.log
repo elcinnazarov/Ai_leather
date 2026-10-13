@@ -1,0 +1,890 @@
+2026-10-09 21:56:05.918 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2026-10-09 21:56:06.102 [main] INFO  c.a.leather.AiatelyeApplication - Starting AiatelyeApplication using Java 21.0.8 with PID 21336 (D:\My_project_Spring\Aiatelye\Aiatelye\build\classes\java\main started by elcin in D:\My_project_Spring\Aiatelye\Aiatelye)
+2026-10-09 21:56:06.103 [main] INFO  c.a.leather.AiatelyeApplication - No active profile set, falling back to 1 default profile: "default"
+2026-10-09 21:56:12.994 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-10-09 21:56:13.001 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-09 21:56:14.137 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 1117 ms. Found 16 JPA repository interfaces.
+2026-10-09 21:56:14.191 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-10-09 21:56:14.194 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-10-09 21:56:14.414 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.CustomDesignRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 21:56:14.414 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.DeliveryCountryConfigRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 21:56:14.415 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.LeatherGradeRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 21:56:19.166 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.LeatherRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 21:56:19.168 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.OrderItemRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 21:56:19.169 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.OrderRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 21:56:19.171 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.PasswordResetTokenRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 21:56:19.174 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.PaymentRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 21:56:19.175 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.PricingRuleRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 21:56:19.176 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.ProductGradePriceRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 21:56:19.221 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.ProductImageRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 21:56:19.222 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.ProductModelRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 21:56:19.222 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.ShippingLocationRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 21:56:19.224 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.UserLimitRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 21:56:19.225 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 21:56:19.226 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.Securty.repository.AuthUserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 21:56:19.227 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 5004 ms. Found 0 Redis repository interfaces.
+2026-10-09 21:56:24.722 [main] INFO  o.s.cloud.context.scope.GenericScope - BeanFactory id=8b66cfcf-b330-3975-82cf-b86c22710312
+2026-10-09 21:56:30.213 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-10-09 21:56:30.253 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-10-09 21:56:30.258 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-10-09 21:56:30.258 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.50]
+2026-10-09 21:56:30.608 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-10-09 21:56:30.608 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 24333 ms
+2026-10-09 21:56:31.275 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-10-09 21:56:31.466 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.41.Final
+2026-10-09 21:56:33.654 [main] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-10-09 21:56:34.837 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-09 21:56:34.936 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-10-09 21:56:35.648 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@5e663ab
+2026-10-09 21:56:35.653 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-10-09 21:56:36.252 [main] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 15.17
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-10-09 21:56:42.649 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-10-09 21:56:45.198 [main] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Warning Code: 0, SQLState: 00000
+2026-10-09 21:56:45.198 [main] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - constraint "uk781pmjx7kf279uopjhmbwnqhl" of relation "favorites" does not exist, skipping
+2026-10-09 21:56:46.607 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-09 21:56:48.402 [main] INFO  o.hibernate.query.sqm.tree.SqmNode - ========== PAYRIFF CONFIG YOXLANIŞI ==========
+2026-10-09 21:56:48.405 [main] INFO  o.hibernate.query.sqm.tree.SqmNode - Base URL: {}https://api.payriff.com/api/v3
+2026-10-09 21:56:48.407 [main] INFO  o.hibernate.query.sqm.tree.SqmNode - Merchant ID: {}ES1097832
+2026-10-09 21:56:48.408 [main] INFO  o.hibernate.query.sqm.tree.SqmNode - Callback URL: {} https://furless-birgit-journalary.ngrok-free.dev/api/internal/payriff-callback
+2026-10-09 21:56:48.409 [main] INFO  o.hibernate.query.sqm.tree.SqmNode - Secret Key Mövcuddur?: {}true
+2026-10-09 21:56:48.410 [main] INFO  o.hibernate.query.sqm.tree.SqmNode - Secret Key (İlkin 6 simvol): {}******3D6627
+2026-10-09 21:56:48.410 [main] INFO  o.hibernate.query.sqm.tree.SqmNode - ===============================================
+2026-10-09 21:56:49.270 [main] INFO  c.a.l.componet.OrderNumberGenerator - Database sequence 'order_number_seq' checked/created successfully.
+2026-10-09 21:56:50.046 [main] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-10-09 21:56:55.130 [main] INFO  o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name daoAuthenticationProvider
+2026-10-09 21:56:55.132 [main] WARN  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-10-09 21:56:57.144 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-10-09 21:56:57.172 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-10-09 21:56:57.193 [main] INFO  o.s.a.r.c.CachingConnectionFactory - Attempting to connect to: [localhost:5672]
+2026-10-09 21:56:57.472 [main] INFO  o.s.a.r.c.CachingConnectionFactory - Created new connection: rabbitConnectionFactory#57ad1859:0/SimpleConnection@6a8ebb66 [delegate=amqp://admin@127.0.0.1:5672/, localPort=58247]
+2026-10-09 21:56:57.682 [main] INFO  c.a.leather.AiatelyeApplication - Started AiatelyeApplication in 56.758 seconds (process running for 60.703)
+2026-10-09 21:56:57.700 [main] INFO  c.a.l.componet.CountryConfigSeeder - Ölkələrin bazada olub-olmaması yoxlanılır...
+2026-10-09 21:56:59.221 [main] INFO  c.a.l.componet.CountryConfigSeeder - Bütün çatdırılma ölkələri artıq bazada mövcuddur. Əlavə işləməyə ehtiyac yoxdur.
+2026-10-09 21:57:59.672 [http-nio-8080-exec-2] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-10-09 21:57:59.686 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-10-09 21:57:59.797 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 110 ms
+2026-10-09 21:58:00.241 [http-nio-8080-exec-1] INFO  o.a.tomcat.util.http.parser.Cookie - A cookie header was received [g_state={"i_l":0,"i_ll":1791112479866,"i_e":{"enable_itp_optimization":24},"i_et":1791112479866}] that contained an invalid cookie. That cookie will be ignored.
+ Note: further occurrences of this error will be logged at DEBUG level.
+2026-10-09 21:58:01.394 [http-nio-8080-exec-1] INFO  c.a.l.c.catalog.ProductController - GET /api/products - page: 0, filter: ProductFilterRequest(modelType=null, search=, page=0, size=12)
+2026-10-09 21:58:01.499 [http-nio-8080-exec-1] INFO  c.a.l.s.c.ProductCatalogService - Fetching product catalog - page: 0, currency: USD
+2026-10-09 21:58:04.586 [http-nio-8080-exec-1] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:18:grade:3:AZN
+2026-10-09 21:58:04.617 [http-nio-8080-exec-1] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:14:grade:1:AZN
+2026-10-09 21:58:04.633 [http-nio-8080-exec-1] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:13:grade:1:AZN
+2026-10-09 21:58:04.649 [http-nio-8080-exec-1] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:8:grade:3:AZN
+2026-10-09 21:58:04.669 [http-nio-8080-exec-1] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:5:grade:2:AZN
+2026-10-09 21:58:04.688 [http-nio-8080-exec-1] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:1:grade:1:AZN
+2026-10-09 21:58:04.830 [http-nio-8080-exec-1] INFO  c.a.l.c.ProductCatalogCacheRepository - Initial page cached for USD: 7 products
+2026-10-09 21:58:07.697 [http-nio-8080-exec-6] INFO  c.a.l.c.catalog.ProductController - GET /api/products/1 - Product detail requested
+2026-10-09 21:58:07.698 [http-nio-8080-exec-8] INFO  c.a.l.c.catalog.ProductController - GET /api/products/1/available-leathers
+2026-10-09 21:58:07.738 [http-nio-8080-exec-8] INFO  c.a.l.s.c.ProductCatalogService - Fetching available leathers for product: 1
+2026-10-09 21:58:07.833 [http-nio-8080-exec-6] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:1:grade:1:AZN
+2026-10-09 21:58:07.866 [http-nio-8080-exec-6] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:1:grade:3:AZN
+2026-10-09 21:58:07.895 [http-nio-8080-exec-6] INFO  c.a.l.c.ProductCatalogCacheRepository - Product detail cached with key: product:detail:1:USD
+2026-10-09 21:58:07.949 [http-nio-8080-exec-9] INFO  c.a.l.c.catalog.ProductController - GET /api/products/1 - Product detail requested
+2026-10-09 21:58:07.969 [http-nio-8080-exec-9] INFO  c.a.l.c.ProductCatalogCacheRepository - Product detail cache hit: product:detail:1:USD
+2026-10-09 21:58:07.969 [http-nio-8080-exec-9] INFO  c.a.l.s.c.ProductCatalogService - Cache hit: Returning product 1 for USD
+2026-10-09 21:58:08.247 [http-nio-8080-exec-8] INFO  c.a.l.cache.LeatherCacheRepository - Cached 4 leathers for product: 1
+2026-10-09 21:58:08.247 [http-nio-8080-exec-8] INFO  c.a.l.s.c.ProductCatalogService - Found and cached 4 leathers for product: 1
+2026-10-09 21:58:08.271 [http-nio-8080-exec-10] INFO  c.a.l.c.catalog.ProductController - GET /api/products/1/available-leathers
+2026-10-09 21:58:08.271 [http-nio-8080-exec-10] INFO  c.a.l.s.c.ProductCatalogService - Fetching available leathers for product: 1
+2026-10-09 21:58:08.288 [http-nio-8080-exec-10] INFO  c.a.l.cache.LeatherCacheRepository - Cache hit for leathers: 1
+2026-10-09 21:58:08.590 [http-nio-8080-exec-10] INFO  c.a.l.s.c.ProductCatalogService - Returning cached leathers for product: 1
+2026-10-09 21:58:13.076 [http-nio-8080-exec-1] INFO  c.a.l.c.order.CartController - POST /api/cart/preview - 1 items, currency: USD
+2026-10-09 21:58:13.080 [http-nio-8080-exec-1] INFO  c.a.l.s.Order.CartPreviewService - Cart preview requested with 1 items, currency: USD
+2026-10-09 21:58:13.172 [http-nio-8080-exec-1] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:1:grade:1:AZN
+2026-10-09 21:58:15.240 [http-nio-8080-exec-3] INFO  c.a.l.c.order.CartController - POST /api/cart/preview - 1 items, currency: AZN
+2026-10-09 21:58:15.314 [http-nio-8080-exec-5] INFO  c.a.l.c.order.CartController - POST /api/cart/preview - 1 items, currency: AZN
+2026-10-09 21:58:15.421 [http-nio-8080-exec-3] INFO  c.a.l.s.Order.CartPreviewService - Cart preview requested with 1 items, currency: AZN
+2026-10-09 21:58:15.430 [http-nio-8080-exec-5] INFO  c.a.l.s.Order.CartPreviewService - Cart preview requested with 1 items, currency: AZN
+2026-10-09 21:58:15.583 [http-nio-8080-exec-3] INFO  c.a.l.cache.PriceCacheRepository - Price cache hit: price:product:1:grade:1:AZN
+2026-10-09 21:58:15.583 [http-nio-8080-exec-3] WARN  c.a.l.s.Order.CartPreviewService - Price mismatch for product 1: seen=70, current=50.00
+2026-10-09 21:58:15.584 [http-nio-8080-exec-5] INFO  c.a.l.cache.PriceCacheRepository - Price cache hit: price:product:1:grade:1:AZN
+2026-10-09 21:58:15.584 [http-nio-8080-exec-5] WARN  c.a.l.s.Order.CartPreviewService - Price mismatch for product 1: seen=70, current=50.00
+2026-10-09 21:58:28.333 [http-nio-8080-exec-8] INFO  c.a.l.c.order.CartController - POST /api/cart/preview - 1 items, currency: USD
+2026-10-09 21:58:28.425 [http-nio-8080-exec-8] INFO  c.a.l.s.Order.CartPreviewService - Cart preview requested with 1 items, currency: USD
+2026-10-09 21:58:29.230 [http-nio-8080-exec-8] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:1:grade:1:AZN
+2026-10-09 21:58:33.841 [http-nio-8080-exec-1] INFO  c.a.l.c.order.OrderController - GET /api/orders/me - User: 13, page: 0
+2026-10-09 21:58:33.942 [http-nio-8080-exec-7] INFO  c.a.l.c.order.OrderController - GET /api/orders/me - User: 13, page: 0
+2026-10-09 21:58:35.626 [http-nio-8080-exec-5] INFO  c.a.l.c.order.OrderController - GET /api/orders/9 - User: 13
+2026-10-09 21:58:35.715 [http-nio-8080-exec-6] INFO  c.a.l.c.order.OrderController - GET /api/orders/9 - User: 13
+2026-10-09 21:58:37.619 [http-nio-8080-exec-9] INFO  c.a.l.controller.PaymentController - POST /api/payments/checkout/9 - User: 13
+2026-10-09 21:58:37.662 [http-nio-8080-exec-9] INFO  c.a.l.s.p.PaymentServiceImpl - Creating ePoint checkout for Order #9: Amount = 122.00 USD, Language = en
+2026-10-09 21:58:39.493 [http-nio-8080-exec-9] INFO  c.a.l.s.p.PaymentServiceImpl - ePoint checkout successfully created: orderId=9, transactionId=te023064704, redirectUrl=https://ecomm.pashabank.az:443/ecomm2/ClientHandler?trans_id=K7OxkQH6nAM248SALm7Ox0XJ8sk%3D
+2026-10-09 21:59:15.095 [http-nio-8080-exec-2] INFO  c.a.l.controller.PaymentController - POST /api/payments/checkout/9 - User: 13
+2026-10-09 21:59:15.125 [http-nio-8080-exec-2] INFO  c.a.l.s.p.PaymentServiceImpl - Creating ePoint checkout for Order #9: Amount = 122.00 USD, Language = en
+2026-10-09 21:59:15.371 [http-nio-8080-exec-2] ERROR c.a.l.s.p.PaymentServiceImpl - ePoint create payment failed for order 9: message=Duplicate order_id value, traceId=16ac92b7310ff03c71a59c84875b9eee
+2026-10-09 21:59:20.770 [http-nio-8080-exec-7] INFO  c.a.l.controller.PaymentController - POST /api/payments/checkout/9 - User: 13
+2026-10-09 21:59:20.876 [http-nio-8080-exec-7] INFO  c.a.l.s.p.PaymentServiceImpl - Creating ePoint checkout for Order #9: Amount = 122.00 USD, Language = en
+2026-10-09 21:59:21.122 [http-nio-8080-exec-7] ERROR c.a.l.s.p.PaymentServiceImpl - ePoint create payment failed for order 9: message=Duplicate order_id value, traceId=16ac92b7834ab00de484e899354707c2
+2026-10-09 21:59:27.742 [http-nio-8080-exec-3] INFO  c.a.l.c.order.OrderController - GET /api/orders/me - User: 13, page: 0
+2026-10-09 21:59:27.927 [http-nio-8080-exec-4] INFO  c.a.l.c.order.OrderController - GET /api/orders/me - User: 13, page: 0
+2026-10-09 21:59:31.415 [http-nio-8080-exec-5] INFO  c.a.l.c.order.OrderController - GET /api/orders/9 - User: 13
+2026-10-09 21:59:31.626 [http-nio-8080-exec-6] INFO  c.a.l.c.order.OrderController - GET /api/orders/9 - User: 13
+2026-10-09 21:59:32.580 [http-nio-8080-exec-9] INFO  c.a.l.controller.PaymentController - POST /api/payments/checkout/9 - User: 13
+2026-10-09 21:59:32.598 [http-nio-8080-exec-9] INFO  c.a.l.s.p.PaymentServiceImpl - Creating ePoint checkout for Order #9: Amount = 122.00 USD, Language = en
+2026-10-09 21:59:32.818 [http-nio-8080-exec-9] ERROR c.a.l.s.p.PaymentServiceImpl - ePoint create payment failed for order 9: message=Duplicate order_id value, traceId=16ac92b8462e640dd772439c31088e73
+2026-10-09 21:59:57.001 [http-nio-8080-exec-10] INFO  c.a.l.c.order.OrderController - GET /api/orders/me - User: 13, page: 0
+2026-10-09 21:59:57.141 [http-nio-8080-exec-2] INFO  c.a.l.c.order.OrderController - GET /api/orders/me - User: 13, page: 0
+2026-10-09 22:00:00.506 [http-nio-8080-exec-3] INFO  c.a.l.c.order.OrderController - GET /api/orders/8 - User: 13
+2026-10-09 22:00:00.618 [http-nio-8080-exec-4] INFO  c.a.l.c.order.OrderController - GET /api/orders/8 - User: 13
+2026-10-09 22:00:01.544 [http-nio-8080-exec-6] INFO  c.a.l.controller.PaymentController - POST /api/payments/checkout/8 - User: 13
+2026-10-09 22:00:01.560 [http-nio-8080-exec-6] INFO  c.a.l.s.p.PaymentServiceImpl - Creating ePoint checkout for Order #8: Amount = 61.00 USD, Language = en
+2026-10-09 22:00:04.294 [http-nio-8080-exec-6] INFO  c.a.l.s.p.PaymentServiceImpl - ePoint checkout successfully created: orderId=8, transactionId=te023064734, redirectUrl=https://ecomm.pashabank.az:443/ecomm2/ClientHandler?trans_id=fs82HGHIYCIkQvFdMF2qVkHOSFM%3D
+2026-10-09 22:18:59.495 [http-nio-8080-exec-1] INFO  c.a.l.c.catalog.ProductController - GET /api/products - page: 0, filter: ProductFilterRequest(modelType=null, search=, page=0, size=12)
+2026-10-09 22:19:00.123 [http-nio-8080-exec-1] INFO  c.a.l.s.c.ProductCatalogService - Fetching product catalog - page: 0, currency: USD
+2026-10-09 22:19:00.812 [http-nio-8080-exec-1] INFO  c.a.l.c.ProductCatalogCacheRepository - Initial page cache hit for USD
+2026-10-09 22:19:08.265 [org.springframework.amqp.rabbit.RabbitListenerEndpointContainer#0-2] INFO  o.s.a.r.l.SimpleMessageListenerContainer - Waiting for workers to finish.
+2026-10-09 22:19:08.276 [org.springframework.amqp.rabbit.RabbitListenerEndpointContainer#0-2] INFO  o.s.a.r.l.SimpleMessageListenerContainer - Successfully waited for workers to finish.
+2026-10-09 22:19:08.337 [SpringApplicationShutdownHook] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-10-09 22:19:08.390 [tomcat-shutdown] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-10-09 22:19:08.734 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-10-09 22:19:08.800 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-10-09 22:19:08.817 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-10-09 22:19:32.622 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2026-10-09 22:19:32.721 [main] INFO  c.a.leather.AiatelyeApplication - Starting AiatelyeApplication using Java 21.0.8 with PID 10168 (D:\My_project_Spring\Aiatelye\Aiatelye\build\classes\java\main started by elcin in D:\My_project_Spring\Aiatelye\Aiatelye)
+2026-10-09 22:19:32.722 [main] INFO  c.a.leather.AiatelyeApplication - No active profile set, falling back to 1 default profile: "default"
+2026-10-09 22:19:36.146 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-10-09 22:19:36.151 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-09 22:19:36.815 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 642 ms. Found 16 JPA repository interfaces.
+2026-10-09 22:19:36.870 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-10-09 22:19:36.874 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-10-09 22:19:36.972 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.CustomDesignRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 22:19:36.972 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.DeliveryCountryConfigRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 22:19:36.973 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.LeatherGradeRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 22:19:36.974 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.LeatherRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 22:19:36.976 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.OrderItemRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 22:19:36.977 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.OrderRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 22:19:36.978 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.PasswordResetTokenRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 22:19:36.978 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.PaymentRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 22:19:36.979 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.PricingRuleRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 22:19:36.979 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.ProductGradePriceRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 22:19:36.980 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.ProductImageRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 22:19:36.981 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.ProductModelRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 22:19:36.982 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.ShippingLocationRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 22:19:36.983 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.UserLimitRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 22:19:36.983 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 22:19:36.983 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.Securty.repository.AuthUserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 22:19:36.983 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 68 ms. Found 0 Redis repository interfaces.
+2026-10-09 22:19:37.903 [main] INFO  o.s.cloud.context.scope.GenericScope - BeanFactory id=8b66cfcf-b330-3975-82cf-b86c22710312
+2026-10-09 22:19:39.237 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-10-09 22:19:39.267 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-10-09 22:19:39.271 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-10-09 22:19:39.271 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.50]
+2026-10-09 22:19:39.425 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-10-09 22:19:39.427 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 6574 ms
+2026-10-09 22:19:39.805 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-10-09 22:19:39.886 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.41.Final
+2026-10-09 22:19:39.949 [main] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-10-09 22:19:40.520 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-09 22:19:40.562 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-10-09 22:19:40.860 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@6dbdeb69
+2026-10-09 22:19:40.864 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-10-09 22:19:41.039 [main] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 15.17
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-10-09 22:19:43.811 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-10-09 22:19:44.086 [main] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Warning Code: 0, SQLState: 00000
+2026-10-09 22:19:44.087 [main] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - constraint "uk781pmjx7kf279uopjhmbwnqhl" of relation "favorites" does not exist, skipping
+2026-10-09 22:19:44.516 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-09 22:19:46.180 [main] INFO  o.hibernate.query.sqm.tree.SqmNode - ========== PAYRIFF CONFIG YOXLANIŞI ==========
+2026-10-09 22:19:46.181 [main] INFO  o.hibernate.query.sqm.tree.SqmNode - Base URL: {}https://api.payriff.com/api/v3
+2026-10-09 22:19:46.181 [main] INFO  o.hibernate.query.sqm.tree.SqmNode - Merchant ID: {}ES1097832
+2026-10-09 22:19:46.181 [main] INFO  o.hibernate.query.sqm.tree.SqmNode - Callback URL: {} https://furless-birgit-journalary.ngrok-free.dev/api/internal/payriff-callback
+2026-10-09 22:19:46.182 [main] INFO  o.hibernate.query.sqm.tree.SqmNode - Secret Key Mövcuddur?: {}true
+2026-10-09 22:19:46.182 [main] INFO  o.hibernate.query.sqm.tree.SqmNode - Secret Key (İlkin 6 simvol): {}******3D6627
+2026-10-09 22:19:46.182 [main] INFO  o.hibernate.query.sqm.tree.SqmNode - ===============================================
+2026-10-09 22:19:46.676 [main] INFO  c.a.l.componet.OrderNumberGenerator - Database sequence 'order_number_seq' checked/created successfully.
+2026-10-09 22:19:47.247 [main] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-10-09 22:19:50.966 [main] INFO  o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name daoAuthenticationProvider
+2026-10-09 22:19:50.968 [main] WARN  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-10-09 22:19:52.486 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-10-09 22:19:52.522 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-10-09 22:19:52.541 [main] INFO  o.s.a.r.c.CachingConnectionFactory - Attempting to connect to: [localhost:5672]
+2026-10-09 22:19:52.762 [main] INFO  o.s.a.r.c.CachingConnectionFactory - Created new connection: rabbitConnectionFactory#7d274ee2:0/SimpleConnection@30cd738c [delegate=amqp://admin@127.0.0.1:5672/, localPort=62658]
+2026-10-09 22:19:52.957 [main] INFO  c.a.leather.AiatelyeApplication - Started AiatelyeApplication in 21.631 seconds (process running for 23.961)
+2026-10-09 22:19:52.963 [main] INFO  c.a.l.componet.CountryConfigSeeder - Ölkələrin bazada olub-olmaması yoxlanılır...
+2026-10-09 22:19:54.287 [main] INFO  c.a.l.componet.CountryConfigSeeder - Bütün çatdırılma ölkələri artıq bazada mövcuddur. Əlavə işləməyə ehtiyac yoxdur.
+2026-10-09 22:22:36.510 [http-nio-8080-exec-2] INFO  o.a.tomcat.util.http.parser.Cookie - A cookie header was received [g_state={"i_l":0,"i_ll":1791112479866,"i_e":{"enable_itp_optimization":24},"i_et":1791112479866}] that contained an invalid cookie. That cookie will be ignored.
+ Note: further occurrences of this error will be logged at DEBUG level.
+2026-10-09 22:22:36.628 [http-nio-8080-exec-2] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-10-09 22:22:36.631 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-10-09 22:22:36.763 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 128 ms
+2026-10-09 22:22:38.004 [http-nio-8080-exec-2] INFO  c.a.l.c.order.OrderController - GET /api/orders/me - User: 13, page: 0
+2026-10-09 22:22:39.445 [http-nio-8080-exec-1] INFO  c.a.l.c.order.OrderController - GET /api/orders/me - User: 13, page: 0
+2026-10-09 22:22:42.908 [http-nio-8080-exec-3] INFO  c.a.l.c.order.OrderController - GET /api/orders/9 - User: 13
+2026-10-09 22:22:43.130 [http-nio-8080-exec-4] INFO  c.a.l.c.order.OrderController - GET /api/orders/9 - User: 13
+2026-10-09 22:22:44.359 [http-nio-8080-exec-5] INFO  c.a.l.controller.PaymentController - POST /api/payments/checkout/9 - User: 13
+2026-10-09 22:22:44.389 [http-nio-8080-exec-5] INFO  c.a.l.s.p.PaymentServiceImpl - Creating ePoint checkout for Order #9: Amount = 122.00 USD, Language = en
+2026-10-09 22:22:44.410 [http-nio-8080-exec-5] INFO  c.a.leather.client.EpointClient - ePoint göndərilən real JSON: {"public_key":"i000201971","amount":122.00,"currency":"USD","language":"en","order_id":"9","description":"Order #ORD-20260903-0022 - E1000 Leather Atelier","success_redirect_url":"https://e1000leather.com/payment/success?status=success","error_redirect_url":"https://e1000leather.com/payment/failed?status=failed"}
+2026-10-09 22:22:46.345 [http-nio-8080-exec-5] INFO  c.a.l.s.p.PaymentServiceImpl - ePoint checkout successfully created: orderId=9, transactionId=te023065213, redirectUrl=https://ecomm.pashabank.az:443/ecomm2/ClientHandler?trans_id=9mxaQvJxdUERSlMPjrEWg5lgfPg%3D
+2026-10-09 22:31:57.716 [http-nio-8080-exec-10] INFO  c.a.l.c.catalog.ProductController - GET /api/products - page: 0, filter: ProductFilterRequest(modelType=null, search=, page=0, size=12)
+2026-10-09 22:31:57.792 [http-nio-8080-exec-10] INFO  c.a.l.s.c.ProductCatalogService - Fetching product catalog - page: 0, currency: USD
+2026-10-09 22:32:01.310 [http-nio-8080-exec-10] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:18:grade:3:AZN
+2026-10-09 22:32:01.336 [http-nio-8080-exec-10] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:14:grade:1:AZN
+2026-10-09 22:32:01.367 [http-nio-8080-exec-10] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:13:grade:1:AZN
+2026-10-09 22:32:01.399 [http-nio-8080-exec-10] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:8:grade:3:AZN
+2026-10-09 22:32:01.463 [http-nio-8080-exec-10] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:5:grade:2:AZN
+2026-10-09 22:32:01.488 [http-nio-8080-exec-10] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:1:grade:1:AZN
+2026-10-09 22:32:01.533 [http-nio-8080-exec-10] INFO  c.a.l.c.ProductCatalogCacheRepository - Initial page cached for USD: 7 products
+2026-10-09 22:32:03.870 [http-nio-8080-exec-3] INFO  c.a.l.c.order.OrderController - GET /api/orders/me - User: 13, page: 0
+2026-10-09 22:32:03.961 [http-nio-8080-exec-4] INFO  c.a.l.c.order.OrderController - GET /api/orders/me - User: 13, page: 0
+2026-10-09 22:32:15.327 [http-nio-8080-exec-7] INFO  c.a.l.c.order.OrderController - GET /api/orders/9 - User: 13
+2026-10-09 22:32:15.442 [http-nio-8080-exec-8] INFO  c.a.l.c.order.OrderController - GET /api/orders/9 - User: 13
+2026-10-09 22:32:16.519 [http-nio-8080-exec-10] INFO  c.a.l.controller.PaymentController - POST /api/payments/checkout/9 - User: 13
+2026-10-09 22:32:16.533 [http-nio-8080-exec-10] INFO  c.a.l.s.p.PaymentServiceImpl - Creating ePoint checkout for Order #9: Amount = 122.00 USD, Language = en
+2026-10-09 22:32:16.535 [http-nio-8080-exec-10] INFO  c.a.leather.client.EpointClient - ePoint göndərilən real JSON: {"public_key":"i000201971","amount":122.00,"currency":"USD","language":"en","order_id":"9","description":"Order #ORD-20260903-0022 - E1000 Leather Atelier","success_redirect_url":"https://e1000leather.com/payment/success?status=success","error_redirect_url":"https://e1000leather.com/payment/failed?status=failed"}
+2026-10-09 22:32:16.930 [http-nio-8080-exec-10] ERROR c.a.l.s.p.PaymentServiceImpl - ePoint create payment failed for order 9: message=Duplicate order_id value, traceId=16ac933300455db4e1de80f415748e15
+2026-10-09 22:34:13.624 [http-nio-8080-exec-6] INFO  c.a.l.c.order.OrderController - GET /api/orders/me - User: 13, page: 0
+2026-10-09 22:34:14.302 [http-nio-8080-exec-5] INFO  c.a.l.c.order.OrderController - GET /api/orders/me - User: 13, page: 0
+2026-10-09 22:34:21.238 [http-nio-8080-exec-7] INFO  c.a.l.c.catalog.ProductController - GET /api/products - page: 0, filter: ProductFilterRequest(modelType=null, search=, page=0, size=12)
+2026-10-09 22:34:21.305 [http-nio-8080-exec-7] INFO  c.a.l.s.c.ProductCatalogService - Fetching product catalog - page: 0, currency: USD
+2026-10-09 22:34:23.621 [http-nio-8080-exec-7] INFO  c.a.l.c.ProductCatalogCacheRepository - Initial page cache hit for USD
+2026-10-09 22:34:25.154 [http-nio-8080-exec-2] INFO  c.a.l.c.catalog.ProductController - GET /api/products/14/available-leathers
+2026-10-09 22:34:25.154 [http-nio-8080-exec-3] INFO  c.a.l.c.catalog.ProductController - GET /api/products/14 - Product detail requested
+2026-10-09 22:34:25.163 [http-nio-8080-exec-2] INFO  c.a.l.s.c.ProductCatalogService - Fetching available leathers for product: 14
+2026-10-09 22:34:25.535 [http-nio-8080-exec-3] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:14:grade:1:AZN
+2026-10-09 22:34:25.647 [http-nio-8080-exec-3] INFO  c.a.l.c.ProductCatalogCacheRepository - Product detail cached with key: product:detail:14:USD
+2026-10-09 22:34:25.679 [http-nio-8080-exec-4] INFO  c.a.l.c.catalog.ProductController - GET /api/products/14 - Product detail requested
+2026-10-09 22:34:25.695 [http-nio-8080-exec-4] INFO  c.a.l.c.ProductCatalogCacheRepository - Product detail cache hit: product:detail:14:USD
+2026-10-09 22:34:25.695 [http-nio-8080-exec-4] INFO  c.a.l.s.c.ProductCatalogService - Cache hit: Returning product 14 for USD
+2026-10-09 22:34:26.067 [http-nio-8080-exec-2] INFO  c.a.l.cache.LeatherCacheRepository - Cached 2 leathers for product: 14
+2026-10-09 22:34:26.068 [http-nio-8080-exec-2] INFO  c.a.l.s.c.ProductCatalogService - Found and cached 2 leathers for product: 14
+2026-10-09 22:34:26.095 [http-nio-8080-exec-6] INFO  c.a.l.c.catalog.ProductController - GET /api/products/14/available-leathers
+2026-10-09 22:34:26.095 [http-nio-8080-exec-6] INFO  c.a.l.s.c.ProductCatalogService - Fetching available leathers for product: 14
+2026-10-09 22:34:26.100 [http-nio-8080-exec-6] INFO  c.a.l.cache.LeatherCacheRepository - Cache hit for leathers: 14
+2026-10-09 22:34:26.114 [http-nio-8080-exec-6] INFO  c.a.l.s.c.ProductCatalogService - Returning cached leathers for product: 14
+2026-10-09 22:34:32.079 [http-nio-8080-exec-7] INFO  c.a.l.c.order.CartController - POST /api/cart/preview - 2 items, currency: USD
+2026-10-09 22:34:32.088 [http-nio-8080-exec-7] INFO  c.a.l.s.Order.CartPreviewService - Cart preview requested with 2 items, currency: USD
+2026-10-09 22:34:32.246 [http-nio-8080-exec-7] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:1:grade:1:AZN
+2026-10-09 22:34:32.417 [http-nio-8080-exec-7] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:14:grade:1:AZN
+2026-10-09 22:34:33.661 [http-nio-8080-exec-1] INFO  c.a.l.c.order.CartController - POST /api/cart/preview - 2 items, currency: AZN
+2026-10-09 22:34:33.662 [http-nio-8080-exec-9] INFO  c.a.l.c.order.CartController - POST /api/cart/preview - 2 items, currency: AZN
+2026-10-09 22:34:33.702 [http-nio-8080-exec-1] INFO  c.a.l.s.Order.CartPreviewService - Cart preview requested with 2 items, currency: AZN
+2026-10-09 22:34:33.733 [http-nio-8080-exec-9] INFO  c.a.l.s.Order.CartPreviewService - Cart preview requested with 2 items, currency: AZN
+2026-10-09 22:34:33.802 [http-nio-8080-exec-1] INFO  c.a.l.cache.PriceCacheRepository - Price cache hit: price:product:1:grade:1:AZN
+2026-10-09 22:34:33.804 [http-nio-8080-exec-9] INFO  c.a.l.cache.PriceCacheRepository - Price cache hit: price:product:1:grade:1:AZN
+2026-10-09 22:34:33.809 [http-nio-8080-exec-1] INFO  c.a.l.cache.PriceCacheRepository - Price cache hit: price:product:14:grade:1:AZN
+2026-10-09 22:34:33.809 [http-nio-8080-exec-1] WARN  c.a.l.s.Order.CartPreviewService - Price mismatch for product 1: seen=70, current=50.00
+2026-10-09 22:34:33.813 [http-nio-8080-exec-9] INFO  c.a.l.cache.PriceCacheRepository - Price cache hit: price:product:14:grade:1:AZN
+2026-10-09 22:34:33.813 [http-nio-8080-exec-9] WARN  c.a.l.s.Order.CartPreviewService - Price mismatch for product 1: seen=70, current=50.00
+2026-10-09 22:34:37.547 [http-nio-8080-exec-2] INFO  c.a.l.c.order.CartController - POST /api/cart/preview - 2 items, currency: USD
+2026-10-09 22:34:37.552 [http-nio-8080-exec-2] INFO  c.a.l.s.Order.CartPreviewService - Cart preview requested with 2 items, currency: USD
+2026-10-09 22:34:37.610 [http-nio-8080-exec-2] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:1:grade:1:AZN
+2026-10-09 22:34:37.634 [http-nio-8080-exec-2] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:14:grade:1:AZN
+2026-10-09 22:39:41.134 [http-nio-8080-exec-3] INFO  c.a.l.c.order.OrderController - GET /api/orders/me - User: 13, page: 0
+2026-10-09 22:39:42.565 [http-nio-8080-exec-4] INFO  c.a.l.c.order.OrderController - GET /api/orders/me - User: 13, page: 0
+2026-10-09 22:39:45.128 [http-nio-8080-exec-2] INFO  c.a.l.c.order.OrderController - GET /api/orders/9 - User: 13
+2026-10-09 22:39:45.468 [http-nio-8080-exec-6] INFO  c.a.l.c.order.OrderController - GET /api/orders/9 - User: 13
+2026-10-09 22:39:46.458 [http-nio-8080-exec-5] INFO  c.a.l.controller.PaymentController - POST /api/payments/checkout/9 - User: 13
+2026-10-09 22:39:46.471 [http-nio-8080-exec-5] INFO  c.a.l.s.p.PaymentServiceImpl - Creating ePoint checkout for Order #9: Amount = 122.00 USD, Language = en
+2026-10-09 22:39:46.476 [http-nio-8080-exec-5] INFO  c.a.leather.client.EpointClient - ePoint göndərilən real JSON: {"public_key":"i000201971","amount":122.00,"currency":"USD","language":"en","order_id":"9","description":"Order #ORD-20260903-0022 - E1000 Leather Atelier","success_redirect_url":"https://e1000leather.com/payment/success?status=success","error_redirect_url":"https://e1000leather.com/payment/failed?status=failed"}
+2026-10-09 22:39:47.481 [http-nio-8080-exec-5] INFO  c.a.l.s.p.PaymentServiceImpl - ePoint checkout successfully created: orderId=9, transactionId=te023065553, redirectUrl=https://ecomm.pashabank.az:443/ecomm2/ClientHandler?trans_id=otpjfJdPt5Lyn4lE97Wq0ZnnXo8%3D
+2026-10-09 23:30:15.110 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2026-10-09 23:30:15.207 [main] INFO  c.a.leather.AiatelyeApplication - Starting AiatelyeApplication using Java 21.0.8 with PID 15784 (D:\My_project_Spring\Aiatelye\Aiatelye\build\classes\java\main started by elcin in D:\My_project_Spring\Aiatelye\Aiatelye)
+2026-10-09 23:30:15.208 [main] INFO  c.a.leather.AiatelyeApplication - No active profile set, falling back to 1 default profile: "default"
+2026-10-09 23:30:18.418 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-10-09 23:30:18.418 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-09 23:30:18.952 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 521 ms. Found 16 JPA repository interfaces.
+2026-10-09 23:30:19.004 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-10-09 23:30:19.004 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-10-09 23:30:19.065 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.CustomDesignRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 23:30:19.065 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.DeliveryCountryConfigRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 23:30:19.065 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.LeatherGradeRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 23:30:19.065 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.LeatherRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 23:30:19.075 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.OrderItemRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 23:30:19.075 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.OrderRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 23:30:19.075 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.PasswordResetTokenRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 23:30:19.075 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.PaymentRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 23:30:19.075 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.PricingRuleRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 23:30:19.075 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.ProductGradePriceRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 23:30:19.075 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.ProductImageRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 23:30:19.075 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.ProductModelRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 23:30:19.075 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.ShippingLocationRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 23:30:19.075 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.UserLimitRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 23:30:19.075 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 23:30:19.075 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.Securty.repository.AuthUserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 23:30:19.075 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 42 ms. Found 0 Redis repository interfaces.
+2026-10-09 23:30:19.676 [main] INFO  o.s.cloud.context.scope.GenericScope - BeanFactory id=8b66cfcf-b330-3975-82cf-b86c22710312
+2026-10-09 23:30:20.582 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-10-09 23:30:20.592 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-10-09 23:30:20.603 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-10-09 23:30:20.603 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.50]
+2026-10-09 23:30:20.748 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-10-09 23:30:20.748 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 5357 ms
+2026-10-09 23:30:21.217 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-10-09 23:30:21.309 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.41.Final
+2026-10-09 23:30:21.376 [main] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-10-09 23:30:22.020 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-09 23:30:22.071 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-10-09 23:30:22.340 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@761b9314
+2026-10-09 23:30:22.340 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-10-09 23:30:22.807 [main] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 15.17
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-10-09 23:30:26.788 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-10-09 23:30:27.102 [main] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Warning Code: 0, SQLState: 00000
+2026-10-09 23:30:27.103 [main] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - constraint "uk781pmjx7kf279uopjhmbwnqhl" of relation "favorites" does not exist, skipping
+2026-10-09 23:30:27.747 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-09 23:30:28.840 [main] INFO  o.hibernate.query.sqm.tree.SqmNode - ========== PAYRIFF CONFIG YOXLANIŞI ==========
+2026-10-09 23:30:28.840 [main] INFO  o.hibernate.query.sqm.tree.SqmNode - Base URL: {}https://api.payriff.com/api/v3
+2026-10-09 23:30:28.840 [main] INFO  o.hibernate.query.sqm.tree.SqmNode - Merchant ID: {}ES1097832
+2026-10-09 23:30:28.840 [main] INFO  o.hibernate.query.sqm.tree.SqmNode - Callback URL: {} https://furless-birgit-journalary.ngrok-free.dev/api/internal/payriff-callback
+2026-10-09 23:30:28.840 [main] INFO  o.hibernate.query.sqm.tree.SqmNode - Secret Key Mövcuddur?: {}true
+2026-10-09 23:30:28.840 [main] INFO  o.hibernate.query.sqm.tree.SqmNode - Secret Key (İlkin 6 simvol): {}******3D6627
+2026-10-09 23:30:28.840 [main] INFO  o.hibernate.query.sqm.tree.SqmNode - ===============================================
+2026-10-09 23:30:29.408 [main] INFO  c.a.l.componet.OrderNumberGenerator - Database sequence 'order_number_seq' checked/created successfully.
+2026-10-09 23:30:29.842 [main] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-10-09 23:30:32.294 [main] INFO  o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name daoAuthenticationProvider
+2026-10-09 23:30:32.294 [main] WARN  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-10-09 23:30:33.361 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-10-09 23:30:33.372 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-10-09 23:30:33.392 [main] INFO  o.s.a.r.c.CachingConnectionFactory - Attempting to connect to: [localhost:5672]
+2026-10-09 23:30:33.551 [main] INFO  o.s.a.r.c.CachingConnectionFactory - Created new connection: rabbitConnectionFactory#8d0a300:0/SimpleConnection@3e9fd11f [delegate=amqp://admin@127.0.0.1:5672/, localPort=64505]
+2026-10-09 23:30:33.734 [main] INFO  c.a.leather.AiatelyeApplication - Started AiatelyeApplication in 19.833 seconds (process running for 22.248)
+2026-10-09 23:30:33.744 [main] INFO  c.a.l.componet.CountryConfigSeeder - Ölkələrin bazada olub-olmaması yoxlanılır...
+2026-10-09 23:30:36.603 [main] INFO  c.a.l.componet.CountryConfigSeeder - Bütün çatdırılma ölkələri artıq bazada mövcuddur. Əlavə işləməyə ehtiyac yoxdur.
+2026-10-09 23:31:23.880 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-10-09 23:31:23.934 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-10-09 23:31:23.950 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 13 ms
+2026-10-09 23:31:24.401 [http-nio-8080-exec-3] INFO  o.a.tomcat.util.http.parser.Cookie - A cookie header was received [g_state={"i_l":0,"i_ll":1791112479866,"i_e":{"enable_itp_optimization":24},"i_et":1791112479866}] that contained an invalid cookie. That cookie will be ignored.
+ Note: further occurrences of this error will be logged at DEBUG level.
+2026-10-09 23:31:25.141 [http-nio-8080-exec-3] INFO  c.a.l.c.catalog.ProductController - GET /api/products - page: 0, filter: ProductFilterRequest(modelType=null, search=, page=0, size=12)
+2026-10-09 23:31:25.177 [http-nio-8080-exec-3] INFO  c.a.l.s.c.ProductCatalogService - Fetching product catalog - page: 0, currency: USD
+2026-10-09 23:31:27.436 [http-nio-8080-exec-3] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:18:grade:3:AZN
+2026-10-09 23:31:27.637 [http-nio-8080-exec-3] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:14:grade:1:AZN
+2026-10-09 23:31:27.817 [http-nio-8080-exec-5] INFO  c.a.l.c.order.OrderController - GET /api/orders/me - User: 13, page: 0
+2026-10-09 23:31:27.934 [http-nio-8080-exec-3] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:13:grade:1:AZN
+2026-10-09 23:31:28.373 [http-nio-8080-exec-3] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:8:grade:3:AZN
+2026-10-09 23:31:29.308 [http-nio-8080-exec-3] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:5:grade:2:AZN
+2026-10-09 23:31:29.337 [http-nio-8080-exec-3] INFO  c.a.l.cache.PriceCacheRepository - Price cached: price:product:1:grade:1:AZN
+2026-10-09 23:31:29.491 [http-nio-8080-exec-6] INFO  c.a.l.c.order.OrderController - GET /api/orders/me - User: 13, page: 0
+2026-10-09 23:31:29.509 [http-nio-8080-exec-3] INFO  c.a.l.c.ProductCatalogCacheRepository - Initial page cached for USD: 7 products
+2026-10-09 23:31:32.233 [http-nio-8080-exec-9] INFO  c.a.l.c.order.OrderController - GET /api/orders/9 - User: 13
+2026-10-09 23:31:32.342 [http-nio-8080-exec-10] INFO  c.a.l.c.order.OrderController - GET /api/orders/9 - User: 13
+2026-10-09 23:31:33.740 [http-nio-8080-exec-2] INFO  c.a.l.controller.PaymentController - POST /api/payments/checkout/9 - User: 13
+2026-10-09 23:31:33.761 [http-nio-8080-exec-2] INFO  c.a.l.s.p.PaymentServiceImpl - Creating ePoint Google Pay checkout for Order #9: Amount = 122.00 USD, Language = en
+2026-10-09 23:31:33.769 [http-nio-8080-exec-2] INFO  c.a.leather.client.EpointClient - ePoint Google Pay Widget JSON: {"public_key":"i000201971","amount":122.00,"currency":"USD","language":"en","order_id":"9","description":"Order #ORD-20260903-0022 - E1000 Leather Atelier","success_redirect_url":"https://e1000leather.com/payment/success?status=success","error_redirect_url":"https://e1000leather.com/payment/failed?status=failed"}
+2026-10-09 23:31:34.600 [http-nio-8080-exec-2] ERROR c.a.leather.client.EpointClient - ePoint widget API error: status=404 NOT_FOUND, body=<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="icon" type="image/png" href="/favicon.ico">
+    <title>Səhifə tapılmadı</title>
+    <meta name="description" content="">
+        <meta property="og:title" content="Səhifə tapılmadı">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://epoint.az/api/1/widget">
+    <meta property="og:image" content="https://epoint.az/images/logo.png">
+
+    <meta property="og:description" content="">
+    <link rel="stylesheet" href="/vendor/bootstrap-4.2.1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://epoint.az/fonts/icomoon/style.css?v=1788254748">
+    <link rel="stylesheet" href="/vendor/swiper-5.3.0/package/css/swiper.min.css">
+    <link rel="stylesheet" href="/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="/vendor/select2/dist/css/select2.min.css">
+    <link rel="stylesheet" href="/vendor/air-datepicker/dist/css/datepicker.min.css">
+    <!-- hotels__ -->
+    
+    <link rel="stylesheet" href="https://epoint.az/css/main.css?v=1791374121">
+    <link rel="stylesheet" href="https://epoint.az/css/hotel-style.css?v=1788254748">
+    <link rel="stylesheet" href="/vendor/world-flags-sprite-master/stylesheets/flags32-both.css">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-WY1X90PG3K"></script>
+    <script nonce=1791574294>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'AW-16828946522');
+    </script>
+    <!-- Yandex.Metrika counter -->
+        <!-- /Yandex.Metrika counter -->
+                <!-- Meta Pixel Code -->
+            <script nonce=1791574294>
+            !function(f,b,e,v,n,t,s)
+            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+            n.queue=[];t=b.createElement(e);t.async=!0;
+            t.src=v;s=b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t,s)}(window, document,'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+            fbq('init', '966223214096112');
+            fbq('track', 'PageView');
+            </script>
+            <noscript><img height="1" width="1" style="display:none"
+            src="https://www.facebook.com/tr?id=966223214096112&ev=PageView&noscript=1"
+            /></noscript>
+<!-- End Meta Pixel Code -->
+            <!-- Global site tag (gtag.js) - Google Analytics -->
+            <script async src="https://www.googletagmanager.com/gtag/js?id=UA-162282638-
+    2"></script>
+        <script nonce=1791574294>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'UA-162282638-2');
+        </script>
+                <link rel="stylesheet" href="https://epoint.az/css/cabinet.css?v=1788254748">
+</head>
+
+<body style="">
+<script nonce=1791574294>
+    setTimeout(function () {
+        $(".alert-list").remove();
+    }, 10000);
+</script>
+
+<script nonce=1791574294>
+    setTimeout(function () {
+        $(".alert-list").remove();
+    }, 10000);
+</script>
+<div class="page-header">
+    <div class="container">
+      <a href="/" class="header-logo">
+        <img src="/images/logo.svg" data-test="main_button" alt="logo">
+      </a>
+<ul class="header-menu">
+           </ul>
+      <div class="header-right">
+        <div class="drop-language-box">
+          <div class="caption" data-test="lang_drop_box">
+            <i class="ico-globe"></i>Az<i class="ico-chevron-down"></i>
+        </div>
+          <ul class="drop-lg">
+                            <li><a href="javascript:void(0)" data-test="az">Az</a></li>
+                            <li><a href="/en" data-test="en">En</a></li>
+                            <li><a href="/ru" data-test="ru">Ru</a></li>
+                      </ul>
+        </div>
+                    <a href="https://epoint.az/az/login" data-test="login" class="btn btn-outline-second btn-sm">Daxil ol</a>
+                            <a href="https://epoint.az/az/registration" data-test="registration" class="btn btn-sm btn-primary">Qeydiyyat</a>
+                          </div>
+      <div class="wrapper-mobile-btns">
+        <a href="#" class="mobile-menu-btn"><i></i></a>
+        <a href="#" class="mobile-m-close"><i class="ico-20"></i></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="menu-for-mobile">
+    <div class="container">
+      <ul class="language-mobile">
+                    <li class="active"><a href="javascript:void(0)">Az</a></li>
+                    <li class=""><a href="/en">En</a></li>
+                    <li class=""><a href="/ru">Ru</a></li>
+              </ul>
+      <ul class="mobile-m">
+          <li class="wrapper-product-service-menu">
+                <div class="btn-mobile-open">
+            Məhsullar və xidmətlər            <i class='ico-chevron-right'></i>
+        </div>
+        <div class="btn-mobile-back">
+            <i class='ico-chevron-right'></i>
+            Geriyə        </div>
+        
+        <div class="big-product-menu">
+                            <div class="left-part">
+                                            <a href="https://epoint.az/az/free-business/Free%20business%20website" class="item">
+                            <img src="https://epointbucket.s3.eu-central-1.amazonaws.com/images/products_and_services/small/6745778211cdd.png">
+                            <span class="description">
+                                <span class="name">Pulsuz sayt-vizitka</span>
+                            </span>
+                        </a>
+                                            <a href="https://epoint.az/az/free-business/apiintegration" class="item">
+                            <img src="https://epointbucket.s3.eu-central-1.amazonaws.com/images/products_and_services/small/674577b39326e.png">
+                            <span class="description">
+                                <span class="name">API qoşulma</span>
+                            </span>
+                        </a>
+                                            <a href="https://epoint.az/az/free-business/Payouts" class="item">
+                            <img src="https://epointbucket.s3.eu-central-1.amazonaws.com/images/products_and_services/small/674578042f9d3.png">
+                            <span class="description">
+                                <span class="name">24/7 biznes kartlarına köçürmələr</span>
+                            </span>
+                        </a>
+                                            <a href="https://epoint.az/az/free-business/pays" class="item">
+                            <img src="https://epointbucket.s3.eu-central-1.amazonaws.com/images/products_and_services/small/6744dcc05acb9.png">
+                            <span class="description">
+                                <span class="name">Apple Pay və Google Pay</span>
+                            </span>
+                        </a>
+                                            <a href="https://epoint.az/az/free-business/marketplace" class="item">
+                            <img src="https://epointbucket.s3.eu-central-1.amazonaws.com/images/products_and_services/small/6744df6e757a0.png">
+                            <span class="description">
+                                <span class="name">Marketpleys</span>
+                            </span>
+                        </a>
+                                            <a href="https://epoint.az/az/free-business/Mobile%20Pos" class="item">
+                            <img src="https://epointbucket.s3.eu-central-1.amazonaws.com/images/products_and_services/small/6761197be9d9e.png">
+                            <span class="description">
+                                <span class="name">Mobile Pos</span>
+                            </span>
+                        </a>
+                                            <a href="https://epoint.az/az/free-business/wallets" class="item">
+                            <img src="https://epointbucket.s3.eu-central-1.amazonaws.com/images/products_and_services/small/6768ec1180185.png">
+                            <span class="description">
+                                <span class="name">Elektron pulqabı ilə ödənişlər</span>
+                            </span>
+                        </a>
+                                    </div>
+                                        <div class="right-part">
+                                            <a href="https://epoint.az/az/free-business/Multi-access" class="item">
+                            <img src="https://epointbucket.s3.eu-central-1.amazonaws.com/images/products_and_services/small/674577e93dfcb.png">
+                            <span class="description">
+                                <span class="name">Multi-access</span>
+                            </span>
+                        </a>
+                                            <a href="https://epoint.az/az/free-business/splitpayment" class="item">
+                            <img src="https://epointbucket.s3.eu-central-1.amazonaws.com/images/products_and_services/small/6744d54e24f0b.png">
+                            <span class="description">
+                                <span class="name">Bölünmüş ödənişlər:</span>
+                            </span>
+                        </a>
+                                            <a href="https://epoint.az/az/free-business/link-payment" class="item">
+                            <img src="https://epointbucket.s3.eu-central-1.amazonaws.com/images/products_and_services/small/6744d6a798417.png">
+                            <span class="description">
+                                <span class="name">QR və link ilə ödənişlər</span>
+                            </span>
+                        </a>
+                                            <a href="https://epoint.az/az/free-business/recuring" class="item">
+                            <img src="https://epointbucket.s3.eu-central-1.amazonaws.com/images/products_and_services/small/6744d88bc151f.png">
+                            <span class="description">
+                                <span class="name">Təkrarlanan ödənişlər</span>
+                            </span>
+                        </a>
+                                            <a href="https://epoint.az/az/free-business/registration" class="item">
+                            <img src="https://epointbucket.s3.eu-central-1.amazonaws.com/images/products_and_services/small/6744db41071e1.png">
+                            <span class="description">
+                                <span class="name">Sürətli qeydiyyat</span>
+                            </span>
+                        </a>
+                                            <a href="https://epoint.az/az/free-business/Installment" class="item">
+                            <img src="https://epointbucket.s3.eu-central-1.amazonaws.com/images/products_and_services/small/6744de174ce74.png">
+                            <span class="description">
+                                <span class="name">Hissəli ödənişlər</span>
+                            </span>
+                        </a>
+                                    </div>
+                    </div>
+    </li>
+          <li class="wrapper-product-service-menu">
+          </li>
+
+                          <li class="">
+                <a href="/az/business">Biznes səhifələr</a>
+            </li>
+                            <li class="">
+                <a href="/az/contact">Əlaqə</a>
+            </li>
+              </ul>
+    </div>
+  </div>
+<div class="page-main">
+        <div class="breadcrumbs-wrapper">
+    <div class="container">
+        <ul class="breadcrumbs">
+            <li><a href="https://epoint.az/az">Epoint</a></li>
+            <li>404</li>
+        </ul>
+    </div>
+</div>
+
+<div class="page-section page-section-main">
+    <div class="container">
+        <div class="row page404-row">
+            <div class="col-md-6">
+                <div class="page404-content">
+                    <div class="number">404</div>
+                    <div class="title">Səhifə tapılmadı</div>
+                    <div class="text">Axtardığınız səhifə tapılmadı. Daxil etdiyiniz ünvan səhv ola bilər və ya axtardığınız səhifə artıq silinib.</div>
+                    <a href="https://epoint.az/az" class="page404-btn btn btn-outline-second">Əsas səhifəyə qayıdın</a>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <img class="page404-img" src="/images/404.svg" alt="">
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="footer-page">
+        <div class="container">
+            <div class="footer-inside">
+                <div class="left-q">
+                    <img src="/images/logo.svg" alt="logo" class="logo" />
+                    <div class="text-l">Veb saytınız, mobil tətbiqiniz, sosial şəbəkələrdəki səhifələriniz üçün onlayn ödənişləri indi qoşun</div>
+                    <ul class="list-footer-img">
+                        <li><img src="/images/footer-img-1.svg" alt="img"></li>
+                        <li><img src="/images/footer-img-2.svg" alt="img"></li>
+                        <li><img src="/images/footer-img-3.svg" alt="img"></li>
+                        <li class="w-25"><img src="/images/footer-img-5.svg" alt="img"></li>
+                    </ul>
+                </div>
+                <ul class="menu">
+                                                                        <li><a href="/az/rules">Daxili qaydalar</a></li>
+                                                                                                                        <li><a href="/az/faq">FAQ</a></li>
+                                                                                                                        <li><a href="/az/contact">Əlaqə</a></li>
+                                                                                                                        <li><a href="/az/about">Haqqımızda</a></li>
+                                                                                                                        <li><a href="/az/news">Xəbərlər</a></li>
+                                                                </ul>
+                <ul class="menu">
+                                                                                            <li><a href="/az/business">Biznes səhifələr</a></li>
+                                                                                                                        <li><a href="/az/terms">İstifadə şərtləri ve müqavilə</a></li>
+                                                                                                                        <li><a href="/az/privacy">Məxfilik siyasəti</a></li>
+                                                                                                                        <li><a href="/az/media-links">Biz mediada</a></li>
+                                                                                          <li ><a href="https://developer.epoint.az" target="_blank">Developer Portal</a></li>
+                </ul>
+                <div class="right-q">
+                    <div class="one-block">
+                        <div class="caption">Telefon</div>
+                        <a href="tel:+99470 242 99 66" class="link-big-c"
+                            onclick="ym(76374967,'reachGoal','Phone'); gtag('event', 'Phone', { 'event_category': 'Button' }); return
+            true;">+99470 242 99 66</a>
+                        <p class="link-big-b">+99412 488 64 47</p>
+                    </div>
+                    <div class="one-block">
+                        <div class="caption">E-mail</div>
+                        <a href="/cdn-cgi/l/email-protection#9ef7f0f8f1defbeef1f7f0eab0ffe4" class="link-big-c" onclick="ym(76374967,'reachGoal','Email'); gtag('event', 'Email', { 'event_category': 'Button' }); return true;"><span class="__cf_email__" data-cfemail="4821262e27082d382721263c662932">[email&#160;protected]</span></a>
+                    </div>
+                    <div class="one-block">
+                        <div class="caption">Bizi sosial şəbəkələrdə izləyin</div>
+                        <ul class="list-btn-social-footer">
+                                                            <li>
+                                    <noindex>
+                                        <a href="https://www.facebook.com/epoint.az/" target="_blank" rel="nofollow"
+                                            class="btn-social-footer"><i class="ico-icons8-facebook-2"></i></a>
+                                    </noindex>
+                                </li>
+                                                                                        <li>
+                                    <noindex>
+                                        <a href="https://www.linkedin.com/company/epointaz/" target="_blank" rel="nofollow"
+                                            class="btn-social-footer"><i class="ico-icons8-linkedin_circled-1"></i></a>
+                                    </noindex>
+                                </li>
+                                                                                        <li>
+                                    <noindex>
+                                        <a href="https://www.instagram.com/epoint.az/" target="_blank" rel="nofollow"
+                                            class="btn-social-footer"><i class="ico-icons8-instagram-1"></i></a>
+                                    </noindex>
+                                </li>
+                                                    </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer_banner">
+                <div class="footer_bannerImageBox">
+                    <a target="_blank" href="https://play.google.com/store/apps/details?id=az.epoint">
+                        <img src="https://epoint.az/images/google.svg" alt="">
+                    </a>
+                    <a target="_blank" href="https://apps.apple.com/us/app/epoint-inc/id6480280749">
+                        <img src="https://epoint.az/images/appstore.svg" alt="">
+                    </a>
+                    <a target="_blank" href="https://www.producthunt.com/products/epoint">
+                        <img src="https://epoint.az/images/productHunt.svg" alt="">
+                    </a>
+                </div>
+                <a target="_blank" href="https://cbar.az/page-854/payment-institutions">
+                    <span>Azərbaycan Respublikası Mərkəzi Bankı tərəfindən 24 iyul 2024-cü il tarixində verilmiş ÖT-002 saylı lisenziya</span>
+                </a>
+                <a href="tel:966">
+                    <span>ARMB Qaynar Xətt 966</span>
+                </a>
+            </div>
+
+
+            <div class="footer__socialBox">
+            <div class="main-icon" id="mainIcon" onclick="toggleIcons()">
+            <img src="/images/button-contact-social.svg" alt="Message Icon" />
+            </div>
+            <div class="expanded-icons" id="expandedIcons" style="display: none;">
+                <a target="_blank" href="https://wa.me/+994702429966">
+                    <img src='https://epoint.az/images/wpSocial.svg' />
+                </a>
+                <a target="_blank" href="https://t.me/+994702429966">
+                    <img src='https://epoint.az/images/telegramSocial.svg' />
+                </a>
+                <div onclick="closeIcons()">
+                <img src='https://epoint.az/images/closeIcon.svg' />
+                </div>
+    </div>
+</div>
+
+
+        </div>
+        <div class="bottom-footer">© 2026 Epoint. All Rights Reserved. | INN 2002891201</div>
+    </div>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+function toggleIcons() {
+    const expandedIcons = document.getElementById('expandedIcons');
+    const mainIcon = document.getElementById('mainIcon');
+
+    if (expandedIcons.style.display === 'none') {
+        expandedIcons.style.display = 'flex';
+        mainIcon.classList.add('hidden');
+    } else {
+        expandedIcons.style.display = 'none';
+        mainIcon.classList.remove('hidden');
+    }
+}
+
+function closeIcons() {
+    document.getElementById('expandedIcons').style.display = 'none';
+    document.getElementById('mainIcon').classList.remove('hidden');
+}
+
+
+</script>
+
+<a href="#" class="scroll-top-btn ico-02"></a>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<script src="/vendor/bootstrap-4.2.1/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="/vendor/swiper-5.3.0/package/js/swiper.min.js"></script>
+<script src="/js/owl.carousel.min.js"></script>
+<script src="/vendor/select2/dist/js/select2.full.min.js"></script>
+<script src="/vendor/RobinHerbots-Inputmask/dist/jquery.inputmask.min.js"></script>
+<script src="/vendor/air-datepicker/dist/js/datepicker.min.js"></script>
+    <script src="/vendor/air-datepicker/dist/js/i18n/datepicker.az.js?v1.1"></script>
+<script src="/vendor/jquery-validation/jquery.validate.js" type="text/javascript"></script>
+<script src="/vendor/jquery-validation/additional-methods.js" type="text/javascript"></script>
+<script src="/vendor/jquery-validation/jquery-validation.init.js" type="text/javascript"></script>
+<script src="/vendor/DataTables/datatables.min.js"></script>
+    <script src="/vendor/jquery-validation/localization/messages_az.js?v2" type="text/javascript"></script>
+    <script src="/vendor/select2/dist/js/i18n/az.js" type="text/javascript"></script>
+<script nonce=1791574294>
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': ""
+        }
+    });
+</script>
+
+<script src="https://epoint.az/js/main.js?v=1788254748" type="text/javascript"></script>
+<script src="https://epoint.az/js/my.js?v=1788254748" type="text/javascript"></script>
+<script src="https://epoint.az/js/new_js.js?v=1788254748" type="text/javascript"></script>
+
+<script nonce=1791574294>
+    let Translations = {
+        'file_upload_error' : 'Fayl yüklənmədi. Fayl növünü və ölçüsünü dəyişdirməyə çalışın'
+    }
+</script>
+
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4bc70e2c01a94c73b74392e4234840661791215815920" integrity="sha512-L0ha0OXavK/8okipN9F8BtP84dg9DUhPERbBXzwI6dgTA55d2+yweo3pn5CSFYs45/r8md2+xvUPtTdvTNRfjA==" data-cf-beacon='{"version":"2024.11.0","token":"09ac2b2abb494731a99824406df79676","spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>
+
+2026-10-09 23:34:56.742 [org.springframework.amqp.rabbit.RabbitListenerEndpointContainer#0-2] INFO  o.s.a.r.l.SimpleMessageListenerContainer - Waiting for workers to finish.
+2026-10-09 23:34:56.818 [org.springframework.amqp.rabbit.RabbitListenerEndpointContainer#0-2] INFO  o.s.a.r.l.SimpleMessageListenerContainer - Successfully waited for workers to finish.
+2026-10-09 23:34:56.887 [SpringApplicationShutdownHook] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-10-09 23:34:57.001 [tomcat-shutdown] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-10-09 23:34:57.703 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-10-09 23:34:57.857 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-10-09 23:34:57.920 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-10-09 23:35:18.946 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+2026-10-09 23:35:19.070 [main] INFO  c.a.leather.AiatelyeApplication - Starting AiatelyeApplication using Java 21.0.8 with PID 7568 (D:\My_project_Spring\Aiatelye\Aiatelye\build\classes\java\main started by elcin in D:\My_project_Spring\Aiatelye\Aiatelye)
+2026-10-09 23:35:19.072 [main] INFO  c.a.leather.AiatelyeApplication - No active profile set, falling back to 1 default profile: "default"
+2026-10-09 23:35:22.168 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-10-09 23:35:22.173 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-09 23:35:22.640 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 446 ms. Found 16 JPA repository interfaces.
+2026-10-09 23:35:22.678 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-10-09 23:35:22.683 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-10-09 23:35:22.744 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.CustomDesignRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 23:35:22.745 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.DeliveryCountryConfigRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 23:35:22.746 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.LeatherGradeRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 23:35:22.746 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.LeatherRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 23:35:22.748 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.OrderItemRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 23:35:22.748 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.OrderRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 23:35:22.749 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.PasswordResetTokenRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 23:35:22.750 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.PaymentRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 23:35:22.750 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.PricingRuleRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 23:35:22.750 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.ProductGradePriceRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 23:35:22.751 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.ProductImageRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 23:35:22.751 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.ProductModelRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 23:35:22.752 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.ShippingLocationRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 23:35:22.752 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.UserLimitRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 23:35:22.752 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 23:35:22.752 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.aiatelye.leather.Securty.repository.AuthUserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-09 23:35:22.752 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 46 ms. Found 0 Redis repository interfaces.
+2026-10-09 23:35:23.277 [main] INFO  o.s.cloud.context.scope.GenericScope - BeanFactory id=8b66cfcf-b330-3975-82cf-b86c22710312
+2026-10-09 23:35:25.034 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-10-09 23:35:25.093 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-10-09 23:35:25.100 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-10-09 23:35:25.100 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.50]
+2026-10-09 23:35:25.429 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-10-09 23:35:25.430 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 6211 ms
+2026-10-09 23:35:26.145 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-10-09 23:35:26.318 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.41.Final
+2026-10-09 23:35:26.469 [main] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-10-09 23:35:27.073 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-09 23:35:27.157 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-10-09 23:35:27.594 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@3e0327dd
+2026-10-09 23:35:27.599 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-10-09 23:35:27.869 [main] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 15.17
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-10-09 23:35:30.958 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-10-09 23:35:31.412 [main] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Warning Code: 0, SQLState: 00000
+2026-10-09 23:35:31.413 [main] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - constraint "uk781pmjx7kf279uopjhmbwnqhl" of relation "favorites" does not exist, skipping
+2026-10-09 23:35:31.990 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-09 23:35:32.988 [main] INFO  o.hibernate.query.sqm.tree.SqmNode - ========== PAYRIFF CONFIG YOXLANIŞI ==========
+2026-10-09 23:35:32.989 [main] INFO  o.hibernate.query.sqm.tree.SqmNode - Base URL: {}https://api.payriff.com/api/v3
+2026-10-09 23:35:32.989 [main] INFO  o.hibernate.query.sqm.tree.SqmNode - Merchant ID: {}ES1097832
+2026-10-09 23:35:32.989 [main] INFO  o.hibernate.query.sqm.tree.SqmNode - Callback URL: {} https://furless-birgit-journalary.ngrok-free.dev/api/internal/payriff-callback
+2026-10-09 23:35:32.989 [main] INFO  o.hibernate.query.sqm.tree.SqmNode - Secret Key Mövcuddur?: {}true
+2026-10-09 23:35:32.989 [main] INFO  o.hibernate.query.sqm.tree.SqmNode - Secret Key (İlkin 6 simvol): {}******3D6627
+2026-10-09 23:35:32.989 [main] INFO  o.hibernate.query.sqm.tree.SqmNode - ===============================================
+2026-10-09 23:35:33.457 [main] INFO  c.a.l.componet.OrderNumberGenerator - Database sequence 'order_number_seq' checked/created successfully.
+2026-10-09 23:35:33.946 [main] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-10-09 23:35:37.824 [main] INFO  o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name daoAuthenticationProvider
+2026-10-09 23:35:37.825 [main] WARN  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-10-09 23:35:38.867 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-10-09 23:35:38.883 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-10-09 23:35:38.896 [main] INFO  o.s.a.r.c.CachingConnectionFactory - Attempting to connect to: [localhost:5672]
+2026-10-09 23:35:39.024 [main] INFO  o.s.a.r.c.CachingConnectionFactory - Created new connection: rabbitConnectionFactory#749bbb99:0/SimpleConnection@68435eec [delegate=amqp://admin@127.0.0.1:5672/, localPort=49357]
+2026-10-09 23:35:39.180 [main] INFO  c.a.leather.AiatelyeApplication - Started AiatelyeApplication in 21.973 seconds (process running for 24.253)
+2026-10-09 23:35:39.189 [main] INFO  c.a.l.componet.CountryConfigSeeder - Ölkələrin bazada olub-olmaması yoxlanılır...
+2026-10-09 23:35:40.625 [main] INFO  c.a.l.componet.CountryConfigSeeder - Bütün çatdırılma ölkələri artıq bazada mövcuddur. Əlavə işləməyə ehtiyac yoxdur.
+2026-10-09 23:36:09.023 [http-nio-8080-exec-2] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-10-09 23:36:09.035 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-10-09 23:36:09.086 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 50 ms
+2026-10-09 23:36:09.792 [http-nio-8080-exec-2] INFO  c.a.l.controller.PaymentController - POST /api/payments/checkout/9 - User: 13
+2026-10-09 23:36:10.116 [http-nio-8080-exec-2] INFO  c.a.l.s.p.PaymentServiceImpl - Creating ePoint Google Pay checkout for Order #9: Amount = 122.00 USD, Language = en
+2026-10-09 23:36:10.224 [http-nio-8080-exec-2] INFO  c.a.leather.client.EpointClient - ePoint Google Pay Widget JSON: {"public_key":"i000201971","amount":122.00,"currency":"USD","language":"en","order_id":"9","description":"Order #ORD-20260903-0022 - E1000 Leather Atelier","success_redirect_url":"https://e1000leather.com/payment/success?status=success","error_redirect_url":"https://e1000leather.com/payment/failed?status=failed"}
+2026-10-09 23:36:12.336 [http-nio-8080-exec-2] ERROR c.a.leather.client.EpointClient - ePoint widget API error: status=403 FORBIDDEN, body={"status":"error","message":"You don't have access to this operation","trace_id":"16ac9422c0c2eebb60ffd9d184ae9401"}
+2026-10-09 23:39:55.070 [org.springframework.amqp.rabbit.RabbitListenerEndpointContainer#0-2] INFO  o.s.a.r.l.SimpleMessageListenerContainer - Waiting for workers to finish.
+2026-10-09 23:39:55.367 [org.springframework.amqp.rabbit.RabbitListenerEndpointContainer#0-2] INFO  o.s.a.r.l.SimpleMessageListenerContainer - Successfully waited for workers to finish.
+2026-10-09 23:39:55.391 [SpringApplicationShutdownHook] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-10-09 23:39:55.449 [tomcat-shutdown] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-10-09 23:39:56.029 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-10-09 23:39:56.086 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-10-09 23:39:56.106 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
