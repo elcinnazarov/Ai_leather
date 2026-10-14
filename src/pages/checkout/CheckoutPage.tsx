@@ -9,8 +9,10 @@ import { useOrders } from "../../lib/hooks/useOrders";
 import { useAITranslation } from "../../lib/hooks/useAITranslation";
 import { OrderType, Country } from "../../types/order";
 import { useTranslation } from "react-i18next";
+import PaymentMethodBadges from "../../payment/PaymentMethodBadges";
 import { paymentService } from "../../services/paymentService";
 import { getCurrencySymbol, getCurrencyForCountry } from "../../lib/currencyMapper";
+
 import {
   Loader2,
   ShoppingBag,
@@ -19,7 +21,6 @@ import {
   Info,
   ChevronDown,
   MapPin,
-  Phone,
   CreditCard,
   AlertCircle,
   Package,
@@ -303,11 +304,11 @@ export default function CheckoutPage() {
     return Object.keys(newErrors).length === 0;
   }, [formData, t]);
 
-const handleCheckout = async (e: React.FormEvent) => {
+  const handleCheckout = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitError(null);
 
-    // 1. Düymə basılan kimi bütün xanaları "touched" edirik ki, boş qalanlar qırmızı ilə parıldasın:
+    // 1. Düymə basılan kimi bütün xanaları "touched" edirik:
     setTouched({
       customerName: true,
       cityName: true,
@@ -326,7 +327,7 @@ const handleCheckout = async (e: React.FormEvent) => {
       return;
     }
 
-    // 2. Əgər forma validasiyadan keçmirsə, xəta mesajını göstər və ən birinci boş xanaya skroll et:
+    // 2. Əgər forma validasiyadan keçmirsə:
     if (!validateForm()) {
       setSubmitError(t("checkout.fill_required_fields", "Zəhmət olmasa tələb olunan bütün xanaları düzgün doldurun."));
       window.scrollTo({ top: 300, behavior: "smooth" });
@@ -383,7 +384,6 @@ const handleCheckout = async (e: React.FormEvent) => {
       }
     } catch (error: any) {
       console.error("Checkout failed:", error);
-      // 3. Backend-dən gələn real xətanı istifadəçiyə göstəririk:
       const backendMessage = error?.response?.data?.message || error?.message || t("checkout.failed", "Sifariş yaradılarkən xəta baş verdi.");
       setSubmitError(backendMessage);
       setIsRedirecting(false);
@@ -755,9 +755,8 @@ const handleCheckout = async (e: React.FormEvent) => {
                 />
               </section>
 
-              {/* Submit & QIRMIZI VALYUTA BİLDİRİŞİ */}
+              {/* Submit & Qırmızı Valyuta Bildirişi & Ödəniş Loqoları */}
               <div className="pt-4 space-y-3">
-                {/* 🔴 SOL TƏRƏF: Düymənin dərhal üstündəki Qırmızı Valyuta Bildirişi */}
                 {approxAznTotal && (
                   <div className="p-3.5 bg-red-50/80 border border-red-200/80 rounded-md flex items-start gap-2.5 text-red-700 font-sans">
                     <ArrowRightLeft className="w-4 h-4 flex-shrink-0 mt-0.5 text-red-600" />
@@ -769,13 +768,14 @@ const handleCheckout = async (e: React.FormEvent) => {
                     </div>
                   </div>
                 )}
-               {/* 🔴 Xəta Bildiriş Qutusu */}
-         {submitError && (
-          <div className="p-4 bg-red-50 border border-red-200 rounded-md flex items-center gap-3 text-red-700 font-sans text-xs">
-       <AlertCircle className="w-4 h-4 flex-shrink-0 text-red-600" />
-       <span>{submitError}</span>
-      </div>
-         )}
+
+                {submitError && (
+                  <div className="p-4 bg-red-50 border border-red-200 rounded-md flex items-center gap-3 text-red-700 font-sans text-xs">
+                    <AlertCircle className="w-4 h-4 flex-shrink-0 text-red-600" />
+                    <span>{submitError}</span>
+                  </div>
+                )}
+
                 <button
                   type="submit"
                   disabled={!previewData?.valid || creating || isRedirecting}
@@ -795,10 +795,11 @@ const handleCheckout = async (e: React.FormEvent) => {
                     </>
                   )}
                 </button>
-                <p className="text-center mt-4 font-sans text-[10px] text-[#a89890] uppercase tracking-wider flex items-center justify-center gap-1">
-                  {t("checkout.encrypted", "TƏHLÜKƏSİZ ÖDƏNİŞ")} • 
-                  <span className="font-bold text-[#271310]">Epoint.az</span>
-                </p>
+
+                {/* 🟢 BEYNƏLXALQ STANDART: Rəsmi Kart Şəbəkələri və SSL Təhlükəsizlik Bloku */}
+                <div className="mt-6 pt-5 border-t border-[#f0e8e6]">
+                  <PaymentMethodBadges showLabels={true} />
+                </div>
               </div>
             </form>
           </motion.div>
@@ -867,7 +868,7 @@ const handleCheckout = async (e: React.FormEvent) => {
                             </span>
                           </div>
 
-                          {/* 🔴 SAĞ TƏRƏF: Yekun məbləğin altındakı Qırmızı Valyuta Bildirişi */}
+                          {/* Sağ Tərəf: Yekun məbləğin altındakı Qırmızı Valyuta Bildirişi */}
                           {approxAznTotal && (
                             <div className="mt-3 p-2.5 bg-red-50/90 border border-red-200/90 rounded text-red-700 font-sans text-right">
                               <p className="text-xs font-bold tracking-wider">
